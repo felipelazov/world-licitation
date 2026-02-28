@@ -1,0 +1,119 @@
+squad_recommendation:
+  metadata:
+    aluno: "Felipe Lazov Nunes de Oliveira"
+    slug: "felipe_lazov"
+    date: "2026-02-21"
+    algorithm_version: "1.0.0"
+    source: "genius-profile.yaml"
+
+  perfil_matching:
+    hamilton_primary: "Creator"
+    hamilton_secondary: "Mechanic"
+    kolbe: "5-7-8-5"
+    clifton_domain: "Strategic Thinking"
+    wealth_spectrum: "Player"
+
+  top_3:
+    - rank: 1
+      squad_id: "creator_os"
+      squad_name: "Creator-OS"
+      score_composto: 0.96
+      scores:
+        hamilton_match: 0.40
+        kolbe_match: 0.27
+        clifton_match: 0.20
+        context_bonus: 0.09
+      racional: |
+        Match PERFEITO com Creator primario. Criacao de cursos, mentorias e produtos digitais
+        sobre IA para PMEs. Seu Quick Start 8 garante lancamentos rapidos. Strategic Thinking
+        dominante permite posicionamento premium. Alavanca TODAS as convergencias do perfil:
+        criar + ensinar + estrategizar. Monetiza sua experiencia de 5+ anos em negocios
+        COMBINADA com IA. Voce nao venderia IA pura — venderia "IA aplicada a negocios reais
+        por quem ja construiu empresas de verdade".
+      alinhamento_zona_genialidade: "Direto — opera 100% na Zona de Genialidade"
+      risco: "Baixo — usa expertise existente + nova habilidade (IA)"
+
+    - rank: 2
+      squad_id: "dopamine_learning"
+      squad_name: "Dopamine Learning"
+      score_composto: 0.89
+      scores:
+        hamilton_match: 0.40
+        kolbe_match: 0.225
+        clifton_match: 0.18
+        context_bonus: 0.08
+      racional: |
+        Creator-Mechanic perfeito para design de experiencias de aprendizagem. Seu desejo
+        de ensinar/mentorar + habilidade de organizar informacoes complexas = combinacao
+        ideal. Poderia criar experiencias de aprendizagem sobre IA com gamificacao.
+        Follow Thru 7 garante consistencia na entrega. Strategic Thinking permite
+        arquitetar jornadas de aprendizagem profundas.
+      alinhamento_zona_genialidade: "Alto — ensinar + criar + sistematizar"
+      risco: "Medio — requer conhecimento de design instrucional"
+
+    - rank: 3
+      squad_id: "ai_studio_prompt_builder"
+      squad_name: "AI Studio Prompt Builder"
+      score_composto: 0.73
+      scores:
+        hamilton_match: 0.28
+        kolbe_match: 0.15
+        clifton_match: 0.20
+        context_bonus: 0.10
+      racional: |
+        Match tecnico com foco em IA. Mechanic secundario se alinha com construcao de
+        prompts e fluxos de AI. AIOS ha 1 semana + agentes criados = fundacao tecnica.
+        Strategic Thinking ideal para arquitetar solucoes complexas.
+        Ponto de atencao: Fact Finder 5 esta abaixo do ideal 7+ deste squad.
+        Felipe prefere executar a pesquisar profundamente.
+      alinhamento_zona_genialidade: "Medio — tecnico mas usa criatividade"
+      risco: "Medio-Alto — requer aprofundamento tecnico em AI/LLMs"
+
+  anti_recommendations:
+    - squad: "ETL Data Collector"
+      score: 0.25
+      motivo: "Accumulator primary, Follow Thru 7+, Fact Finder 8+ — tudo o oposto de Felipe"
+    - squad: "MMOS Mind Mapper"
+      score: 0.30
+      motivo: "Accumulator, paciencia para processos longos — conflita com Quick Start 8"
+    - squad: "GDrive Ingestor"
+      score: 0.28
+      motivo: "Operacional/repetitivo — exatamente o que drena energia de Felipe"
+
+  dream_squad:
+    nome: "IA Agency OS"
+    descricao: |
+      Squad CUSTOMIZADO para Felipe. Uma agencia de solucoes de IA para PMEs que combina:
+      - Creator-OS (criacao de produtos e mentorias sobre IA)
+      - AI Studio (construcao tecnica de agentes e automacoes)
+      - Experiencia real de negocios (5+ anos, loja online, mercados, consultoria)
+
+      Diferencial: NAO e mais um "especialista em IA". E um EMPRESARIO que usa IA para
+      resolver problemas reais de negocios, porque JA viveu esses problemas.
+    composicao:
+      - agent: "Estrategista de Negocios com IA"
+        funcao: "Diagnosticar processos do cliente e prescrever solucoes de IA"
+        felipe_faz: true
+      - agent: "Construtor de Agentes"
+        funcao: "Desenvolver agentes WhatsApp, automacoes, apps"
+        felipe_faz: true
+        nota: "Delegar parcialmente quando escalar"
+      - agent: "Gestor de Conteudo"
+        funcao: "Criar conteudo sobre IA para PMEs (posicionamento)"
+        felipe_faz: true
+        nota: "Quick wins diarios"
+      - agent: "Gestor Operacional"
+        funcao: "Admin, financeiro, atendimento, processos"
+        felipe_faz: false
+        nota: "DELEGAR - Zona de Competencia, nao de Genialidade"
+    caminho_criacao: |
+      Mes 1: Validar com 3-5 clientes via warm outreach
+      Mes 2: Documentar cases, criar processo padrao
+      Mes 3: Comecar conteudo diario, escalar para 10 clientes
+      Mes 4-6: Contratar primeiro VA operacional, focar no estrategico
+
+  next_step:
+    acao_imediata: "Listar 20 empresarios da sua rede que tem problemas operacionais e mandar mensagem oferecendo diagnóstico gratuito de IA"
+    prazo: "Hoje"
+    meta_7_dias: "5 diagnosticos agendados"
+    meta_30_dias: "3 clientes pagantes a R$2.000-3.000/mes"

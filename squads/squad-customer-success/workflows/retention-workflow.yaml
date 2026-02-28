@@ -1,0 +1,94 @@
+# Retention Workflow
+# Ciclo de retencao: health-check → engagement → churn-prevention → upsell-detection
+
+workflow:
+  id: "retention-workflow"
+  name: "Retention Cycle Workflow"
+  description: "Ciclo de retencao de clientes. Monitoramento de saude, engajamento proativo, prevencao de churn e deteccao de oportunidades de expansao."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "customer-success"
+  chief: "lincoln-murphy"
+  created_date: "2026-02-25"
+  tags: [retention, health-check, churn-prevention, upsell]
+
+inputs:
+  client_name: { type: "string", required: true, description: "Nome do cliente" }
+  health_score_threshold: { type: "number", default: 70, description: "Score minimo aceitavel (0-100)" }
+  review_period: { type: "enum", options: ["monthly", "quarterly", "semi-annual"], default: "quarterly" }
+
+steps:
+  - id: "step_1_health_check"
+    name: "Client Health Check"
+    phase: "Diagnostico"
+    task: "health-check"
+    agent: "wayne-mcculloch"
+    description: "Avaliacao completa da saude do cliente usando frameworks de Wayne McCulloch. Analisar metricas de uso, satisfacao, NPS e sinais de risco."
+    inputs: { client_name: "{{client_name}}", review_period: "{{review_period}}", threshold: "{{health_score_threshold}}" }
+    outputs:
+      health_report: "outputs/customer-success/{{client_name}}/retention/health-report.md"
+      health_score: "outputs/customer-success/{{client_name}}/retention/health-score.yaml"
+    success_criteria:
+      - "Health score calculado com todas as dimensoes"
+      - "Sinais de risco identificados e priorizados"
+      - "Classificacao: HEALTHY / AT_RISK / CRITICAL"
+
+  - id: "step_2_engagement"
+    name: "Engagement Strategy"
+    phase: "Engajamento"
+    task: "engagement"
+    agent: "lincoln-murphy"
+    description: "Lincoln Murphy define estrategia de engajamento baseada no diagnostico. Para saudaveis: aprofundar valor. Para em risco: plano de reengajamento imediato."
+    inputs: { client_name: "{{client_name}}", health_report: "{{step_1_health_check.health_report}}" }
+    outputs:
+      engagement_plan: "outputs/customer-success/{{client_name}}/retention/engagement-plan.md"
+      touchpoint_calendar: "outputs/customer-success/{{client_name}}/retention/touchpoint-calendar.yaml"
+    success_criteria:
+      - "Plano de engajamento personalizado criado"
+      - "Calendario de touchpoints definido"
+
+  - id: "step_3_churn_prevention"
+    name: "Churn Prevention"
+    phase: "Prevencao"
+    task: "churn-prevention"
+    agent: "lincoln-murphy"
+    description: "Acoes preventivas contra churn. Lincoln Murphy aplica estrategias proativas de Customer Success para reverter sinais de risco antes do cancelamento."
+    inputs: { client_name: "{{client_name}}", health_score: "{{step_1_health_check.health_score}}", engagement_plan: "{{step_2_engagement.engagement_plan}}" }
+    outputs:
+      prevention_actions: "outputs/customer-success/{{client_name}}/retention/prevention-actions.md"
+      risk_mitigation: "outputs/customer-success/{{client_name}}/retention/risk-mitigation.yaml"
+    success_criteria:
+      - "Acoes preventivas mapeadas para cada sinal de risco"
+      - "Plano de mitigacao com prazos e responsaveis"
+
+  - id: "step_4_upsell"
+    name: "Upsell & Expansion Detection"
+    phase: "Expansao"
+    task: "upsell-detection"
+    agent: "wayne-mcculloch"
+    description: "Identificar oportunidades de expansao e upsell. Wayne McCulloch analisa sinais de maturidade e prontidao para aumento de escopo."
+    inputs: { client_name: "{{client_name}}", health_report: "{{step_1_health_check.health_report}}", engagement_plan: "{{step_2_engagement.engagement_plan}}" }
+    outputs:
+      upsell_opportunities: "outputs/customer-success/{{client_name}}/retention/upsell-opportunities.md"
+      expansion_roadmap: "outputs/customer-success/{{client_name}}/retention/expansion-roadmap.yaml"
+    success_criteria:
+      - "Oportunidades de expansao identificadas e qualificadas"
+      - "Score de prontidao para upsell calculado"
+
+outputs:
+  retention_complete: { type: "boolean", source: "step_4_upsell.success" }
+  client_status: { type: "enum", options: ["HEALTHY", "AT_RISK", "CRITICAL", "EXPANSION_READY"], source: "step_1_health_check.health_score" }
+
+governance:
+  review_points:
+    - { step: "step_1_health_check", gate: "Health score calculado e classificacao definida" }
+    - { step: "step_3_churn_prevention", gate: "Acoes preventivas definidas para clientes em risco" }
+    - { step: "step_4_upsell", gate: "Oportunidades de expansao documentadas" }
+
+notes:
+  - "Lincoln Murphy orquestra o ciclo e lidera engajamento e prevencao de churn"
+  - "Wayne McCulloch fornece frameworks de health scoring e deteccao de upsell"
+  - "Ciclo recomendado: mensal para AT_RISK, trimestral para HEALTHY"
+  - "CRITICO: Health score abaixo de 40 requer intervencao imediata"

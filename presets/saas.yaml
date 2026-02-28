@@ -1,0 +1,65 @@
+# World OS Preset: saas
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "saas"
+  nome: "Produto Digital (SaaS / App / Plataforma)"
+  descricao: "Produto digital escalavel como SaaS, aplicativo ou plataforma. Foco em descoberta de problema, definicao de produto, identidade e estrategia de conteudo para aquisicao."
+
+fases:
+  descoberta:
+    status: "pendente"
+    motivo: "Essencial - validacao do problema e entendimento profundo do usuario antes de construir"
+  proposito:
+    status: "pendente"
+    motivo: "Define a visao fundadora e o impacto que o produto busca gerar no mercado"
+  produto:
+    status: "pendente"
+    motivo: "Core do negocio - definicao de features, MVP, modelo de monetizacao e experiencia do usuario"
+  visao-produto:
+    status: "pendente"
+    motivo: "Roadmap estrategico e fundamental para priorizar desenvolvimento e comunicar direcao"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Identidade visual do produto impacta diretamente percepcao de valor e confianca do usuario"
+  conteudo:
+    status: "pendente"
+    motivo: "Estrategia de conteudo para educacao do mercado, SEO e aquisicao organica"
+  vendas:
+    status: "pendente"
+    motivo: "Funil de vendas SaaS (PLG, sales-led ou hybrid) precisa ser definido cedo para validar PMF"
+  aquisicao:
+    status: "pendente"
+    motivo: "Growth marketing, SEO e trafego pago sao essenciais para escalar aquisicao de usuarios"
+  retencao:
+    status: "pendente"
+    motivo: "Critico para SaaS - churn destroi unit economics. Onboarding, health score e engagement sao vitais"
+  operacao:
+    status: "ignorado"
+    motivo: "Opcional - ativado quando o produto atingir traction e precisar de processos de suporte e CS"
+  escala:
+    status: "ignorado"
+    motivo: "Opcional - ativado apos product-market fit validado e metricas de retencao estaveis"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-design"
+  - "squad-content-distillery"
+  - "squad-customer-success"
+
+ordem_sugerida:
+  - "descoberta"
+  - "proposito"
+  - "produto"
+  - "visao-produto"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "vendas"
+  - "aquisicao"
+  - "retencao"
+
+notas: "SaaS segue logica de lean startup: descoberta e validacao antes de construcao. As fases comerciais (vendas, aquisicao, retencao) sao criticas para SaaS porque unit economics depende de CAC:LTV saudavel. Retencao e especialmente importante - churn alto inviabiliza o modelo. Operacao e escala sao ativados pos PMF."

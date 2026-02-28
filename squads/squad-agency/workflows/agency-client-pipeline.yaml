@@ -1,0 +1,613 @@
+# ============================================================
+# Workflow: Agency Client Pipeline
+# ============================================================
+# Pipeline completo do ciclo de vida do cliente na agencia IA.
+# Orquestrado pelo ia-agency-chief, cada fase tem 1 agente lider.
+# Sequencial: Captacao → Diagnostico → Proposta → Onboarding → Entrega → Acompanhamento
+# ============================================================
+
+metadata:
+  name: "Agency Client Pipeline"
+  id: "agency-client-pipeline"
+  squad: "squad-agency"
+  chief: "ia-agency-chief"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "Pipeline completo do cliente: da captacao ao acompanhamento mensal"
+  monetization_target: "R$20k/mes em 90 dias com 10 clientes"
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - lead_info: "Nome, empresa, contato, como chegou (conteudo, indicacao, outbound)"
+  optional:
+    - genius_profile: "Output do squad-zona-genialidade (se disponivel)"
+    - contexto_negocio: "Dados pre-existentes sobre o lead"
+    - referral_source: "Quem indicou (se aplicavel)"
+
+# ── FASES ───────────────────────────────────────────────────
+
+phases:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 1: CAPTACAO (Leads)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 1
+    name: "Captacao de Leads"
+    id: "captacao"
+    agent: "gestor-conteudo"
+    support_agent: "ia-agency-chief"
+    description: "Atrair leads qualificados via conteudo + outreach"
+
+    steps:
+      - step: 1
+        name: "Conteudo Diario"
+        description: "Publicar 1 post/dia seguindo calendario de pilares"
+        action: |
+          Executar task conteudo-diario:
+          - Segunda: Carousel educativo
+          - Terca: Reels case
+          - Quarta: Post bastidores
+          - Quinta: Carousel educativo
+          - Sexta: Reels CTA
+          - Sabado: Stories bastidores
+          - Domingo: LinkedIn autoridade
+        output: "7 posts/semana publicados, metricas coletadas"
+        frequency: "Diario (continuo)"
+
+      - step: 2
+        name: "Outreach Ativo"
+        description: "Prospecao direta em leads qualificados"
+        action: |
+          - Identificar PMEs com sinais de necessidade de IA
+          - Enviar mensagem personalizada via DM ou WhatsApp
+          - Usar framework: Dor especifica + Resultado possivel + Convite pro diagnostico
+          - Meta: 5-10 conversas iniciadas por semana
+        output: "Leads em conversa, agendamentos de diagnostico"
+        frequency: "3x por semana"
+
+      - step: 3
+        name: "Qualificacao de Lead"
+        description: "Filtrar lead antes de agendar diagnostico"
+        action: |
+          Criterios minimos pra agendar:
+          - Tem faturamento mensal (nao e startup sem receita)
+          - Tem processo operacional (algo pra automatizar)
+          - Demonstrou interesse genuino (nao so curtiu post)
+          - Tem capacidade de investimento (alinhado com ticket medio)
+        output: "Lead qualificado → agendar diagnostico"
+
+    metrics:
+      - "Posts publicados por semana (meta: 7)"
+      - "Alcance semanal"
+      - "DMs recebidos"
+      - "Leads qualificados por semana (meta: 2-3)"
+      - "Taxa de conversao conteudo → lead"
+
+    deliverables:
+      - "Calendario de conteudo semanal (template conteudo-diario-tmpl.md)"
+      - "Lista de leads qualificados"
+
+    notes: |
+      Fase 1 e CONTINUA — nao para nunca. Mesmo com 10 clientes, conteudo continua
+      pra manter pipeline aquecido e gerar indicacoes.
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 2: DIAGNOSTICO (30 min)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 2
+    name: "Diagnostico do Cliente"
+    id: "diagnostico"
+    agent: "estrategista-negocios"
+    task: "diagnostico-cliente"
+    depends_on: "captacao"
+    description: "Sessao de 30 min para mapear oportunidades de IA com ROI"
+
+    steps:
+      - step: 1
+        name: "Abertura"
+        description: "Estabelecer rapport e alinhar expectativas"
+        duration: "2 minutos"
+        action: |
+          - Agradecer pelo tempo
+          - Explicar: "Vou entender seu negocio pra ver onde IA pode gerar resultado real"
+          - Definir expectativa: "Em 30 min voce sai com um mapa de oportunidades"
+        output: "Cliente alinhado e confortavel"
+
+      - step: 2
+        name: "Receita e Modelo de Negocio"
+        description: "Entender os numeros e a estrutura"
+        duration: "5 minutos"
+        action: |
+          Perguntas guiadas:
+          - Qual seu faturamento mensal atual?
+          - Quantos clientes ativos voce tem?
+          - Qual seu principal produto/servico?
+          - Como voce consegue clientes hoje?
+          - Qual seu ticket medio?
+        output: "Dados de receita documentados"
+
+      - step: 3
+        name: "Processos e Operacao"
+        description: "Mapear o dia-a-dia operacional"
+        duration: "8 minutos"
+        action: |
+          Perguntas guiadas:
+          - Me descreva seu dia tipico de trabalho
+          - Quais atividades tomam mais tempo?
+          - O que voce faz que acha que nao deveria estar fazendo?
+          - Quais processos sao manuais e repetitivos?
+          - Se tivesse um assistente perfeito, o que delegaria primeiro?
+        output: "3+ processos mapeados com tempo, frequencia e executor"
+
+      - step: 4
+        name: "Problemas e Gargalos"
+        description: "Identificar dor principal e custo"
+        duration: "8 minutos"
+        action: |
+          Perguntas guiadas:
+          - Qual o MAIOR gargalo do seu negocio hoje?
+          - Quanto esse gargalo te custa por mes (em tempo ou dinheiro)?
+          - De 1 a 10, qual a urgencia de resolver isso?
+          - Voce ja tentou resolver antes? O que aconteceu?
+          - Se magicamente resolvesse amanha, o que mudaria?
+        output: "Gargalo principal com custo estimado e urgencia"
+
+      - step: 5
+        name: "Prescricao de Oportunidades"
+        description: "Apresentar 3 oportunidades de IA rankeadas"
+        duration: "5 minutos"
+        action: |
+          Com base nos dados coletados:
+          - Identificar 3 oportunidades onde IA resolve problemas mapeados
+          - Rankear por impacto (ROI estimado)
+          - Definir quick win de 7 dias (oportunidade mais facil e impactante)
+          - Apresentar: "Com base no que voce me contou, aqui estao 3 caminhos..."
+        output: "3 oportunidades rankeadas com ROI e quick win definido"
+
+      - step: 6
+        name: "Decisao e Proximo Passo"
+        description: "Fechar a sessao com proximos passos claros"
+        duration: "2 minutos"
+        action: |
+          - Apresentar resumo visual (Mapa de Oportunidades)
+          - Perguntar: "Isso faz sentido pra voce?"
+          - Proximo passo: "Posso preparar uma proposta focada na oportunidade #1"
+          - Registrar decisao do cliente
+        output: "Decisao do cliente: proposta / pensar / nao"
+
+    quality_gate:
+      name: "QG-IAOS-001"
+      checklist: "checklists/diagnostico-cliente-checklist.md"
+      threshold: "18/22 (APROVADO)"
+      fail_action: "Reagendar sessao complementar ou completar dados faltantes"
+
+    deliverables:
+      - "deliverables/diagnosticos/{cliente}-diagnostico.md (template diagnostico-cliente-tmpl.md)"
+      - "Output YAML para pipeline"
+
+    synapses:
+      - para: "squad-agency (proposta)"
+        decisao: "Diagnostico aprovado"
+        acao: "Gerar proposta comercial baseada nos dados coletados"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 3: PROPOSTA COMERCIAL (Auto)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 3
+    name: "Proposta Comercial"
+    id: "proposta"
+    agent: "ia-agency-chief"
+    task: "proposta-comercial"
+    depends_on: "diagnostico"
+    description: "Gerar proposta personalizada usando Grand Slam Offer"
+
+    steps:
+      - step: 1
+        name: "Carregar Diagnostico"
+        description: "Ler output do diagnostico aprovado"
+        action: |
+          - Carregar YAML do diagnostico
+          - Verificar QG-IAOS-001 = APROVADO
+          - Extrair: gargalo, oportunidades, receita, quick win
+        output: "Dados do diagnostico carregados para geracao"
+
+      - step: 2
+        name: "Construir Proposta Grand Slam"
+        description: "Aplicar framework de oferta irresistivel"
+        action: |
+          Montar proposta com:
+          1. Dream Outcome (na voz do cliente)
+          2. Problema articulado (do diagnostico)
+          3. Value Stack (solucoes empilhadas)
+          4. Resultado mensuravel com numeros
+          5. Timeline semanal (7-30 dias)
+          6. Quick win de 7 dias como primeiro entregavel
+          7. Garantia de 30 dias
+          8. Investimento vs ROI
+        output: "Proposta completa em markdown"
+
+      - step: 3
+        name: "Review por Felipe"
+        description: "Felipe revisa e aprova antes do envio"
+        action: |
+          Felipe verifica:
+          - Dados estao corretos? (veio do diagnostico)
+          - Preco faz sentido? (dentro do catalogo)
+          - Promessa e cumprivel? (capacidade de entrega)
+          - Timeline e realista? (recursos disponiveis)
+          - Garantia e sustentavel? (risco calculado)
+        output: "Proposta aprovada por Felipe"
+        requires_human: true
+
+      - step: 4
+        name: "Envio e Follow-up"
+        description: "Enviar proposta e agendar acompanhamento"
+        action: |
+          - Formatar como PDF profissional
+          - Enviar via WhatsApp (canal preferencial)
+          - Agendar follow-up em 24-48h
+          - Registrar no pipeline: status "proposta enviada"
+        output: "Proposta enviada + follow-up agendado"
+
+    quality_gate:
+      name: "QG-IAOS-002"
+      checklist: "checklists/proposta-comercial-checklist.md"
+      threshold: "22/28 (APROVADO)"
+      fail_action: "Ajustar proposta e resubmeter para review de Felipe"
+
+    deliverables:
+      - "deliverables/propostas/{cliente}-proposta.md (template proposta-comercial-tmpl.md)"
+      - "PDF formatado para envio"
+
+    decision_tree:
+      cliente_aceitou: "Seguir para onboarding (Fase 4)"
+      cliente_pediu_tempo: "Follow-up em 48h. Nutrir via conteudo."
+      cliente_recusou: "Registrar motivo. Manter no pipeline como lead frio."
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 4: ONBOARDING (1h)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 4
+    name: "Onboarding do Cliente"
+    id: "onboarding"
+    agent: "gestor-operacional"
+    task: "onboarding-cliente"
+    depends_on: "proposta"
+    description: "Setup completo do cliente em 1 hora: contrato, pagamento, tecnico, alinhamento"
+
+    steps:
+      - step: 1
+        name: "Contrato e Pagamento"
+        description: "Formalizar parceria"
+        duration: "15 minutos"
+        action: |
+          - Gerar contrato digital baseado na proposta aprovada
+          - Coletar assinatura do cliente
+          - Confirmar pagamento do setup fee
+          - Emitir nota fiscal
+          - SEPARAR 30% como reserva (regra nao negociavel)
+          - Configurar recorrencia (se aplicavel)
+        output: "Contrato assinado, pagamento confirmado, reserva separada"
+
+      - step: 2
+        name: "Setup Tecnico"
+        description: "Preparar ambiente tecnico do cliente"
+        duration: "20 minutos"
+        action: |
+          - Configurar WhatsApp Business (Evolution API)
+          - Criar dashboard do cliente
+          - Configurar workflow n8n
+          - Conectar integracoes necessarias
+          - Testar tudo em staging
+          - Documentar credenciais em local seguro
+        output: "Ambiente tecnico funcional e testado"
+
+      - step: 3
+        name: "Alinhamento"
+        description: "Garantir que cliente sabe o que esperar"
+        duration: "15 minutos"
+        action: |
+          - Agendar kickoff
+          - Compartilhar timeline semanal
+          - Definir canal de comunicacao
+          - Alinhar expectativas: quem faz o que
+          - Agendar primeiro checkpoint (max 7 dias)
+        output: "Expectativas alinhadas, kickoff agendado"
+
+      - step: 4
+        name: "Registro no Pipeline"
+        description: "Centralizar dados e configurar alertas"
+        duration: "10 minutos"
+        action: |
+          - Registrar cliente no dashboard/pipeline
+          - Centralizar todos os dados (contato, escopo, preco)
+          - Agendar report mensal
+          - Configurar alerta de follow-up (max 48h sem contato)
+          - Documentar onboarding completo
+        output: "Cliente registrado, alertas configurados"
+
+    quality_gate:
+      name: "QG-IAOS-003"
+      checklist: "checklists/onboarding-cliente-checklist.md"
+      threshold: "20/25 (APROVADO)"
+      fail_action: "Completar itens faltantes em 24h antes de iniciar entrega"
+
+    deliverables:
+      - "deliverables/onboarding/{cliente}-onboarding.md (template onboarding-cliente-tmpl.md)"
+      - "Contrato assinado"
+      - "Setup tecnico documentado"
+
+    synapses:
+      - para: "squad-agency (entrega)"
+        decisao: "Cliente onboarded"
+        acao: "Iniciar construcao do quick win (7 dias)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 5: ENTREGA (7-30 dias)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 5
+    name: "Entrega da Solucao"
+    id: "entrega"
+    agent: "construtor-agentes"
+    support_agent: "gestor-operacional"
+    depends_on: "onboarding"
+    description: "Construir e entregar a solucao IA em 7-30 dias"
+
+    steps:
+      - step: 1
+        name: "Quick Win (Semana 1)"
+        description: "Entregar resultado tangivel em 7 dias"
+        duration: "7 dias"
+        action: |
+          - Construir solucao rapida definida no diagnostico
+          - Catalogo: WhatsApp FAQ Bot (7 dias) / Automacao simples / Dashboard MVP
+          - Testar com dados reais do cliente
+          - Entregar e validar com cliente
+          - Coletar feedback: "Isso ja ta gerando resultado?"
+        output: "Quick win funcional em producao, feedback do cliente"
+
+      - step: 2
+        name: "Construcao Completa (Semanas 2-3)"
+        description: "Desenvolver solucao completa do escopo"
+        duration: "14 dias"
+        action: |
+          - Implementar features restantes do escopo
+          - Integrar com sistemas do cliente
+          - Configurar automacoes e triggers
+          - Testar end-to-end com dados reais
+          - Checkpoint semanal com cliente
+        output: "Solucao completa em staging, testada"
+
+      - step: 3
+        name: "Deploy e Treinamento (Semana 4)"
+        description: "Colocar em producao e treinar o cliente"
+        duration: "7 dias"
+        action: |
+          - Deploy em producao
+          - Configurar fallbacks e error handling
+          - Treinar cliente (ao vivo ou video)
+          - Entregar documentacao e FAQ
+          - Configurar metricas e dashboard de monitoramento
+          - Definir baseline (numeros antes da solucao)
+        output: "Solucao em producao, cliente treinado, metricas configuradas"
+
+      - step: 4
+        name: "Handoff e Autonomia"
+        description: "Garantir que o cliente e independente"
+        action: |
+          - Transferir todos os acessos e credenciais
+          - Remover dependencias do builder
+          - Entregar documentacao tecnica
+          - Definir plano de contingencia
+          - Confirmar: cliente consegue operar sozinho?
+        output: "Zero dependencia do builder. Solucao autonoma."
+
+    quality_gate:
+      name: "QG-IAOS-004"
+      checklist: "checklists/entrega-validacao-checklist.md"
+      threshold: "22/27 (APROVADO)"
+      fail_action: "Ficar na fase de entrega ate resolver gaps"
+
+    deliverables:
+      - "Solucao funcional em producao"
+      - "Documentacao tecnica"
+      - "Material de treinamento"
+      - "Dashboard de metricas"
+
+    synapses:
+      - para: "squad-agency (acompanhamento)"
+        decisao: "Entrega completa e validada"
+        acao: "Iniciar ciclo de acompanhamento mensal"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 6: ACOMPANHAMENTO (Mensal)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 6
+    name: "Acompanhamento Mensal"
+    id: "acompanhamento"
+    agent: "gestor-operacional"
+    support_agent: "ia-agency-chief"
+    depends_on: "entrega"
+    description: "Report mensal, otimizacao e identificacao de upsell"
+    frequency: "Mensal (continuo enquanto cliente ativo)"
+
+    steps:
+      - step: 1
+        name: "Coleta de Metricas"
+        description: "Levantar dados de performance da solucao"
+        action: |
+          Coletar:
+          - Metricas definidas na proposta (ROI real vs prometido)
+          - Uptime e performance da solucao
+          - Volume de uso (mensagens, automacoes, acessos)
+          - Feedback qualitativo do cliente
+        output: "Dados de performance do mes"
+
+      - step: 2
+        name: "Report Mensal"
+        description: "Apresentar resultados ao cliente"
+        action: |
+          Report inclui:
+          - Resumo de performance (numeros)
+          - ROI realizado vs prometido
+          - Otimizacoes realizadas
+          - Recomendacoes para proximo mes
+          - NPS (se aplicavel)
+        output: "Report entregue ao cliente"
+
+      - step: 3
+        name: "Otimizacao"
+        description: "Melhorar a solucao baseado nos dados"
+        action: |
+          - Identificar pontos de melhoria
+          - Ajustar automacoes e fluxos
+          - Corrigir problemas reportados
+          - Implementar quick fixes
+        output: "Solucao otimizada"
+
+      - step: 4
+        name: "Identificacao de Upsell"
+        description: "Encontrar novas oportunidades"
+        action: |
+          - Analisar se ha novos processos automatizaveis
+          - Verificar se o cliente cresceu e precisa escalar
+          - Propor expansao do escopo (se fizer sentido)
+          - Registrar oportunidade de upsell no pipeline
+        output: "Oportunidade de upsell mapeada (ou nao)"
+
+    metrics:
+      - "NPS >= 8"
+      - "Churn rate < 10%"
+      - "Upsell rate (% de clientes que expandem)"
+      - "ROI real vs prometido"
+
+    deliverables:
+      - "Report mensal do cliente"
+      - "Log de otimizacoes"
+
+    notes: |
+      Fase 6 e CICLICA — repete todo mes enquanto o cliente estiver ativo.
+      Se NPS < 6, acionar ia-agency-chief para intervencao.
+      Se churn iminente, acionar estrategista-negocios para renegociacao.
+
+# ── OUTPUTS FINAIS ──────────────────────────────────────────
+
+outputs:
+  deliverables_por_fase:
+    captacao:
+      - "Calendario de conteudo semanal"
+      - "Lista de leads qualificados"
+    diagnostico:
+      - "deliverables/diagnosticos/{cliente}-diagnostico.md"
+    proposta:
+      - "deliverables/propostas/{cliente}-proposta.md"
+      - "PDF de proposta formatado"
+    onboarding:
+      - "deliverables/onboarding/{cliente}-onboarding.md"
+      - "Contrato assinado"
+    entrega:
+      - "Solucao em producao"
+      - "Documentacao tecnica"
+      - "Material de treinamento"
+    acompanhamento:
+      - "Report mensal"
+
+  project_state_updates:
+    negocio:
+      - "servicos, ferramentas, automacoes (apos entrega)"
+    progresso:
+      - "operacao: pendente → em_andamento → concluido (quando 5+ clientes)"
+
+# ── CATALOGO DE SOLUCOES ───────────────────────────────────
+
+solution_catalog:
+  - id: "whatsapp-faq-bot"
+    name: "WhatsApp FAQ Bot"
+    prazo: "7 dias"
+    setup_fee: "R$ 2.500"
+    recorrente: "R$ 500/mes"
+    stack: "Evolution API + n8n + OpenAI"
+    complexity: "Baixa"
+
+  - id: "whatsapp-sales-bot"
+    name: "WhatsApp Sales Bot"
+    prazo: "14 dias"
+    setup_fee: "R$ 4.000"
+    recorrente: "R$ 800/mes"
+    stack: "Evolution API + n8n + OpenAI + CRM"
+    complexity: "Media"
+
+  - id: "process-automation"
+    name: "Automacao de Processos"
+    prazo: "14-30 dias"
+    setup_fee: "R$ 3.000 - R$ 6.000"
+    recorrente: "R$ 500 - R$ 1.500/mes"
+    stack: "n8n + APIs do cliente + Supabase"
+    complexity: "Media-Alta"
+
+  - id: "custom-dashboard"
+    name: "Dashboard/App Customizado"
+    prazo: "30 dias"
+    setup_fee: "R$ 6.000 - R$ 10.000"
+    recorrente: "R$ 1.000 - R$ 2.000/mes"
+    stack: "React/Next.js + Supabase + n8n"
+    complexity: "Alta"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  review_points:
+    - after: "phase_2"
+      action: "Validar diagnostico antes de gerar proposta (QG-IAOS-001)"
+    - after: "phase_3"
+      action: "Felipe DEVE aprovar proposta antes do envio (QG-IAOS-002)"
+    - after: "phase_4"
+      action: "Validar onboarding completo antes de iniciar construcao (QG-IAOS-003)"
+    - after: "phase_5"
+      action: "Validar entrega completa antes de mover para acompanhamento (QG-IAOS-004)"
+
+  escalation_rules:
+    - trigger: "Quick win atrasado > 10 dias"
+      action: "ia-agency-chief intervem e realoca recursos"
+    - trigger: "Cliente sem contato > 48h"
+      action: "Alerta automatico para gestor-operacional"
+    - trigger: "NPS < 6"
+      action: "ia-agency-chief + estrategista-negocios intervention"
+    - trigger: "Churn iminente"
+      action: "Reuniao de retencao com estrategista-negocios"
+
+  financial_rules:
+    - "30% de TODA receita vai pra reserva (nao negociavel)"
+    - "Preco minimo: R$ 2.000 setup + R$ 500/mes recorrente"
+    - "Margem minima: 60%"
+    - "Nao comecar entrega antes de pagamento confirmado"
+
+  anti_patterns:
+    - "NUNCA deixar Felipe fazer trabalho operacional"
+    - "NUNCA propor processo burocratico longo"
+    - "NUNCA apresentar opcoes sem recomendacao clara"
+    - "NUNCA deixar cliente > 48h sem status"
+    - "NUNCA escalar antes de ter 5+ clientes validados"
+    - "NUNCA prometer prazo que nao pode cumprir"
+    - "NUNCA entregar sem treinar o cliente"
+    - "NUNCA criar dependencia do builder na solucao"
+
+notes: |
+  Este pipeline e o motor da agencia IA. Cada fase alimenta a proxima.
+  O conteudo (Fase 1) nunca para — e o combustivel do pipeline.
+  O diagnostico (Fase 2) e o filtro de qualidade — sem diagnostico bom, nao tem proposta boa.
+  A proposta (Fase 3) precisa de review humano — Felipe decide o preco final.
+  O onboarding (Fase 4) define o tom dos proximos 30 dias.
+  A entrega (Fase 5) precisa do quick win de 7 dias — e o que gera confianca.
+  O acompanhamento (Fase 6) e o que gera retencao e upsell.
+
+  Meta: 10 clientes em 90 dias = R$20k/mes recorrente.
+  Cada cliente no pipeline e tratado como unico — nao e fabrica.

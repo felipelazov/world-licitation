@@ -1,0 +1,97 @@
+# Product Discovery Pipeline
+# Fluxo de discovery: discovery → opportunity-mapping → prioritization → roadmap
+
+workflow:
+  id: "product-discovery-pipeline"
+  name: "Product Discovery Pipeline"
+  description: "Pipeline de descoberta de produto. Da pesquisa inicial ate o roadmap, garantindo que so se construa o que realmente importa para o usuario."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "product"
+  chief: "marty-cagan"
+  created_date: "2026-02-25"
+  tags: [product-discovery, opportunity-mapping, prioritization, roadmap]
+
+inputs:
+  product_name: { type: "string", required: true, description: "Nome do produto ou feature" }
+  discovery_scope: { type: "enum", options: ["new-product", "new-feature", "improvement", "pivot"], default: "new-feature" }
+  target_audience: { type: "string", required: true, description: "Publico-alvo principal" }
+
+steps:
+  - id: "step_1_discovery"
+    name: "Product Discovery"
+    phase: "Descoberta"
+    task: "discovery"
+    agent: "melissa-perri"
+    description: "Melissa Perri lidera o discovery. Identificar problemas reais dos usuarios, validar suposicoes e mapear o espaco de oportunidades antes de pensar em solucoes."
+    inputs: { product_name: "{{product_name}}", discovery_scope: "{{discovery_scope}}", target_audience: "{{target_audience}}" }
+    outputs:
+      discovery_report: "outputs/product/{{product_name}}/discovery/discovery-report.md"
+      user_insights: "outputs/product/{{product_name}}/discovery/user-insights.yaml"
+    success_criteria:
+      - "Problemas dos usuarios identificados e validados"
+      - "Suposicoes documentadas com nivel de confianca"
+      - "Espaco de problema claramente definido"
+
+  - id: "step_2_opportunity_mapping"
+    name: "Opportunity Mapping"
+    phase: "Mapeamento"
+    task: "opportunity-mapping"
+    agent: "melissa-perri"
+    description: "Mapear oportunidades a partir dos insights. Construir Opportunity Solution Tree conectando problemas a possiveis solucoes. Avaliar viabilidade e risco."
+    inputs: { product_name: "{{product_name}}", discovery_report: "{{step_1_discovery.discovery_report}}" }
+    outputs:
+      opportunity_map: "outputs/product/{{product_name}}/discovery/opportunity-map.md"
+      solution_candidates: "outputs/product/{{product_name}}/discovery/solution-candidates.yaml"
+    success_criteria:
+      - "Opportunity Solution Tree construida"
+      - "Solucoes candidatas mapeadas por oportunidade"
+      - "Viabilidade e risco avaliados para cada caminho"
+
+  - id: "step_3_prioritization"
+    name: "Prioritization"
+    phase: "Priorizacao"
+    task: "prioritization"
+    agent: "marty-cagan"
+    description: "Marty Cagan valida e prioriza oportunidades usando criterios de valor, viabilidade tecnica, viabilidade de negocio e usabilidade (4 riscos de produto)."
+    inputs: { product_name: "{{product_name}}", opportunity_map: "{{step_2_opportunity_mapping.opportunity_map}}", solution_candidates: "{{step_2_opportunity_mapping.solution_candidates}}" }
+    outputs:
+      priority_matrix: "outputs/product/{{product_name}}/discovery/priority-matrix.md"
+      prioritized_backlog: "outputs/product/{{product_name}}/discovery/prioritized-backlog.yaml"
+    success_criteria:
+      - "Oportunidades ranqueadas por impacto vs esforco"
+      - "Top oportunidades validadas nos 4 riscos"
+      - "Backlog priorizado com justificativa clara"
+
+  - id: "step_4_roadmap"
+    name: "Roadmap Definition"
+    phase: "Roadmap"
+    task: "roadmap"
+    agent: "marty-cagan"
+    description: "Marty Cagan define roadmap baseado em outcomes, nao outputs. Organizar oportunidades em horizontes now/next/later com metas e metricas claras."
+    inputs: { product_name: "{{product_name}}", prioritized_backlog: "{{step_3_prioritization.prioritized_backlog}}" }
+    outputs:
+      product_roadmap: "outputs/product/{{product_name}}/discovery/product-roadmap.md"
+      success_metrics: "outputs/product/{{product_name}}/discovery/success-metrics.yaml"
+    success_criteria:
+      - "Roadmap orientado a outcomes definido"
+      - "Horizontes now/next/later mapeados"
+      - "Metricas de sucesso definidas para cada item"
+
+outputs:
+  discovery_complete: { type: "boolean", source: "step_4_roadmap.success" }
+  product_roadmap: { type: "string", source: "step_4_roadmap.product_roadmap" }
+
+governance:
+  review_points:
+    - { step: "step_1_discovery", gate: "Problemas reais dos usuarios validados" }
+    - { step: "step_3_prioritization", gate: "Priorizacao aprovada por Marty Cagan" }
+    - { step: "step_4_roadmap", gate: "Roadmap alinhado com visao do produto" }
+
+notes:
+  - "Melissa Perri lidera discovery e mapeamento (metodologia Escaping the Build Trap)"
+  - "Marty Cagan valida e prioriza usando os 4 riscos de produto (Inspired/Empowered)"
+  - "Roadmap baseado em outcomes, NAO em features ou datas fixas"
+  - "CRITICO: Nunca pular discovery para ir direto para solucao"

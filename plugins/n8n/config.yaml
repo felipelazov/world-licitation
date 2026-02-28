@@ -1,0 +1,29 @@
+# n8n Plugin — Configuracao Base
+# Preencher com dados do projeto ao configurar automacoes
+
+# Conexao n8n
+n8n:
+  instance_url: ""          # URL da instancia n8n (ex: https://n8n.meudominio.com)
+  api_key: ""               # API key para acesso programatico (NUNCA commitar preenchido)
+
+# Credentials Template
+# Listar aqui as credentials necessarias por tipo de automacao.
+# O gestor-operacional usa isso para saber o que configurar.
+credentials:
+  webhook_base_url: ""      # URL base para webhooks recebidos
+  smtp:
+    host: ""
+    port: ""
+    user: ""
+  database:
+    host: ""
+    port: ""
+    name: ""
+
+# Variaveis de Ambiente
+# Variaveis que os templates esperam encontrar no n8n.
+env_vars:
+  PROJECT_NAME: ""
+  CLIENT_NAME: ""
+  NOTIFICATION_EMAIL: ""
+  WEBHOOK_SECRET: ""

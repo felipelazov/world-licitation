@@ -1,0 +1,98 @@
+# Engagement Loop
+# Fluxo de engajamento: hook-analysis → habit-design → engagement-metrics → churn-diagnosis
+
+workflow:
+  id: "engagement-loop"
+  name: "Engagement Loop Workflow"
+  description: "Analise e design de engajamento do produto. Do modelo de hooks ate diagnostico de churn, criando habitos saudaveis e retencao sustentavel."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "product"
+  chief: "marty-cagan"
+  created_date: "2026-02-25"
+  tags: [engagement, hook-model, habit-design, churn-diagnosis, retention]
+
+inputs:
+  product_name: { type: "string", required: true, description: "Nome do produto" }
+  user_segment: { type: "string", required: true, description: "Segmento de usuarios a analisar" }
+  current_retention_rate: { type: "string", required: false, description: "Taxa de retencao atual" }
+
+steps:
+  - id: "step_1_hook_analysis"
+    name: "Hook Model Analysis"
+    phase: "Analise de Hooks"
+    task: "hook-analysis"
+    agent: "nir-eyal"
+    description: "Nir Eyal analisa o produto usando o Hook Model (Trigger → Action → Variable Reward → Investment). Mapear hooks existentes e identificar gaps no ciclo."
+    inputs: { product_name: "{{product_name}}", user_segment: "{{user_segment}}", current_retention_rate: "{{current_retention_rate}}" }
+    outputs:
+      hook_analysis: "outputs/product/{{product_name}}/engagement/hook-analysis.md"
+      hook_scorecard: "outputs/product/{{product_name}}/engagement/hook-scorecard.yaml"
+    success_criteria:
+      - "4 fases do Hook Model mapeadas e avaliadas"
+      - "Gaps no ciclo de hooks identificados"
+      - "Score de forca do hook calculado"
+
+  - id: "step_2_habit_design"
+    name: "Habit Design"
+    phase: "Design de Habitos"
+    task: "habit-design"
+    agent: "nir-eyal"
+    description: "Desenhar sistema de habitos baseado na analise. Definir triggers, simplificar acoes, variar recompensas e criar investimentos que aumentam valor ao longo do tempo."
+    inputs: { product_name: "{{product_name}}", hook_analysis: "{{step_1_hook_analysis.hook_analysis}}", hook_scorecard: "{{step_1_hook_analysis.hook_scorecard}}" }
+    outputs:
+      habit_blueprint: "outputs/product/{{product_name}}/engagement/habit-blueprint.md"
+      habit_experiments: "outputs/product/{{product_name}}/engagement/habit-experiments.yaml"
+    success_criteria:
+      - "Blueprint de habitos com ciclos completos"
+      - "Experimentos priorizados"
+      - "Validacao etica via Manipulation Matrix"
+
+  - id: "step_3_engagement_metrics"
+    name: "Engagement Metrics"
+    phase: "Metricas"
+    task: "engagement-metrics"
+    agent: "marty-cagan"
+    description: "Marty Cagan define metricas de engajamento que importam. Separar vaidade de valor real. Indicadores leading e lagging para validar formacao de habitos."
+    inputs: { product_name: "{{product_name}}", habit_blueprint: "{{step_2_habit_design.habit_blueprint}}", user_segment: "{{user_segment}}" }
+    outputs:
+      metrics_framework: "outputs/product/{{product_name}}/engagement/metrics-framework.md"
+      tracking_plan: "outputs/product/{{product_name}}/engagement/tracking-plan.yaml"
+    success_criteria:
+      - "North Star Metric de engajamento definida"
+      - "Metricas leading e lagging mapeadas"
+      - "Plano de tracking com eventos e triggers"
+
+  - id: "step_4_churn_diagnosis"
+    name: "Churn Diagnosis"
+    phase: "Diagnostico de Churn"
+    task: "churn-diagnosis"
+    agent: "nir-eyal"
+    description: "Diagnosticar pontos de abandono pela lente do Hook Model. Onde o ciclo quebra, quais triggers falham e quais investimentos nao geram retorno."
+    inputs: { product_name: "{{product_name}}", hook_scorecard: "{{step_1_hook_analysis.hook_scorecard}}", metrics_framework: "{{step_3_engagement_metrics.metrics_framework}}" }
+    outputs:
+      churn_diagnosis: "outputs/product/{{product_name}}/engagement/churn-diagnosis.md"
+      retention_playbook: "outputs/product/{{product_name}}/engagement/retention-playbook.yaml"
+    success_criteria:
+      - "Pontos de abandono mapeados no ciclo de habito"
+      - "Causas raiz do churn identificadas"
+      - "Playbook de retencao com acoes priorizadas"
+
+outputs:
+  engagement_complete: { type: "boolean", source: "step_4_churn_diagnosis.success" }
+  retention_playbook: { type: "string", source: "step_4_churn_diagnosis.retention_playbook" }
+
+governance:
+  review_points:
+    - { step: "step_1_hook_analysis", gate: "Hook Model mapeado e gaps identificados" }
+    - { step: "step_2_habit_design", gate: "Design de habitos validado eticamente (Manipulation Matrix)" }
+    - { step: "step_4_churn_diagnosis", gate: "Diagnostico de churn com acoes concretas" }
+
+notes:
+  - "Nir Eyal lidera hooks, habitos e diagnostico de churn (metodologia Hooked)"
+  - "Marty Cagan define metricas com foco em valor real, nao vaidade"
+  - "CRITICO: Todo design de habito deve passar pela Manipulation Matrix (etica)"
+  - "Executar a cada trimestre ou apos mudancas significativas no produto"
+  - "Integra com squad-customer-success para dados reais de churn e retencao"

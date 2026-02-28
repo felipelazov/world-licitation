@@ -1,0 +1,497 @@
+# Genius Zone Pipeline
+# Pipeline completo: assessment → analise multi-framework → perfil integrado → blueprint estrategico
+
+workflow:
+  id: "genius-zone-pipeline"
+  name: "Pipeline Completo de Zona de Genialidade"
+  description: |
+    Workflow orquestrado pelo zona-genialidade-chief que conduz o fundador
+    desde o assessment comportamental unificado ate a entrega do Blueprint
+    estrategico com recomendacao de squad e plano de monetizacao.
+    4 fases sequenciais com quality gates entre cada transicao.
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "zona-genialidade-chief"
+  created_date: "2026-02-25"
+  last_modified: "2026-02-25"
+  squad: "squad-zona-genialidade"
+  fase_world_os: "descoberta"
+  tags:
+    - zona-genialidade
+    - assessment
+    - genius-profile
+    - blueprint
+    - monetizacao
+    - multi-framework
+
+inputs:
+  fundador_nome:
+    type: "string"
+    description: "Nome do fundador que sera avaliado"
+    required: true
+
+  fundador_contexto:
+    type: "string"
+    description: "Contexto profissional do fundador (area, experiencia, estagio)"
+    required: true
+
+  modo_execucao:
+    type: "enum"
+    description: "Modo de execucao do pipeline"
+    options:
+      - "completo"          # Todas as 4 fases
+      - "apenas-assessment" # So fase 1
+      - "retomar-analise"   # Pula assessment, entra na fase 2 com dados existentes
+    required: false
+    default: "completo"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # FASE 1: ASSESSMENT COMPORTAMENTAL UNIFICADO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_intake"
+    name: "Intake e Alinhamento de Expectativas"
+    phase: "Assessment"
+    type: "task"
+    task: "start"
+    agent: "zona-genialidade-chief"
+    description: |
+      Recepcionar o fundador, alinhar expectativas sobre o processo,
+      coletar contexto inicial (area, experiencia, motivacao) e preparar
+      o ambiente para o assessment unificado.
+    inputs:
+      fundador_nome: "{{fundador_nome}}"
+      fundador_contexto: "{{fundador_contexto}}"
+    outputs:
+      intake_data: "data/intake/{{fundador_nome}}/intake.yaml"
+    success_criteria:
+      - "Fundador entende o que o processo entrega e o que nao entrega"
+      - "Contexto profissional coletado"
+      - "Motivacao explicitada"
+    error_handling:
+      strategy: "fail"
+      message: "Sem intake nao ha como prosseguir"
+
+  - id: "step_2_assessment"
+    name: "Assessment Comportamental Unificado (30 min)"
+    phase: "Assessment"
+    type: "task"
+    task: "run-assessment"
+    agent: "zona-genialidade-chief"
+    description: |
+      Conduzir sessao de assessment unificado de ate 30 minutos.
+      Perguntas projetadas para alimentar simultaneamente os 7 frameworks:
+      Hendricks (zona), Clifton (talentos), Sullivan (unique ability),
+      Hamilton (riqueza), Hormozi (mercado), Kolbe (conativo), Hogshead (fascinacao).
+      Gerar relatorio de sessao usando assessment-report-tmpl.md.
+    inputs:
+      intake_data: "{{step_1_intake.intake_data}}"
+    outputs:
+      assessment_report: "data/assessments/{{fundador_nome}}/assessment-report.md"
+      raw_data: "data/assessments/{{fundador_nome}}/raw-responses.yaml"
+    success_criteria:
+      - "Todos os 7 frameworks receberam dados"
+      - "Sessao completou dentro de 30 minutos"
+      - "Relatorio de sessao gerado"
+    error_handling:
+      strategy: "warn"
+      on_fail: "Agendar sessao complementar para frameworks incompletos"
+
+  - id: "step_3_qg_assessment"
+    name: "Quality Gate: Assessment Completo"
+    phase: "Assessment"
+    type: "checklist"
+    checklist: "assessment-quality-checklist"
+    agent: "zona-genialidade-chief"
+    description: |
+      Aplicar checklist de qualidade do assessment para garantir dados
+      suficientes antes de distribuir para os 7 agentes especialistas.
+    inputs:
+      assessment_report: "{{step_2_assessment.assessment_report}}"
+      raw_data: "{{step_2_assessment.raw_data}}"
+    outputs:
+      qg_result: "data/assessments/{{fundador_nome}}/qg-assessment.md"
+    success_criteria:
+      - "Score >= 75% (22/29 itens)"
+    error_handling:
+      strategy: "fail"
+      on_fail: "Retornar ao step_2 para sessao complementar"
+
+  # ---------------------------------------------------------------------------
+  # FASE 2: ANALISE MULTI-FRAMEWORK (7 agentes em paralelo)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_tier0_hendricks"
+    name: "Analise Tier 0 — Gay Hendricks (Zona de Genialidade)"
+    phase: "Analise"
+    type: "task"
+    task: "analyze-genius-profile"
+    agent: "gay-hendricks"
+    tier: 0
+    description: |
+      Primeiro agente a processar. Diagnostica zona predominante,
+      identifica Upper Limit Problem ativo e delineia caminho Big Leap.
+      Resultado alimenta contexto para agentes Tier 1.
+    inputs:
+      raw_data: "{{step_2_assessment.raw_data}}"
+      intake_data: "{{step_1_intake.intake_data}}"
+    outputs:
+      hendricks_analysis: "data/analysis/{{fundador_nome}}/hendricks-zone.md"
+    success_criteria:
+      - "Zona predominante identificada com confianca"
+      - "ULP tipificado"
+      - "Big Leap delineado"
+    error_handling:
+      strategy: "warn"
+      message: "Documentar incerteza e prosseguir"
+
+  - id: "step_5_tier1_parallel"
+    name: "Analise Tier 1 — Clifton, Sullivan, Hamilton, Hormozi (paralelo)"
+    phase: "Analise"
+    type: "parallel"
+    description: |
+      4 agentes Tier 1 processam em paralelo, cada um com seu framework.
+      Recebem dados brutos + output do Tier 0 como contexto.
+    parallel_tasks:
+
+      - id: "step_5a_clifton"
+        name: "Don Clifton — CliftonStrengths"
+        task: "analyze-genius-profile"
+        agent: "don-clifton"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+        outputs:
+          clifton_analysis: "data/analysis/{{fundador_nome}}/clifton-strengths.md"
+
+      - id: "step_5b_sullivan"
+        name: "Dan Sullivan — Unique Ability"
+        task: "analyze-genius-profile"
+        agent: "dan-sullivan"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+        outputs:
+          sullivan_analysis: "data/analysis/{{fundador_nome}}/sullivan-unique-ability.md"
+
+      - id: "step_5c_hamilton"
+        name: "Roger Hamilton — Wealth Dynamics"
+        task: "analyze-genius-profile"
+        agent: "roger-hamilton"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+        outputs:
+          hamilton_analysis: "data/analysis/{{fundador_nome}}/hamilton-wealth-dynamics.md"
+
+      - id: "step_5d_hormozi"
+        name: "Alex Hormozi — Value Equation e Monetizacao"
+        task: "analyze-genius-profile"
+        agent: "alex-hormozi"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+        outputs:
+          hormozi_analysis: "data/analysis/{{fundador_nome}}/hormozi-monetization.md"
+
+    success_criteria:
+      - "Todos os 4 agentes Tier 1 completaram analise"
+    error_handling:
+      strategy: "warn"
+      on_fail: "Prosseguir com agentes que completaram, documentar lacunas"
+
+  - id: "step_6_tier2_parallel"
+    name: "Analise Tier 2 — Kolbe, Hogshead (paralelo)"
+    phase: "Analise"
+    type: "parallel"
+    description: |
+      2 agentes Tier 2 processam em paralelo. Recebem dados brutos
+      + outputs de Tier 0 e Tier 1 como contexto enriquecido.
+    parallel_tasks:
+
+      - id: "step_6a_kolbe"
+        name: "Kathy Kolbe — Kolbe A Index"
+        task: "analyze-genius-profile"
+        agent: "kathy-kolbe"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+          clifton_analysis: "{{step_5a_clifton.clifton_analysis}}"
+        outputs:
+          kolbe_analysis: "data/analysis/{{fundador_nome}}/kolbe-conative.md"
+
+      - id: "step_6b_hogshead"
+        name: "Sally Hogshead — Fascination Advantage"
+        task: "analyze-genius-profile"
+        agent: "sally-hogshead"
+        inputs:
+          raw_data: "{{step_2_assessment.raw_data}}"
+          hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+          sullivan_analysis: "{{step_5b_sullivan.sullivan_analysis}}"
+        outputs:
+          hogshead_analysis: "data/analysis/{{fundador_nome}}/hogshead-fascination.md"
+
+    success_criteria:
+      - "Ambos agentes Tier 2 completaram analise"
+    error_handling:
+      strategy: "warn"
+      on_fail: "Prosseguir documentando lacunas"
+
+  # ---------------------------------------------------------------------------
+  # FASE 3: SINTESE E PERFIL INTEGRADO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_7_synthesis"
+    name: "Sintese — Genius Profile Integrado"
+    phase: "Sintese"
+    type: "task"
+    task: "analyze-genius-profile"
+    agent: "zona-genialidade-chief"
+    description: |
+      O chief recebe outputs dos 7 agentes e sintetiza em:
+      1. Genius Profile integrado (genius-profile-tmpl.md)
+      2. Talent Map com cruzamentos (talent-map-tmpl.md)
+      Identifica intersecoes, tensoes e pontos cegos.
+    inputs:
+      hendricks_analysis: "{{step_4_tier0_hendricks.hendricks_analysis}}"
+      clifton_analysis: "{{step_5a_clifton.clifton_analysis}}"
+      sullivan_analysis: "{{step_5b_sullivan.sullivan_analysis}}"
+      hamilton_analysis: "{{step_5c_hamilton.hamilton_analysis}}"
+      hormozi_analysis: "{{step_5d_hormozi.hormozi_analysis}}"
+      kolbe_analysis: "{{step_6a_kolbe.kolbe_analysis}}"
+      hogshead_analysis: "{{step_6b_hogshead.hogshead_analysis}}"
+    outputs:
+      genius_profile: "deliverables/descoberta/genius-profile.md"
+      talent_map: "deliverables/descoberta/talent-map.md"
+    success_criteria:
+      - "Todas as 6 dimensoes presentes no perfil"
+      - "Pelo menos 3 cruzamentos entre frameworks documentados"
+      - "Narrativa integradora coerente"
+    error_handling:
+      strategy: "fail"
+      message: "Perfil integrado e prerequisito para Blueprint"
+
+  - id: "step_8_qg_profile"
+    name: "Quality Gate: Perfil Completo"
+    phase: "Sintese"
+    type: "checklist"
+    checklist: "profile-completeness-checklist"
+    agent: "zona-genialidade-chief"
+    description: |
+      Aplicar checklist de completude do perfil para validar que
+      todas as dimensoes estao mapeadas antes de gerar o Blueprint.
+    inputs:
+      genius_profile: "{{step_7_synthesis.genius_profile}}"
+      talent_map: "{{step_7_synthesis.talent_map}}"
+    outputs:
+      qg_result: "data/quality-gates/{{fundador_nome}}/qg-profile.md"
+    success_criteria:
+      - "Score >= 75% (31/41 itens)"
+    error_handling:
+      strategy: "fail"
+      on_fail: "Retornar aos agentes com dimensoes incompletas"
+
+  # ---------------------------------------------------------------------------
+  # FASE 4: BLUEPRINT ESTRATEGICO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_9_blueprint"
+    name: "Geracao do Blueprint Estrategico"
+    phase: "Blueprint"
+    type: "task"
+    task: "generate-blueprint"
+    agent: "zona-genialidade-chief"
+    description: |
+      Gerar Blueprint estrategico usando blueprint-tmpl.md.
+      Conecta talentos → oportunidade de mercado → modelo de negocio →
+      plano de monetizacao → recomendacao de squad → plano de acao 90 dias.
+    inputs:
+      genius_profile: "{{step_7_synthesis.genius_profile}}"
+      talent_map: "{{step_7_synthesis.talent_map}}"
+      hormozi_analysis: "{{step_5d_hormozi.hormozi_analysis}}"
+      hamilton_analysis: "{{step_5c_hamilton.hamilton_analysis}}"
+    outputs:
+      blueprint: "deliverables/descoberta/blueprint.md"
+    success_criteria:
+      - "Modelo de negocio recomendado com justificativa no perfil"
+      - "Caminho de monetizacao com escada de valor"
+      - "Squad recomendado com razoes claras"
+      - "3 prioridades de 90 dias com passos concretos"
+    error_handling:
+      strategy: "fail"
+      message: "Blueprint e o deliverable final da fase descoberta"
+
+  - id: "step_10_recommend_squad"
+    name: "Recomendacao Formal de Squad"
+    phase: "Blueprint"
+    type: "task"
+    task: "recommend-squad"
+    agent: "zona-genialidade-chief"
+    description: |
+      Formalizar recomendacao de squad ideal e registrar decisoes
+      no project-state.yaml conforme Protocolo de Sinapse.
+    inputs:
+      blueprint: "{{step_9_blueprint.blueprint}}"
+      genius_profile: "{{step_7_synthesis.genius_profile}}"
+    outputs:
+      squad_recommendation: "data/recommendations/{{fundador_nome}}/squad-recommendation.yaml"
+    success_criteria:
+      - "Squad recomendado com justificativa multi-framework"
+      - "Decisoes registradas no project-state.yaml"
+      - "Sinapses criadas para squads impactados"
+    error_handling:
+      strategy: "warn"
+      message: "Recomendacao pode ser formalizada posteriormente"
+
+  - id: "step_11_qg_blueprint"
+    name: "Quality Gate Final: Blueprint Validado"
+    phase: "Blueprint"
+    type: "checklist"
+    checklist: "blueprint-validation-checklist"
+    agent: "zona-genialidade-chief"
+    description: |
+      Quality gate final antes de entregar o Blueprint ao fundador.
+      Valida acionabilidade, ancoragem no perfil e caminho de monetizacao.
+    inputs:
+      blueprint: "{{step_9_blueprint.blueprint}}"
+      genius_profile: "{{step_7_synthesis.genius_profile}}"
+    outputs:
+      qg_result: "data/quality-gates/{{fundador_nome}}/qg-blueprint.md"
+    success_criteria:
+      - "Score >= 75% (27/36 itens)"
+    error_handling:
+      strategy: "fail"
+      on_fail: "Retornar ao step_9 para ajustes no Blueprint"
+
+  - id: "step_12_entrega"
+    name: "Entrega ao Fundador"
+    phase: "Entrega"
+    type: "handoff"
+    agent: "zona-genialidade-chief"
+    description: |
+      Apresentar ao fundador os 3 deliverables da fase descoberta:
+      1. Genius Profile (perfil integrado de genialidade)
+      2. Talent Map (mapa de talentos com cruzamentos)
+      3. Blueprint (plano estrategico de monetizacao)
+      Alinhar proximos passos e transicao para fase proposito.
+    inputs:
+      genius_profile: "{{step_7_synthesis.genius_profile}}"
+      talent_map: "{{step_7_synthesis.talent_map}}"
+      blueprint: "{{step_9_blueprint.blueprint}}"
+    outputs:
+      handoff_summary: "data/handoff/{{fundador_nome}}/entrega-descoberta.md"
+    success_criteria:
+      - "Fundador recebeu e revisou os 3 deliverables"
+      - "Duvidas esclarecidas"
+      - "Proximo passo definido"
+    error_handling:
+      strategy: "warn"
+      message: "Entrega pode ser agendada separadamente"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  pipeline_complete:
+    type: "boolean"
+    description: "Pipeline completo executado com sucesso"
+    source: "step_11_qg_blueprint.success"
+
+  genius_profile:
+    type: "string"
+    description: "Caminho para o Genius Profile integrado"
+    source: "step_7_synthesis.genius_profile"
+
+  talent_map:
+    type: "string"
+    description: "Caminho para o Talent Map"
+    source: "step_7_synthesis.talent_map"
+
+  blueprint:
+    type: "string"
+    description: "Caminho para o Blueprint estrategico"
+    source: "step_9_blueprint.blueprint"
+
+  squad_recommendation:
+    type: "string"
+    description: "Squad recomendado para o fundador"
+    source: "step_10_recommend_squad.squad_recommendation"
+
+# =============================================================================
+# ERROR HANDLING & GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+governance:
+  review_points:
+    - step: "step_3_qg_assessment"
+      gate: "Prosseguir somente se assessment tem dados suficientes para os 7 frameworks"
+
+    - step: "step_8_qg_profile"
+      gate: "Prosseguir somente se todas as dimensoes estao mapeadas no perfil"
+
+    - step: "step_11_qg_blueprint"
+      gate: "Entregar somente se Blueprint e acionavel e ancorado no perfil"
+
+sinapse_protocol:
+  on_complete:
+    decisoes:
+      - campo: "genius_zone"
+        descricao: "Zona de Genialidade do fundador"
+      - campo: "dominant_talents"
+        descricao: "Top 5 talentos ordenados"
+      - campo: "wealth_profile"
+        descricao: "Perfil Wealth Dynamics"
+      - campo: "conative_strength"
+        descricao: "Modo conativo dominante Kolbe"
+      - campo: "fascination_archetype"
+        descricao: "Arquetipo de fascinacao Hogshead"
+    sinapses_destino:
+      - "squad-advisor"
+      - "squad-design"
+      - "squad-content-distillery"
+
+# =============================================================================
+# PRINCIPIOS GUIA
+# =============================================================================
+
+guiding_principles:
+  - name: "Nenhum framework isolado e suficiente"
+    application: "Sempre cruzar pelo menos 3 frameworks antes de qualquer conclusao"
+
+  - name: "Zona de Genialidade, nao Zona de Excelencia"
+    application: "Garantir que recomendacoes estao na zona de genialidade real, nao onde o fundador apenas performa bem"
+
+  - name: "Acionavel acima de brilhante"
+    application: "Blueprint que ninguem executa e poster de parede. Calibrar para o modo conativo do fundador."
+
+  - name: "Perfil e ponto de partida, nao destino"
+    application: "O perfil informa decisoes mas nao as determina. O fundador sempre tem a palavra final."
+
+# =============================================================================
+# NOTAS
+# =============================================================================
+
+notes:
+  - "Pipeline completo leva entre 1-2 sessoes (assessment + entrega)"
+  - "Assessment unificado e 30 min max — respeitar o tempo do fundador"
+  - "Tier 0 (Hendricks) sempre roda primeiro — fornece contexto para Tier 1 e 2"
+  - "Tier 1 e Tier 2 rodam em paralelo dentro de seus respectivos niveis"
+  - "Quality gates sao bloqueantes — nao pular etapas"
+  - "Deliverables finais salvos em deliverables/descoberta/"
+  - "Proxima fase: proposito (squad-advisor com Simon Sinek)"

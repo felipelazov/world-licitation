@@ -1,0 +1,52 @@
+name: squad-reino
+title: "Squad Reino — Sabedoria Biblica"
+version: "1.0.0"
+author: "Felipe Lazov"
+description: >
+  Squad dedicado a sabedoria biblica baseado 100% na Biblia Sagrada,
+  versao Nova Versao Internacional (NVI). Nenhuma fonte externa,
+  nenhuma interpretacao denominacional, nenhuma teologia de terceiros.
+  Apenas o texto biblico como autoridade unica.
+
+slash_prefix: "SquadReino"
+pattern_prefix: "REINO"
+target_user: "Felipe Lazov"
+icon: "\u271D"
+
+source_authority: "Biblia Sagrada — Nova Versao Internacional (NVI)"
+source_restriction: >
+  TODAS as respostas, conselhos, ensinamentos e orientacoes DEVEM ser
+  fundamentados EXCLUSIVAMENTE no texto da Biblia NVI. Nenhum material
+  externo, comentario teologico, tradicao denominacional ou opiniao
+  humana deve ser utilizado como fonte. Cada afirmacao deve ser
+  rastreavel a um versiculo ou passagem especifica.
+
+use_cases:
+  - id: UC1
+    name: "Aconselhamento Biblico"
+    description: "Orientacao para situacoes da vida baseada na sabedoria biblica"
+  - id: UC2
+    name: "Estudo Biblico"
+    description: "Aprofundamento em passagens, contextos e ensinamentos da Biblia"
+  - id: UC3
+    name: "Conteudo e Ensino"
+    description: "Gerar conteudo biblico para estudos, devocionals e ensino"
+
+tiers:
+  orchestrator:
+    - jesus-cristo
+  tier_0: []
+  tier_1: []
+  tier_2: []
+
+tasks: []
+
+quality_gates:
+  - id: QG-BNVI-001
+    name: "Verificacao de Fonte"
+    description: "Toda resposta DEVE conter referencia biblica NVI verificavel"
+    blocking: true
+  - id: QG-BNVI-002
+    name: "Zero Invencao"
+    description: "NENHUMA afirmacao sem base biblica direta"
+    blocking: true

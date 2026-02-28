@@ -1,0 +1,43 @@
+{
+  "name": "world",
+  "version": "1.0.0",
+  "description": "> Created with Synkra AIOS",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "duplicate-for-client": "node scripts/duplicate-for-client.js",
+    "sync-organogram": "node scripts/sync-organogram.js --pretty",
+    "sync-organogram:diff": "node scripts/sync-organogram.js --pretty --diff",
+    "sync-organogram:pull": "node scripts/figma-pull-organogram.js",
+    "sync-organogram:build": "node scripts/figma-build-organogram.js",
+    "sync-world": "node scripts/sync-world.js --sync",
+    "sync-world:validate": "node scripts/sync-world.js --validate",
+    "sync-world:diff": "node scripts/sync-world.js --diff",
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed",
+    "test:report": "npx playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipelazov/world.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/felipelazov/world/issues"
+  },
+  "homepage": "https://github.com/felipelazov/world#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.1",
+    "ws": "^8.19.0"
+  }
+}

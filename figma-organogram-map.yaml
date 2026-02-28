@@ -1,0 +1,153 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Figma Organogram Mapping — World OS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Conecta node IDs do Figma aos dados do project-state.yaml.
+# Preenchido automaticamente via /sync-organogram map
+#
+# REGRAS:
+# - figma_file_key: obtido da URL do Figma (figma.com/file/{KEY}/...)
+# - channel_id: obtido do plugin companion (WebSocket channel)
+# - frame_id: ID do frame/grupo de cada squad no Figma
+# - *_node: IDs de text nodes individuais dentro do frame
+#
+# Gerado em: 2026-02-25
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Conexao Figma
+figma_file_key: ""
+channel_id: "uealddj7"
+
+# Node raiz do organograma sincronizado
+root:
+  frame_id: "6:2077"
+  title_node: "sync-title"
+  progress_node: "sync-subtitle"
+
+# Mapeamento por squad — IDs reais do Figma
+mappings:
+  squad-advisor:
+    frame_id: "6:2080"
+    name_node: "6:2082"
+    domain_node: "6:2083"
+    chief_node: "6:2084"
+    agents_node: "6:2087"
+    status_node: "6:2085"
+    agent_count_node: "6:2086"
+
+  squad-agency:
+    frame_id: "6:2088"
+    name_node: "6:2090"
+    domain_node: "6:2091"
+    chief_node: "6:2092"
+    agents_node: "6:2095"
+    status_node: "6:2093"
+    agent_count_node: "6:2094"
+
+  squad-content-distillery:
+    frame_id: "6:2096"
+    name_node: "6:2098"
+    domain_node: "6:2099"
+    chief_node: "6:2100"
+    agents_node: "6:2103"
+    status_node: "6:2101"
+    agent_count_node: "6:2102"
+
+  squad-creator:
+    frame_id: "6:2104"
+    name_node: "6:2106"
+    domain_node: "6:2107"
+    chief_node: "6:2108"
+    agents_node: "6:2111"
+    status_node: "6:2109"
+    agent_count_node: "6:2110"
+
+  squad-design:
+    frame_id: "6:2112"
+    name_node: "6:2114"
+    domain_node: "6:2115"
+    chief_node: "6:2116"
+    agents_node: "6:2119"
+    status_node: "6:2117"
+    agent_count_node: "6:2118"
+
+  squad-franchise:
+    frame_id: "6:2120"
+    name_node: "6:2122"
+    domain_node: "6:2123"
+    chief_node: "6:2124"
+    agents_node: "6:2127"
+    status_node: "6:2125"
+    agent_count_node: "6:2126"
+
+  squad-reino:
+    frame_id: "6:2128"
+    name_node: "6:2130"
+    domain_node: "6:2131"
+    chief_node: "6:2132"
+    agents_node: "6:2135"
+    status_node: "6:2133"
+    agent_count_node: "6:2134"
+
+  squad-zona-genialidade:
+    frame_id: "6:2136"
+    name_node: "6:2138"
+    domain_node: "6:2139"
+    chief_node: "6:2140"
+    agents_node: "6:2143"
+    status_node: "6:2141"
+    agent_count_node: "6:2142"
+
+  squad-sales:
+    frame_id: "6:2144"
+    name_node: "6:2146"
+    domain_node: "6:2147"
+    chief_node: "6:2148"
+    agents_node: "6:2151"
+    status_node: "6:2149"
+    agent_count_node: "6:2150"
+
+  squad-marketing:
+    frame_id: "6:2152"
+    name_node: "6:2154"
+    domain_node: "6:2155"
+    chief_node: "6:2156"
+    agents_node: "6:2159"
+    status_node: "6:2157"
+    agent_count_node: "6:2158"
+
+  squad-adm:
+    frame_id: "29:2077"
+    name_node: "29:2079"
+    domain_node: "29:2080"
+    chief_node: "29:2081"
+    agents_node: "29:2084"
+    status_node: "29:2082"
+    agent_count_node: "29:2083"
+
+  squad-customer-success:
+    frame_id: "29:2085"
+    name_node: "29:2087"
+    domain_node: "29:2088"
+    chief_node: "29:2089"
+    agents_node: "29:2092"
+    status_node: "29:2090"
+    agent_count_node: "29:2091"
+
+  squad-ops:
+    frame_id: "6:2160"
+    name_node: "6:2162"
+    domain_node: "6:2163"
+    chief_node: "6:2164"
+    agents_node: "6:2167"
+    status_node: "6:2165"
+    agent_count_node: "6:2166"
+
+  squad-product:
+    frame_id: "29:2093"
+    name_node: "29:2095"
+    domain_node: "29:2096"
+    chief_node: "29:2097"
+    agents_node: "29:2100"
+    status_node: "29:2098"
+    agent_count_node: "29:2099"

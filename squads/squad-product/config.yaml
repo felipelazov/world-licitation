@@ -1,0 +1,193 @@
+pack:
+  name: squad-product
+  version: 1.0.0
+  short-title: Product Squad
+  description: >-
+    Squad de Produto completo com AI Head de Produto (Marty Cagan) liderando
+    3 especialistas de elite: Product Manager (Melissa Perri), Positioning &
+    Content Creator (April Dunford) e Retention Architect (Nir Eyal). Da visao
+    de produto ate retencao por design, com frameworks de classe mundial.
+  author: World OS
+  icon: "🎯"
+  slashPrefix: squad-product
+
+# Pattern Library
+pattern_library:
+  prefix: PD
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "PD-VS-001"
+  categories:
+    - id: VS
+      name: "Vision & Strategy Patterns"
+      description: "Patterns for product vision, strategy and team topology"
+    - id: DI
+      name: "Discovery & Roadmap Patterns"
+      description: "Patterns for product discovery, opportunity mapping and prioritization"
+    - id: PO
+      name: "Positioning Patterns"
+      description: "Patterns for product positioning, category design and narrative"
+    - id: RT
+      name: "Retention Patterns"
+      description: "Patterns for habit design, hook models and product-led retention"
+    - id: QG
+      name: "Quality Gate Patterns"
+      description: "Patterns for product quality validation"
+
+# Agents
+agents:
+  marty-cagan:
+    role: "AI Head de Produto (Chief)"
+    tier: orchestrator
+    mind: "Marty Cagan"
+    domain: "Product vision, strategy, empowered teams, product discovery, team topology, routing"
+
+  melissa-perri:
+    role: "Product Manager"
+    tier: 1
+    mind: "Melissa Perri"
+    domain: "Product strategy, outcome-based roadmaps, discovery, prioritization, escaping the build trap"
+
+  april-dunford:
+    role: "Positioning & Content Creator"
+    tier: 1
+    mind: "April Dunford"
+    domain: "Product positioning, category design, competitive context, sales pitch, launch narrative"
+
+  nir-eyal:
+    role: "CS / Retencao (Product-side)"
+    tier: 1
+    mind: "Nir Eyal"
+    domain: "Hook model, habit-forming products, behavioral design, engagement loops, product-led retention"
+
+# Tasks (14 total)
+tasks:
+  # Marty Cagan (Chief) — 2 strategic tasks
+  product-review:
+    owner: marty-cagan
+    input: "Estado atual do produto / metricas"
+    output: "Review completo + decisoes + proximos passos"
+
+  vision-alignment:
+    owner: marty-cagan
+    input: "Contexto de negocio + feedback squads"
+    output: "Product vision atualizada + alinhamento com estrategia"
+
+  # Melissa Perri (PM) — 4 tasks
+  discovery:
+    owner: melissa-perri
+    input: "Problema ou oportunidade identificada"
+    output: "Evidencias coletadas + hipoteses validadas"
+
+  opportunity-mapping:
+    owner: melissa-perri
+    input: "Dados de discovery / feedback"
+    output: "Opportunity Solution Tree + recomendacoes priorizadas"
+
+  roadmap:
+    owner: melissa-perri
+    input: "Oportunidades priorizadas + estrategia"
+    output: "Outcome-based roadmap trimestral"
+
+  prioritization:
+    owner: melissa-perri
+    input: "Backlog de oportunidades / features"
+    output: "Stack rank priorizado + justificativa por outcome"
+
+  # April Dunford (Positioning) — 4 tasks
+  positioning:
+    owner: april-dunford
+    input: "Produto / oferta definida"
+    output: "Positioning canvas completo (5 componentes)"
+
+  category-design:
+    owner: april-dunford
+    input: "Positioning definido"
+    output: "Categoria escolhida/criada + narrativa de categoria"
+
+  sales-pitch:
+    owner: april-dunford
+    input: "Positioning + contexto competitivo"
+    output: "Sales pitch estruturado (Setup → Insight → Alternatives → Value → Proof)"
+
+  launch-narrative:
+    owner: april-dunford
+    input: "Produto pronto para lancamento"
+    output: "Narrativa de lancamento + key messages por audiencia"
+
+  # Nir Eyal (Retention) — 4 tasks
+  hook-analysis:
+    owner: nir-eyal
+    input: "Produto / feature existente"
+    output: "Hook Model mapeado (Trigger → Action → Reward → Investment)"
+
+  habit-design:
+    owner: nir-eyal
+    input: "Comportamento desejado do usuario"
+    output: "Habit loop projetado + metricas de engajamento"
+
+  engagement-metrics:
+    owner: nir-eyal
+    input: "Produto em operacao"
+    output: "Framework de metricas de engajamento + thresholds"
+
+  churn-diagnosis:
+    owner: nir-eyal
+    input: "Dados de churn / baixo engajamento"
+    output: "Root cause analysis + redesign de hook loops"
+
+# Pipeline Architecture
+pipeline:
+  flow: "Visao define → Discovery valida → Positioning comunica → Retention mantem"
+  stages:
+    - name: "Vision & Strategy"
+      owner: "marty-cagan"
+      tasks: ["product-review", "vision-alignment"]
+      gate: "Vision documentada + time alinhado"
+      metrics: ["vision-clarity-score", "team-alignment", "strategy-to-execution-gap"]
+
+    - name: "Discovery & Roadmap"
+      owner: "melissa-perri"
+      tasks: ["discovery", "opportunity-mapping", "roadmap", "prioritization"]
+      gate: "Evidencias coletadas + roadmap outcome-based aprovado"
+      metrics: ["discovery-velocity", "hypothesis-validation-rate", "outcome-achievement-rate"]
+
+    - name: "Positioning & Narrative"
+      owner: "april-dunford"
+      tasks: ["positioning", "category-design", "sales-pitch", "launch-narrative"]
+      gate: "Positioning validado + pitch testado"
+      metrics: ["positioning-clarity-score", "win-rate-change", "message-recall"]
+
+    - name: "Retention & Engagement"
+      owner: "nir-eyal"
+      tasks: ["hook-analysis", "habit-design", "engagement-metrics", "churn-diagnosis"]
+      gate: "Hook model ativo + engagement acima do threshold"
+      metrics: ["dau-mau-ratio", "retention-d1-d7-d30", "habit-zone-percentage", "churn-rate"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: false
+  allow_manual_override: true
+  cross_squad_handoffs:
+    - from: "squad-advisor"
+      to: "marty-cagan"
+      trigger: "Decisao estrategica de negocio que impacta produto"
+    - from: "squad-sales"
+      to: "melissa-perri"
+      trigger: "Feedback de objecoes recorrentes"
+    - from: "april-dunford"
+      to: "squad-marketing"
+      trigger: "Posicionamento definido"
+    - from: "april-dunford"
+      to: "squad-content-distillery"
+      trigger: "Narrativa core para atomizar em conteudo"
+    - from: "nir-eyal"
+      to: "squad-customer-success"
+      trigger: "Metricas de retencao produto → CS operacional"
+    - from: "melissa-perri"
+      to: "squad-ops"
+      trigger: "Processos de produto para operacionalizar"
+    - from: "squad-customer-success"
+      to: "nir-eyal"
+      trigger: "Churn data para analise product-side"

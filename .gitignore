@@ -37,6 +37,15 @@ Thumbs.db
 # Testing
 coverage/
 .nyc_output/
+playwright-report/
+test-results/
+
+# Generated previews
+*-preview.html
+client-intake-form.html
+
+# Figma MCP (installed via npx, not local)
+claude-talk-to-figma-mcp/
 
 # Temporary files
 tmp/

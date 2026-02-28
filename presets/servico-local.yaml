@@ -1,0 +1,63 @@
+# World OS Preset: servico-local
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "servico-local"
+  nome: "Servico Local / Clinica / Escritorio"
+  descricao: "Negocio local com atendimento presencial — clinicas, escritorios, saloes, restaurantes, academias. Foco em identidade forte, marketing local, retencao de clientes e operacao eficiente."
+
+fases:
+  descoberta:
+    status: "ignorado"
+    motivo: "Opcional - o negocio ja existe e opera. Ativar se o fundador quiser reposicionar com base em talentos pessoais"
+  proposito:
+    status: "pendente"
+    motivo: "Define o diferencial no mercado local — por que escolher voce e nao o concorrente ao lado"
+  produto:
+    status: "pendente"
+    motivo: "Estruturacao de servicos, pacotes, precificacao e proposta de valor clara"
+  visao-produto:
+    status: "ignorado"
+    motivo: "Opcional - roadmap de servicos e secundario para negocio local ja operando"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Critico - fachada, presenca visual, Google Meu Negocio, materiais impressos definem primeira impressao"
+  conteudo:
+    status: "pendente"
+    motivo: "Conteudo local: Google Maps, avaliacoes, redes sociais com foco geografico, antes/depois"
+  vendas:
+    status: "ignorado"
+    motivo: "Opcional - vendas em servico local sao geralmente por indicacao e presenca. Ativar se tiver modelo B2B ou corporativo"
+  aquisicao:
+    status: "pendente"
+    motivo: "Marketing local e vital: Google Ads local, Instagram geolocalizado, parcerias, indicacao estruturada"
+  retencao:
+    status: "pendente"
+    motivo: "Critico - retencao e o motor de servico local. Fidelizacao, agendamento recorrente, experiencia do cliente"
+  operacao:
+    status: "pendente"
+    motivo: "Processos de atendimento, agendamento, gestao de equipe e padronizacao de servico"
+  escala:
+    status: "ignorado"
+    motivo: "Opcional - ativado quando quiser abrir segunda unidade ou franquear"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-design"
+  - "squad-marketing"
+  - "squad-customer-success"
+
+ordem_sugerida:
+  - "proposito"
+  - "produto"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "aquisicao"
+  - "retencao"
+  - "operacao"
+
+notas: "Servico local vive de reputacao + retencao + presenca. A identidade visual e mais importante que em digital porque o cliente VE fisicamente. Marketing e hiperlocal (raio de 5-20km). Retencao e rei — custa 5x menos reter que adquirir. Operacao garante consistencia na entrega. Escala so quando tiver modelo replicavel (segunda unidade ou franquia)."

@@ -1,0 +1,104 @@
+pack:
+  name: squad-marketing
+  version: 1.0.0
+  short-title: Marketing Squad
+  description: >-
+    Squad de marketing completo com AI Head of Marketing (Thiago Finch) liderando
+    5 especialistas de elite: Social Media, Media Buying, Email, Content e Research.
+    Cada agente e clonado de uma elite mind real com frameworks documentados.
+  author: World OS
+  icon: "📈"
+  slashPrefix: squad-marketing
+
+# Pattern Library
+pattern_library:
+  prefix: MK
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "MK-TP-001"
+  categories:
+    - id: TP
+      name: "Task Patterns"
+      description: "Patterns for marketing task structure"
+    - id: EP
+      name: "Executor Patterns"
+      description: "Patterns for executor selection"
+    - id: PP
+      name: "Process Patterns"
+      description: "Patterns for marketing workflows"
+    - id: IP
+      name: "Integration Patterns"
+      description: "Patterns for cross-agent collaboration"
+
+# Agents
+agents:
+  thiago-finch:
+    role: "AI Head of Marketing (Chief)"
+    tier: orchestrator
+    mind: "Thiago Finch"
+    domain: "Marketing strategy, launches, funnels, scaling"
+
+  gary-vaynerchuk:
+    role: "Social Media Manager"
+    tier: 1
+    mind: "Gary Vaynerchuk"
+    domain: "Social media strategy, content distribution, platform-native content"
+
+  depesh-mandalia:
+    role: "Media Buyer"
+    tier: 1
+    mind: "Depesh Mandalia"
+    domain: "Paid traffic, Meta Ads, CBO scaling, performance marketing"
+
+  andre-chaperon:
+    role: "Email Strategist"
+    tier: 1
+    mind: "Andre Chaperon"
+    domain: "Email sequences, narrative emails, autoresponders, lifecycle"
+
+  joe-pulizzi:
+    role: "Content Manager"
+    tier: 2
+    mind: "Joe Pulizzi"
+    domain: "Content strategy, editorial planning, content-to-business pipeline"
+
+  avinash-kaushik:
+    role: "Research Analyst"
+    tier: 2
+    mind: "Avinash Kaushik"
+    domain: "Marketing analytics, measurement, audience research, KPI frameworks"
+
+# Task Standards
+task_standards:
+  enforce_anatomy: true
+  validator: "MK-TP-001"
+  required_fields:
+    - task_name
+    - status
+    - responsible_executor
+    - execution_type
+    - input
+    - output
+    - action_items
+    - acceptance_criteria
+
+# Executor Types
+executor_types:
+  human:
+    id: "MK-EP-001"
+    use_for: ["Strategic decisions", "Brand approvals", "Budget allocation"]
+  agent:
+    id: "MK-EP-002"
+    use_for: ["Content creation", "Campaign analysis", "Research", "Strategy generation"]
+  hybrid:
+    id: "MK-EP-003"
+    use_for: ["Campaign reviews", "Content approvals", "A/B test analysis"]
+  worker:
+    id: "MK-EP-004"
+    use_for: ["Report generation", "Data extraction", "Scheduling"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: true
+  allow_manual_override: false

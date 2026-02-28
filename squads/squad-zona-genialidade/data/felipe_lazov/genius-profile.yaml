@@ -1,0 +1,152 @@
+genius_profile:
+  metadata:
+    aluno: "Felipe Lazov Nunes de Oliveira"
+    slug: "felipe_lazov"
+    date: "2026-02-21"
+    version: "1.0.0"
+    assessment_source: "assessments/felipe_lazov-assessment.yaml"
+    overall_confidence: 0.76
+
+  tier_0_hendricks:
+    confidence: 0.85
+    zona_atual: "Zona de Excelencia (preso)"
+    zona_genialidade: "Criar coisas novas + Estrategia + Ensinar/Mentorar + Pesquisar e aplicar"
+    zona_excelencia: "Gestao operacional, organizacao de processos, disciplina de execucao"
+    zona_competencia: "Tarefas admin, trabalho repetitivo, operacional braçal"
+    zona_incompetencia: "Analise financeira detalhada, controle de gastos"
+    upper_limit_problem:
+      ativo: true
+      padrao: "Sempre chego quase la e volto umas casinhas"
+      mecanismo: "Escolha de socios que acomodam + ciclo financeiro ganha-gasta-volta"
+      crenca_limitante: "Nao mereço explodir / Se crescer muito vou perder controle"
+      manifestacoes:
+        - "Socios que acomodam quando ele entrega mais"
+        - "Vendeu empresa R$1.5M por R$400k (enganado)"
+        - "Ciclo: ganha dinheiro -> gasta -> volta a estaca"
+        - "Minimiza conquistas: 'nao explodi em nada ainda'"
+      prescricao_big_leap:
+        - "Reconhecer o padrao conscientemente"
+        - "Journaling diario: 'O que fiz hoje que me aproximou do meu potencial maximo?'"
+        - "Antes de toda decisao de sociedade: 'Essa pessoa entrega no meu nivel?'"
+        - "Regra financeira: 30% de toda receita em reserva (nao negociavel)"
+
+  tier_1_clifton:
+    confidence: 0.75
+    top_5_estimated:
+      - theme: "Ideation"
+        domain: "Strategic Thinking"
+        evidence: "Multiplos produtos, ideias constantes, inovacao"
+      - theme: "Strategic"
+        domain: "Strategic Thinking"
+        evidence: "Enxerga oportunidades, pensador estrategico, visao longo prazo"
+      - theme: "Learner"
+        domain: "Strategic Thinking"
+        evidence: "Flow em pesquisa, 3 meses estudando IA, aprende rapido"
+      - theme: "Activator"
+        domain: "Influencing"
+        evidence: "Executa logo, age rapido, multiplos negocios"
+      - theme: "Achiever"
+        domain: "Executing"
+        evidence: "Sprint/recovery, disciplina, multiplos negocios simultaneos"
+    dominio_dominante: "Strategic Thinking"
+    dominio_secundario: "Executing"
+
+  tier_1_sullivan:
+    confidence: 0.80
+    unique_ability: "Identificar oportunidades e criar estruturas do zero que transformam ideias em negocios funcionais, combinando visao estrategica com execucao disciplinada"
+    ua_components:
+      paixao: "Criar coisas novas, ensinar, resolver problemas"
+      talento: "Aprendizado rapido + visao de oportunidades + organizacao de informacoes"
+      energia: "Flow em pesquisa/aprendizado e ensinar/mentorar"
+      impacto: "Tudo que coloca a mao da certo (reconhecido por outros)"
+    who_not_how:
+      deve_delegar: ["Admin", "Financeiro detalhado", "Operacional repetitivo", "Abastecimento", "Atendimento"]
+      pode_delegar: ["Gestao operacional diaria", "Processos organizacionais", "Acompanhamento de equipe"]
+      jamais_delegar: ["Criacao de produtos/negocios", "Estrategia", "Mentoria", "Pesquisa de oportunidades"]
+    gap_vs_gain:
+      gap: "R$20k/mes IA, 10 clientes, sair do operacional"
+      gain: "5+ anos empreendendo, empresa R$1.5M, multiplos negocios, cria com IA"
+      problema: "Foca no gap, minimiza o gain"
+
+  tier_1_hamilton:
+    confidence: 0.82
+    perfil_primario: "Creator"
+    perfil_secundario: "Mechanic"
+    perfil_combinado: "Creator-Mechanic (Dynamo)"
+    quadrante: "Dynamo"
+    eixo: "Intuitivo + Tangivel"
+    wealth_spectrum_level: "Player (Nivel 2)"
+    proximo_nivel: "Performer - precisa de negocio que funcione SEM ele"
+    bloqueio_wd: "Creator fazendo trabalho de Accumulator e Supporter"
+    squad_natural: "Squads criativos, de produto, de inovacao"
+
+  tier_1_hormozi:
+    confidence: 0.72
+    oferta_potencial: "Agencia de IA para PMEs"
+    value_equation:
+      dream_outcome: 8
+      perceived_likelihood: 5
+      time_delay: 5
+      effort_sacrifice: 4
+      value_score: 2.0
+      classificacao: "Media"
+    recomendacoes:
+      - "Aumentar Perceived Likelihood: 3-5 cases documentados"
+      - "Reduzir Time Delay: quick wins semana 1 (agente WhatsApp em 7 dias)"
+      - "Reduzir Effort: mais done-for-you, menos done-with-you"
+      - "Preco sugerido: R$2.000-3.000/mes por cliente"
+      - "Meta: 10 clientes x R$2.500 = R$25.000/mes"
+    core_4_strategy:
+      primario: "Free Content (1 post/dia sobre IA para negocios)"
+      secundario: "Warm Outreach (rede existente de empresarios)"
+      evitar: "Paid Ads (ate ter oferta validada)"
+
+  tier_2_kolbe:
+    confidence: 0.68
+    kolbe_estimado: "5-7-8-5"
+    fact_finder: 5
+    follow_thru: 7
+    quick_start: 8
+    implementor: 5
+    modo_dominante: "Quick Start"
+    insight: "QS8 + FT7 = comeca muitas coisas E quer que todas funcionem = sobrecarga"
+
+  tier_2_hogshead:
+    confidence: 0.70
+    vantagem_primaria: "Innovation"
+    vantagem_secundaria: "Power"
+    arquetipo: "The Maverick Leader (Lider Inovador)"
+    frase_posicionamento: "O empreendedor que transforma ideias em negocios reais com IA"
+    vantagem_dormant: "Mystique (storytelling a desenvolver)"
+
+  sintese_cruzada:
+    convergencias:
+      - tema: "Criador/Inovador"
+        frameworks: 7
+        descricao: "Todos os 7 frameworks apontam criacao e inovacao como core"
+      - tema: "Preso no Operacional"
+        frameworks: 4
+        descricao: "Hendricks, Sullivan, Hamilton, Kolbe confirmam desalinhamento"
+      - tema: "Upper Limit Problem Ativo"
+        frameworks: 4
+        descricao: "Padrao de auto-sabotagem no limiar do sucesso"
+      - tema: "Ensinar/Mentorar como Destino"
+        frameworks: 4
+        descricao: "Hendricks, Sullivan, Clifton + desejo declarado"
+    insights_unicos:
+      - framework: "Kolbe"
+        insight: "QS8 + FT7 explica sobrecarga: muitos comecos + necessidade de estruturar tudo"
+      - framework: "Hogshead"
+        insight: "Mystique dormant - storytelling pode ser game-changer"
+      - framework: "Hormozi"
+        insight: "Value Score 2.0 - oferta precisa redesign antes de escalar"
+    contradicoes:
+      - tema: "Estrutura vs Execucao rapida"
+        descricao: "Prefere estrutura total mas comeca executando logo"
+        resolucao: "Criar frameworks RAPIDOS e iterar, nao planejar tudo antes"
+    meta_insight: |
+      Felipe e um Creator-Mechanic preso na Zona de Excelencia (operacional),
+      com Upper Limit Problem ativo em ciclos de quase-sucesso.
+      Zona de Genialidade = criar + ensinar + estrategizar.
+      IA e a convergencia perfeita dessas 3 habilidades.
+      Caminho: sair do operacional -> validar oferta IA (5 clientes) -> escalar (agencia).

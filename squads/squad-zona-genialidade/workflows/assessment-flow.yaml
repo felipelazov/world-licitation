@@ -1,0 +1,391 @@
+# Assessment Flow
+# Fluxo de execucao do assessment comportamental unificado: quem pergunta o que, em qual ordem
+
+workflow:
+  id: "assessment-flow"
+  name: "Fluxo de Assessment Comportamental Unificado"
+  description: |
+    Define a sequencia exata de perguntas do assessment unificado,
+    organizado em blocos tematicos que alimentam multiplos frameworks
+    simultaneamente. O chief conduz todas as perguntas — os agentes
+    especialistas NAO interagem diretamente com o fundador nesta fase.
+    Duracao maxima: 30 minutos.
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "zona-genialidade-chief"
+  created_date: "2026-02-25"
+  last_modified: "2026-02-25"
+  squad: "squad-zona-genialidade"
+  max_duration_minutes: 30
+  tags:
+    - assessment
+    - questionario
+    - intake
+    - multi-framework
+
+inputs:
+  fundador_nome:
+    type: "string"
+    description: "Nome do fundador"
+    required: true
+
+  intake_data:
+    type: "object"
+    description: "Dados de intake ja coletados (nome, area, experiencia, motivacao)"
+    required: true
+
+# =============================================================================
+# BLOCOS DE PERGUNTAS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 1: AQUECIMENTO E CONTEXTO (3-5 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_1_aquecimento"
+    name: "Aquecimento e Contexto de Vida"
+    phase: "Aquecimento"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 5
+    description: |
+      Estabelecer rapport e coletar contexto de vida profissional.
+      Perguntas abertas que relaxam e preparam para reflexao profunda.
+    feeds_frameworks:
+      - hendricks    # contexto para diagnostico de zona
+      - clifton      # historico de talentos
+      - sullivan     # atividades de energia
+    questions:
+      - id: "Q01"
+        text: "Me conta um pouco da sua trajetoria. O que te trouxe ate aqui hoje?"
+        purpose: "Contexto geral, marcos profissionais, motivacao"
+        feeds: ["hendricks", "clifton", "sullivan"]
+        depth: "aberta"
+
+      - id: "Q02"
+        text: "Nos seus melhores momentos profissionais — aqueles que voce lembra com orgulho — o que voce estava fazendo?"
+        purpose: "Identificar padrao de excelencia/genialidade"
+        feeds: ["hendricks", "clifton"]
+        depth: "especifica"
+
+      - id: "Q03"
+        text: "E o que te motivou a buscar esse processo agora? O que voce espera descobrir?"
+        purpose: "Motivacao, expectativas, possiveis Upper Limit Problems"
+        feeds: ["hendricks", "sullivan"]
+        depth: "emocional"
+
+    outputs:
+      contexto_vida: "Narrativa profissional e marcos principais"
+      momentos_pico: "Descricao dos melhores momentos"
+      motivacao: "Por que busca o assessment agora"
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 2: TALENTOS E ENERGIA (5-7 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_2_talentos"
+    name: "Talentos Naturais e Padroes de Energia"
+    phase: "Exploracao"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 7
+    description: |
+      Explorar padroes de talento natural e mapear o que gera
+      e o que drena energia. Bloco central que alimenta a maioria dos frameworks.
+    feeds_frameworks:
+      - clifton      # talentos dominantes
+      - sullivan     # unique ability
+      - hendricks    # zona de genialidade
+      - kolbe        # modo de acao
+    questions:
+      - id: "Q04"
+        text: "Que tipo de atividade voce aprende mais rapido que a maioria das pessoas ao seu redor?"
+        purpose: "Talentos naturais (aprendizado acelerado = indicador de forca)"
+        feeds: ["clifton"]
+        depth: "especifica"
+
+      - id: "Q05"
+        text: "O que voce faz que parece facil pra voce mas as pessoas dizem que e dificil?"
+        purpose: "Zona de genialidade (naturalidade + percepcao externa)"
+        feeds: ["hendricks", "clifton"]
+        depth: "especifica"
+
+      - id: "Q06"
+        text: "Que atividade te da MAIS energia quanto mais voce faz? Aquela que voce faria de graca?"
+        purpose: "Unique ability + zona de genialidade (energia como indicador)"
+        feeds: ["sullivan", "hendricks"]
+        depth: "emocional"
+
+      - id: "Q07"
+        text: "E o oposto: que tarefas te drenam completamente, mesmo que voce saiba fazer?"
+        purpose: "Zona de excelencia (faz bem mas drena) + atividades para delegar"
+        feeds: ["hendricks", "sullivan", "kolbe"]
+        depth: "especifica"
+
+      - id: "Q08"
+        text: "Quando voce enfrenta um problema novo e complexo, qual e seu PRIMEIRO impulso? Pesquisar? Organizar? Agir? Construir algo?"
+        purpose: "Modo conativo Kolbe (Fact Finder, Follow Thru, Quick Start, Implementor)"
+        feeds: ["kolbe"]
+        depth: "comportamental"
+
+    outputs:
+      talentos_acelerados: "Atividades de aprendizado rapido"
+      atividades_naturais: "O que e facil para o fundador e dificil para outros"
+      atividades_energia: "O que gera energia superior"
+      atividades_drenam: "O que drena mesmo sendo competente"
+      impulso_primeiro: "Modo de acao instintivo"
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 3: CRIACAO DE VALOR E RIQUEZA (5-7 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_3_valor"
+    name: "Criacao de Valor e Modelo de Riqueza"
+    phase: "Exploracao"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 7
+    description: |
+      Mapear como o fundador naturalmente cria e captura valor.
+      Identificar perfil de riqueza e oportunidade de monetizacao.
+    feeds_frameworks:
+      - hamilton     # perfil Wealth Dynamics
+      - hormozi      # Value Equation e mercado
+      - sullivan     # visao 10x
+    questions:
+      - id: "Q09"
+        text: "Voce prefere CRIAR coisas novas ou OTIMIZAR o que ja existe?"
+        purpose: "Eixo criacao vs. refinamento (Creator vs. Mechanic em WD)"
+        feeds: ["hamilton"]
+        depth: "preferencia"
+
+      - id: "Q10"
+        text: "Como voce naturalmente gera valor para os outros — com suas ideias, com suas conexoes, com seus sistemas ou com sua execucao?"
+        purpose: "Eixo de alavancagem (ideias/pessoas/sistemas/execucao)"
+        feeds: ["hamilton"]
+        depth: "reflexiva"
+
+      - id: "Q11"
+        text: "Quem voce consegue ajudar de um jeito que quase ninguem mais consegue? Qual problema voce resolve de forma unica?"
+        purpose: "Nicho natural + proposta de valor unica"
+        feeds: ["hormozi", "sullivan"]
+        depth: "especifica"
+
+      - id: "Q12"
+        text: "Se voce tivesse que cobrar por um resultado (nao por hora), qual resultado voce entregaria com confianca?"
+        purpose: "Oferta natural + dream outcome do cliente"
+        feeds: ["hormozi"]
+        depth: "pratica"
+
+      - id: "Q13"
+        text: "Imagine sua vida profissional daqui 10 anos no cenario dos sonhos. O que voce esta fazendo? Com quem? Para quem?"
+        purpose: "Visao 10x Sullivan + aspiracao de perfil WD"
+        feeds: ["sullivan", "hamilton"]
+        depth: "visionaria"
+
+    outputs:
+      estilo_criacao: "Criador vs. Otimizador"
+      alavanca_valor: "Como gera valor (ideias/pessoas/sistemas/execucao)"
+      publico_unico: "Quem ajuda de forma unica"
+      resultado_cobravel: "Que resultado entregaria por valor"
+      visao_10_anos: "Cenario ideal de longo prazo"
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 4: PERCEPCAO EXTERNA E DIFERENCIACAO (5-7 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_4_percepcao"
+    name: "Percepcao Externa e Diferenciacao"
+    phase: "Exploracao"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 7
+    description: |
+      Explorar como os outros percebem o fundador e o que o diferencia.
+      Mapear vantagem de fascinacao e validar zona de genialidade externamente.
+    feeds_frameworks:
+      - hogshead    # Fascination Advantage
+      - hendricks   # validacao externa da zona
+      - clifton     # talentos percebidos
+    questions:
+      - id: "Q14"
+        text: "Se eu perguntasse para 3 pessoas proximas 'o que tem de especial nele/nela?', o que acha que diriam?"
+        purpose: "Percepcao externa (base para arquetipo Hogshead)"
+        feeds: ["hogshead", "hendricks"]
+        depth: "reflexiva"
+
+      - id: "Q15"
+        text: "Qual elogio profissional voce recebe com mais frequencia?"
+        purpose: "Padrao de reconhecimento externo (vantagem primaria)"
+        feeds: ["hogshead", "clifton"]
+        depth: "especifica"
+
+      - id: "Q16"
+        text: "O que te diferencia das outras pessoas que fazem algo parecido com voce?"
+        purpose: "Diferenciacao percebida + onlyness"
+        feeds: ["hogshead", "hormozi"]
+        depth: "competitiva"
+
+      - id: "Q17"
+        text: "Quando voce lidera ou influencia, qual e seu estilo natural? Voce inspira, convence, organiza, provoca ou protege?"
+        purpose: "Estilo de influencia (mapa para 7 vantagens Hogshead)"
+        feeds: ["hogshead", "kolbe"]
+        depth: "comportamental"
+
+    outputs:
+      percepcao_terceiros: "Como os outros veem o fundador"
+      elogio_recorrente: "Padrao de reconhecimento externo"
+      diferencial_percebido: "O que o diferencia dos pares"
+      estilo_influencia: "Como lidera naturalmente"
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 5: SABOTAGEM E LIMITES (3-5 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_5_limites"
+    name: "Sabotagem, Limites e Armadilhas"
+    phase: "Aprofundamento"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 5
+    description: |
+      Investigar padroes de auto-sabotagem e limites superiores.
+      Bloco mais profundo e vulneravel — requer rapport ja estabelecido.
+    feeds_frameworks:
+      - hendricks   # Upper Limit Problem
+      - kolbe       # tensao conativa
+      - hamilton    # armadilhas do perfil WD
+    questions:
+      - id: "Q18"
+        text: "Quando as coisas estao indo muito bem na sua vida, o que acontece em seguida? Voce ja notou algum padrao?"
+        purpose: "Upper Limit Problem (Hendricks)"
+        feeds: ["hendricks"]
+        depth: "vulneravel"
+
+      - id: "Q19"
+        text: "Em que situacao profissional voce se sente mais desconfortavel ou preso, mesmo quando os outros dizem que voce deveria estar satisfeito?"
+        purpose: "Armadilha da zona de excelencia + tensao conativa"
+        feeds: ["hendricks", "kolbe"]
+        depth: "vulneravel"
+
+      - id: "Q20"
+        text: "Qual crenca sobre voce mesmo voce acha que mais te limita hoje?"
+        purpose: "Crenca limitante central (alimenta ULP e caminho Big Leap)"
+        feeds: ["hendricks"]
+        depth: "profunda"
+
+    outputs:
+      padrao_sabotagem: "Padrao de auto-sabotagem apos sucesso"
+      armadilha_excelencia: "Onde se sente preso apesar de ser bom"
+      crenca_limitante: "Crenca central que mais limita"
+
+  # ---------------------------------------------------------------------------
+  # BLOCO 6: FECHAMENTO E VALIDACAO (2-3 min)
+  # ---------------------------------------------------------------------------
+
+  - id: "bloco_6_fechamento"
+    name: "Fechamento e Validacao Rapida"
+    phase: "Fechamento"
+    type: "interview"
+    agent: "zona-genialidade-chief"
+    duration_minutes: 3
+    description: |
+      Fechar a sessao com pergunta integradora e validacao
+      rapida das percepcoes do chief durante o assessment.
+    feeds_frameworks:
+      - all   # pergunta integradora alimenta todos
+    questions:
+      - id: "Q21"
+        text: "Se voce pudesse fazer UMA UNICA COISA pelo resto da vida profissional e se sentir realizado, o que seria?"
+        purpose: "Pergunta integradora final — captura essencia da zona de genialidade"
+        feeds: ["hendricks", "sullivan", "clifton"]
+        depth: "essencial"
+
+      - id: "Q22"
+        text: "Baseado no que conversamos, eu percebi X, Y e Z como padroes fortes. Isso faz sentido pra voce?"
+        purpose: "Validacao em tempo real — chief compartilha primeiras impressoes"
+        feeds: ["all"]
+        depth: "validacao"
+
+    outputs:
+      essencia_genialidade: "Resposta a pergunta integradora"
+      validacao_fundador: "Reacao do fundador as primeiras impressoes"
+
+# =============================================================================
+# POS-ASSESSMENT: DISTRIBUICAO PARA AGENTES
+# =============================================================================
+
+post_assessment:
+  - id: "distribuicao"
+    name: "Distribuicao dos Dados para Agentes Especialistas"
+    agent: "zona-genialidade-chief"
+    description: |
+      Apos coletar todas as respostas, o chief empacota e distribui:
+      - Tier 0 (Hendricks): Bloco 1 + 2 + 5 + Q21
+      - Tier 1 (Clifton): Bloco 1 + 2 + 4
+      - Tier 1 (Sullivan): Bloco 1 + 2 + 3 + Q21
+      - Tier 1 (Hamilton): Bloco 3 + Q08 + Q19
+      - Tier 1 (Hormozi): Bloco 3 + 4
+      - Tier 2 (Kolbe): Q08 + Q17 + Q19 + Bloco 2
+      - Tier 2 (Hogshead): Bloco 4 + Q05 + Q06
+    distribution_map:
+      gay-hendricks:
+        blocos: [1, 2, 5]
+        perguntas_extras: ["Q21"]
+      don-clifton:
+        blocos: [1, 2, 4]
+        perguntas_extras: []
+      dan-sullivan:
+        blocos: [1, 2, 3]
+        perguntas_extras: ["Q21"]
+      roger-hamilton:
+        blocos: [3]
+        perguntas_extras: ["Q08", "Q19"]
+      alex-hormozi:
+        blocos: [3, 4]
+        perguntas_extras: []
+      kathy-kolbe:
+        blocos: [2]
+        perguntas_extras: ["Q08", "Q17", "Q19"]
+      sally-hogshead:
+        blocos: [4]
+        perguntas_extras: ["Q05", "Q06"]
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  assessment_complete:
+    type: "boolean"
+    description: "Assessment unificado concluido com sucesso"
+
+  assessment_report:
+    type: "string"
+    description: "Relatorio de sessao completo (assessment-report-tmpl.md)"
+
+  raw_responses:
+    type: "object"
+    description: "Respostas brutas organizadas por bloco e pergunta"
+
+  distribution_status:
+    type: "object"
+    description: "Status de distribuicao para cada agente"
+
+# =============================================================================
+# NOTAS
+# =============================================================================
+
+notes:
+  - "22 perguntas no total, organizadas em 6 blocos tematicos"
+  - "Cada pergunta alimenta 1-3 frameworks simultaneamente"
+  - "Duracao ideal: 25-30 min. Minimo absoluto: 20 min"
+  - "Bloco 5 (sabotagem) requer rapport — NUNCA comecar por ele"
+  - "Chief pode adaptar a ordem das perguntas DENTRO de cada bloco"
+  - "Chief NAO pode pular blocos inteiros"
+  - "Se tempo acabar antes do bloco 5, priorizar bloco 6 (fechamento) e agendar complemento"
+  - "Perguntas sao guias — chief pode reformular mantendo a intencao"

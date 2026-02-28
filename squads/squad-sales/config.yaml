@@ -1,0 +1,107 @@
+pack:
+  name: squad-sales
+  version: 1.0.0
+  short-title: Sales Squad
+  description: >-
+    Squad de vendas completo com AI Head of Sales (Alex Hormozi) liderando
+    3 especialistas de elite: SDR/Prospecting (Jeb Blount), Closer (Jeremy Miner)
+    e Sales Analyst/RevOps (Jacco van der Kooij). Cada agente clonado de uma elite
+    mind real com frameworks documentados. Orquestra perfeita: prospectar, fechar, medir.
+  author: World OS
+  icon: "💰"
+  slashPrefix: squad-sales
+
+# Pattern Library
+pattern_library:
+  prefix: SL
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "SL-TP-001"
+  categories:
+    - id: TP
+      name: "Task Patterns"
+      description: "Patterns for sales task structure"
+    - id: EP
+      name: "Executor Patterns"
+      description: "Patterns for executor selection"
+    - id: PP
+      name: "Process Patterns"
+      description: "Patterns for sales workflows"
+    - id: IP
+      name: "Integration Patterns"
+      description: "Patterns for cross-agent collaboration"
+
+# Agents
+agents:
+  alex-hormozi:
+    role: "AI Head of Sales (Chief)"
+    tier: orchestrator
+    mind: "Alex Hormozi"
+    domain: "Sales strategy, CLOSER framework, team architecture, offer design, routing"
+
+  jeb-blount:
+    role: "SDR / Prospector"
+    tier: 1
+    mind: "Jeb Blount"
+    domain: "Outbound prospecting, cold calling, multi-channel cadences, pipeline generation"
+
+  jeremy-miner:
+    role: "Closer"
+    tier: 1
+    mind: "Jeremy Miner"
+    domain: "High-ticket closing, NEPQ questions, behavioral science selling, objection handling"
+
+  jacco-van-der-kooij:
+    role: "Sales Analyst / RevOps"
+    tier: 2
+    mind: "Jacco van der Kooij"
+    domain: "Revenue architecture, sales analytics, pipeline metrics, forecasting, GTM motions"
+
+# Task Standards
+task_standards:
+  enforce_anatomy: true
+  validator: "SL-TP-001"
+  required_fields:
+    - task_name
+    - status
+    - responsible_executor
+    - execution_type
+    - input
+    - output
+    - action_items
+    - acceptance_criteria
+
+# Executor Types
+executor_types:
+  human:
+    id: "SL-EP-001"
+    use_for: ["Closing calls", "Strategic pricing decisions", "Partnership negotiations"]
+  agent:
+    id: "SL-EP-002"
+    use_for: ["Prospecting strategy", "Script generation", "Pipeline analysis", "Forecast modeling"]
+  hybrid:
+    id: "SL-EP-003"
+    use_for: ["Call reviews", "Deal qualification", "Compensation planning"]
+  worker:
+    id: "SL-EP-004"
+    use_for: ["Report generation", "CRM data extraction", "Activity tracking"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: true
+  allow_manual_override: false
+
+# Sales Pipeline Architecture
+pipeline:
+  flow: "Lead → SDR qualifica → Closer fecha → Analyst mede"
+  stages:
+    - name: "Prospecting"
+      owner: "jeb-blount"
+      metrics: ["calls/day", "emails/day", "response rate", "meetings booked"]
+    - name: "Closing"
+      owner: "jeremy-miner"
+      metrics: ["show rate", "offer rate", "close rate", "upfront cash %"]
+    - name: "Analysis"
+      owner: "jacco-van-der-kooij"
+      metrics: ["LTV:CAC", "pipeline velocity", "conversion by stage", "revenue forecast"]

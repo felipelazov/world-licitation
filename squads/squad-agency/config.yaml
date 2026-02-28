@@ -1,0 +1,93 @@
+name: ia-agency-os
+title: "IA Agency OS"
+version: "1.0.0"
+author: "Felipe Lazov (via Zona de Genialidade Pipeline)"
+description: >
+  Squad CUSTOMIZADO para Felipe Lazov. Agencia de solucoes de IA para PMEs
+  que combina Creator-OS (criacao de produtos e mentorias) + AI Studio
+  (construcao tecnica de agentes) + experiencia real de negocios (5+ anos).
+  Diferencial: empresario que usa IA para resolver problemas reais porque
+  JA viveu esses problemas. Perfil: Creator-Mechanic, Quick Start 8,
+  Strategic Thinking dominante, Maverick Leader.
+
+slash_prefix: "IAAgencyOS"
+pattern_prefix: "IAOS"
+target_user: "Felipe Lazov - Creator-Mechanic (Dynamo)"
+icon: "🚀"
+
+use_cases:
+  - id: UC1
+    name: "Diagnostico de Negocios com IA"
+    description: "Diagnosticar processos do cliente PME e prescrever solucoes de IA"
+  - id: UC2
+    name: "Construcao de Agentes e Automacoes"
+    description: "Desenvolver agentes WhatsApp, automacoes n8n, apps para clientes"
+  - id: UC3
+    name: "Conteudo e Posicionamento"
+    description: "Criar conteudo diario sobre IA para PMEs (autoridade + leads)"
+  - id: UC4
+    name: "Gestao de Clientes e Entregas"
+    description: "Onboarding, acompanhamento e entrega de projetos para clientes"
+  - id: UC5
+    name: "Propostas e Vendas"
+    description: "Gerar propostas comerciais e fechar clientes"
+
+tiers:
+  orchestrator:
+    - ia-agency-chief
+  tier_0:
+    - estrategista-negocios
+  tier_1:
+    - construtor-agentes
+    - gestor-conteudo
+  tier_2:
+    - gestor-operacional
+
+tasks:
+  - diagnostico-cliente
+  - proposta-comercial
+  - conteudo-diario
+  - onboarding-cliente
+
+quality_gates:
+  - id: QG-IAOS-001
+    name: "Diagnostico Validado"
+    transition: "Intake -> Diagnostico Completo"
+    blocking: true
+  - id: QG-IAOS-002
+    name: "Proposta Aprovada"
+    transition: "Diagnostico -> Proposta Enviada"
+    blocking: true
+  - id: QG-IAOS-003
+    name: "Cliente Onboarded"
+    transition: "Proposta Aceita -> Projeto Iniciado"
+    blocking: true
+  - id: QG-IAOS-004
+    name: "Entrega Validada"
+    transition: "Projeto -> Entrega Final"
+    blocking: true
+
+dependencies:
+  optional:
+    - zona-genialidade
+    - squad-creator
+
+profile_context:
+  hamilton: "Creator-Mechanic (Dynamo)"
+  kolbe: "5-7-8-5 (Quick Start 8)"
+  clifton_domain: "Strategic Thinking"
+  wealth_spectrum: "Player"
+  hogshead: "Maverick Leader (Innovation + Power)"
+  zona_genialidade: "Criar + Ensinar + Estrategizar"
+  zona_excelencia: "Gestao operacional (SAIR)"
+  upper_limit_problem: true
+  horas_disponiveis: "10-20h/semana"
+  meta_90_dias: "R$20k/mes com 10 clientes"
+  meta_6_meses: "R$50-100k/mes"
+
+monetization:
+  ticket_medio: "R$2.500/mes"
+  meta_clientes: 10
+  core_4_primario: "Free Content (1 post/dia)"
+  core_4_secundario: "Warm Outreach (rede existente)"
+  grand_slam_offer: "Seu negocio rodando com IA em 30 dias ou dinheiro de volta"

@@ -1,0 +1,450 @@
+# ============================================================
+# Workflow: ADM Operations Pipeline
+# ============================================================
+# Pipeline administrativo: 5 pipelines multi-agente orquestrados
+# pelo Ray Dalio (ADM Chief). Cada pipeline cruza 2-5 departamentos.
+# Principio: "Radical Transparency + Idea Meritocracy" [SOURCE: Ray Dalio]
+# ============================================================
+
+metadata:
+  name: "ADM Operations Pipeline"
+  id: "adm-operations-pipeline"
+  squad: "squad-adm"
+  chief: "ray-dalio-adm-chief"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "5 pipelines administrativos: onboarding, offboarding, contratos, fechamento mensal, auditoria"
+  agents: 6
+  pattern: "Multi-Mind Departmental — cada agente e uma mente real de elite no seu dominio"
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - tipo_demanda: "onboarding / offboarding / contrato / fechamento / auditoria / ad-hoc"
+    - descricao: "O que precisa ser feito"
+  optional:
+    - urgencia: "Alta / Media / Normal"
+    - departamento_alvo: "Financeiro / RH / Juridico / Facilities / Compliance"
+    - dados_complementares: "Docs, contratos, numeros relevantes"
+
+# ── ROUTING (Ray Dalio Chief) ──────────────────────────────
+
+routing:
+  description: "Ray Dalio (Chief) recebe demanda e decide qual pipeline ou departamento"
+  decision_framework: "5-Step Process: GOALS → PROBLEMS → DIAGNOSE → DESIGN → DO"
+
+  routing_rules:
+    - keywords: ["contratar", "vaga", "recrutamento", "onboarding", "time", "cultura"]
+      route_to: "pipeline_onboarding OR patrick-lencioni-rh"
+    - keywords: ["demissao", "desligar", "offboarding", "saida"]
+      route_to: "pipeline_offboarding"
+    - keywords: ["contrato", "acordo", "NDA", "SLA", "termo"]
+      route_to: "pipeline_contrato OR ken-adams-juridico"
+    - keywords: ["fatura", "pagamento", "receita", "DRE", "caixa", "fluxo"]
+      route_to: "dave-ramsey-financeiro"
+    - keywords: ["ferramenta", "SaaS", "licenca", "acesso", "fornecedor"]
+      route_to: "marie-kondo-facilities"
+    - keywords: ["auditoria", "LGPD", "compliance", "politica", "regulacao"]
+      route_to: "pipeline_auditoria OR ray-dalio-compliance"
+    - keywords: ["fechamento", "mensal", "report"]
+      route_to: "pipeline_fechamento"
+
+# ── PIPELINES ──────────────────────────────────────────────
+
+pipelines:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PIPELINE 1: ONBOARDING DE FUNCIONARIO
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - pipeline: "onboarding-completo"
+    name: "Onboarding de Novo Funcionario"
+    trigger: "Candidato aceitou oferta"
+    duration: "90 dias (checkpoints 30/60/90)"
+    sequence: "RH → Facilities → Compliance → Finance"
+
+    phases:
+      - phase: 1
+        name: "People Setup"
+        agent: "patrick-lencioni-rh"
+        duration: "5-7 dias"
+        actions:
+          - "Validar fit via Ideal Team Player (Humble + Hungry + Smart)"
+          - "Preparar documentacao (contrato, politicas)"
+          - "Planejar Day 1 e Week 1"
+          - "Definir mentor/buddy"
+          - "Agendar checkpoints 30/60/90"
+        gate: "QG-ADM-005 — Onboarding Complete"
+        output: "Plano de onboarding + docs prontos"
+
+      - phase: 2
+        name: "Access & Tools Setup"
+        agent: "marie-kondo-facilities"
+        duration: "1-2 dias"
+        actions:
+          - "Criar contas em todas as ferramentas necessarias"
+          - "Aplicar Principle of Least Privilege (PoLP)"
+          - "Configurar 1Password vault"
+          - "Setup de equipamento (se aplicavel)"
+        gate: "QG-ADM-003 — Access Control"
+        output: "Acessos configurados + equipamento pronto"
+
+      - phase: 3
+        name: "Compliance Induction"
+        agent: "ray-dalio-compliance"
+        duration: "1 dia"
+        actions:
+          - "Apresentar Codigo de Conduta"
+          - "Treinamento LGPD basico"
+          - "Coletar assinatura em politicas obrigatorias"
+          - "Registrar no ROPA (se lida com dados pessoais)"
+        gate: "QG-ADM-004 — LGPD Compliance"
+        output: "Politicas assinadas + compliance ok"
+
+      - phase: 4
+        name: "Financial Registration"
+        agent: "dave-ramsey-financeiro"
+        duration: "1-2 dias"
+        actions:
+          - "Registrar na folha de pagamento"
+          - "Configurar beneficios"
+          - "Definir centro de custo"
+          - "Atualizar budget do departamento"
+        gate: "QG-ADM-001 — Financial Accuracy"
+        output: "Registro financeiro completo"
+
+    exit_criteria: "Funcionario produtivo, acessos ok, compliance ok, financeiro registrado"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PIPELINE 2: OFFBOARDING DE FUNCIONARIO
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - pipeline: "offboarding-completo"
+    name: "Offboarding de Funcionario"
+    trigger: "Demissao aprovada"
+    duration: "5-7 dias uteis"
+    sequence: "RH → Facilities → Finance → Legal"
+
+    phases:
+      - phase: 1
+        name: "Exit Process"
+        agent: "patrick-lencioni-rh"
+        duration: "1-2 dias"
+        actions:
+          - "Entrevista de desligamento (respeitosa)"
+          - "Notificar time e stakeholders"
+          - "Capturar learnings (o que aprendemos?)"
+          - "Definir plano de transicao de responsabilidades"
+        output: "Exit interview + transicao planejada"
+
+      - phase: 2
+        name: "Access Revocation"
+        agent: "marie-kondo-facilities"
+        duration: "< 24 horas (SLA critico)"
+        actions:
+          - "Revogar TODOS os acessos em < 24h"
+          - "Recuperar equipamento"
+          - "Remover de grupos e canais"
+          - "Documentar acessos revogados (audit trail)"
+        gate: "QG-ADM-003 — Access Control"
+        output: "Todos os acessos revogados + equipamento devolvido"
+        sla_critical: true
+
+      - phase: 3
+        name: "Financial Closing"
+        agent: "dave-ramsey-financeiro"
+        duration: "3-5 dias"
+        actions:
+          - "Calcular rescisao e verbas"
+          - "Processar ultimo pagamento"
+          - "Emitir documentos fiscais"
+          - "Atualizar budget do departamento"
+        gate: "QG-ADM-001 — Financial Accuracy"
+        output: "Rescisao processada + docs emitidos"
+
+      - phase: 4
+        name: "Legal Closure"
+        agent: "ken-adams-juridico"
+        duration: "1-2 dias"
+        actions:
+          - "Preparar documentos de desligamento"
+          - "Verificar clausulas de nao-concorrencia/NDA"
+          - "Coletar assinaturas finais"
+          - "Arquivar documentacao"
+        gate: "QG-ADM-002 — Contract Compliance"
+        output: "Documentacao legal arquivada"
+
+    exit_criteria: "Acessos revogados, rescisao paga, docs assinados, transicao feita"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PIPELINE 3: NOVO CONTRATO COM CLIENTE
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - pipeline: "novo-contrato"
+    name: "Novo Contrato com Cliente"
+    trigger: "Venda fechada pelo squad-sales"
+    duration: "10-15 dias"
+    sequence: "Legal → Compliance → Finance"
+
+    phases:
+      - phase: 1
+        name: "Legal Review & Drafting"
+        agent: "ken-adams-juridico"
+        task: "contract-review"
+        duration: "5-7 dias"
+        actions:
+          - "Classificar tipo de contrato"
+          - "Risk assessment (6 dimensoes, score 1-5 cada)"
+          - "Redigir/revisar usando MSCD (6 regras)"
+          - "Verificar clausulas LGPD"
+          - "Checar red flags"
+          - "Enviar pra assinatura (DocuSign)"
+        gate: "QG-ADM-002 — Contract Compliance"
+        output: "Contrato assinado + risk assessment"
+
+      - phase: 2
+        name: "Compliance Clearance"
+        agent: "ray-dalio-compliance"
+        duration: "3-5 dias"
+        actions:
+          - "Analise LGPD do contrato"
+          - "Verificar base legal (Art. 7 LGPD)"
+          - "Mapear dados pessoais envolvidos"
+          - "Emitir clearance memo"
+        gate: "QG-ADM-004 — LGPD Compliance"
+        output: "Compliance clearance memo"
+
+      - phase: 3
+        name: "Financial Setup"
+        agent: "dave-ramsey-financeiro"
+        duration: "2-3 dias"
+        actions:
+          - "Registrar na contabilidade"
+          - "Configurar cobranca/faturamento"
+          - "Verificar impacto no budget"
+          - "Configurar no CRM financeiro"
+        gate: "QG-ADM-001 — Financial Accuracy"
+        output: "Cliente registrado financeiramente"
+
+    exit_criteria: "Contrato assinado, compliance ok, faturamento configurado"
+
+    synapses:
+      - para: "squad-sales"
+        decisao: "Contrato aprovado e operacional"
+        acao: "Cliente pronto para onboarding"
+      - para: "squad-agency"
+        decisao: "Contrato ativo"
+        acao: "Pode iniciar entrega de servicos"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PIPELINE 4: FECHAMENTO MENSAL
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - pipeline: "fechamento-mensal"
+    name: "Fechamento Mensal"
+    trigger: "Dia 5 do mes seguinte"
+    duration: "1-2 dias"
+    frequency: "Mensal"
+    sequence: "Finance → Compliance → Facilities"
+
+    phases:
+      - phase: 1
+        name: "Financial Closing"
+        agent: "dave-ramsey-financeiro"
+        task: "financial-health-check"
+        duration: "4-6 horas"
+        actions:
+          - "Conciliar contas a pagar e receber"
+          - "Gerar DRE do mes"
+          - "Calcular burn rate e runway"
+          - "Projecao de caixa 30/60/90 dias"
+          - "Identificar alertas (runway < 3 meses, despesas acima do budget)"
+          - "Gerar report financeiro"
+        gate: "QG-ADM-001 — Financial Accuracy"
+        output: "Report financeiro mensal"
+
+      - phase: 2
+        name: "Compliance Review"
+        agent: "ray-dalio-compliance"
+        duration: "2-3 horas"
+        actions:
+          - "Verificar obrigacoes fiscais cumpridas"
+          - "Checar status de politicas (alguma vence esse mes?)"
+          - "Verificar incidents no mes (se houve)"
+          - "Atualizar compliance calendar"
+        output: "Status de compliance do mes"
+
+      - phase: 3
+        name: "Tools & Cost Review"
+        agent: "marie-kondo-facilities"
+        duration: "1-2 horas"
+        actions:
+          - "Verificar renovacoes de SaaS no mes"
+          - "Identificar licencas nao utilizadas"
+          - "Calcular custo por ferramenta vs uso"
+          - "Recomendar cortes ou upgrades"
+        output: "Review de ferramentas do mes"
+
+    exit_criteria: "DRE fechado, compliance ok, tools revisados"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # PIPELINE 5: AUDITORIA GERAL
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - pipeline: "auditoria-geral"
+    name: "Auditoria Geral"
+    trigger: "Trimestral (ou sob demanda)"
+    duration: "15-20 dias"
+    frequency: "Trimestral"
+    sequence: "Compliance → Finance → Facilities → Legal"
+
+    phases:
+      - phase: 1
+        name: "Compliance Audit"
+        agent: "ray-dalio-compliance"
+        task: "compliance-audit"
+        duration: "5 dias"
+        actions:
+          - "Definir escopo da auditoria"
+          - "Coletar evidencias (processos, docs, logs)"
+          - "Classificar findings (Critical/High/Medium/Low)"
+          - "Criar plano de remediacao"
+          - "Follow-up 30/60/90"
+        gate: "Findings classificados e plano definido"
+        output: "Compliance audit report (template compliance-report-tmpl.md)"
+
+      - phase: 2
+        name: "Financial Audit"
+        agent: "dave-ramsey-financeiro"
+        task: "financial-health-check"
+        duration: "3-5 dias"
+        actions:
+          - "Revisar DRE dos ultimos 3 meses"
+          - "Verificar consistencia banco vs contabilidade"
+          - "Analisar tendencias de custo"
+          - "Validar regra de 30% de reserva"
+        output: "Financial audit report (template financial-report-tmpl.md)"
+
+      - phase: 3
+        name: "Tools & Access Audit"
+        agent: "marie-kondo-facilities"
+        task: "tools-audit"
+        duration: "3-5 dias"
+        actions:
+          - "Inventario completo de SaaS/ferramentas"
+          - "KonMari analysis (spark value?)"
+          - "Audit de acessos (PoLP verificado?)"
+          - "Identificar redundancias e anomalias"
+        output: "Tools audit report (template tools-inventory-tmpl.md)"
+
+      - phase: 4
+        name: "Legal Review"
+        agent: "ken-adams-juridico"
+        duration: "3-5 dias"
+        actions:
+          - "Revisar contratos que vencem nos proximos 90 dias"
+          - "Verificar status de disputas ativas"
+          - "Validar NDAs e clausulas de confidencialidade"
+          - "Recomendar renovacoes ou renegociacoes"
+        output: "Legal review report (template contract-review-report-tmpl.md)"
+
+    exit_criteria: "4 reports consolidados + plano de acao integrado"
+
+# ── STANDALONE TASKS ───────────────────────────────────────
+
+standalone_tasks:
+  description: "Tasks que podem ser executadas individualmente, fora dos pipelines"
+  tasks:
+    - task: "financial-health-check"
+      agent: "dave-ramsey-financeiro"
+      when: "Precisa de snapshot financeiro rapido"
+    - task: "team-health-check"
+      agent: "patrick-lencioni-rh"
+      when: "Verificar saude organizacional"
+    - task: "contract-review"
+      agent: "ken-adams-juridico"
+      when: "Revisar contrato especifico"
+    - task: "compliance-audit"
+      agent: "ray-dalio-compliance"
+      when: "Auditoria pontual de area especifica"
+    - task: "tools-audit"
+      agent: "marie-kondo-facilities"
+      when: "Auditoria de ferramentas e acessos"
+
+# ── QUALITY GATES ──────────────────────────────────────────
+
+quality_gates:
+  - id: "QG-ADM-001"
+    name: "Financial Accuracy"
+    type: "blocking"
+    owner: "dave-ramsey-financeiro"
+    checklist: "checklists/financial-health-checklist.md"
+
+  - id: "QG-ADM-002"
+    name: "Contract Compliance"
+    type: "blocking"
+    owner: "ken-adams-juridico"
+    checklist: "checklists/contract-review-checklist.md"
+
+  - id: "QG-ADM-003"
+    name: "Access Control"
+    type: "advisory"
+    owner: "marie-kondo-facilities"
+    checklist: "checklists/tools-audit-checklist.md"
+
+  - id: "QG-ADM-004"
+    name: "LGPD Compliance"
+    type: "blocking"
+    owner: "ray-dalio-compliance"
+    checklist: "checklists/compliance-audit-checklist.md"
+
+  - id: "QG-ADM-005"
+    name: "Onboarding Complete"
+    type: "advisory"
+    owner: "patrick-lencioni-rh"
+    checklist: "checklists/team-health-checklist.md"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  compliance_calendar:
+    - frequency: "Trimestral"
+      action: "Financial audit + Access audit"
+    - frequency: "Semestral"
+      action: "Process audit + Compliance training"
+    - frequency: "Anual"
+      action: "Policy review + ROPA mapping"
+
+  escalation_rules:
+    - trigger: "Finding critical em auditoria"
+      action: "Resolucao em 48h. Ray Dalio Chief escala diretamente."
+      sla: "48 horas"
+    - trigger: "Breach LGPD"
+      action: "Incident response imediato. Compliance + Legal juntos."
+      sla: "Imediato"
+    - trigger: "Contrato expirando sem renovacao"
+      action: "Alerta 90/60/30 dias. Ken Adams notificado."
+    - trigger: "Runway < 3 meses"
+      action: "Alerta critico. Dave Ramsey + Ray Dalio Chief."
+
+  integration_squads:
+    - squad: "squad-sales"
+      triggers: ["venda fechada → pipeline contrato", "meta receita → financial planning"]
+    - squad: "squad-agency"
+      triggers: ["novo cliente → compliance check", "entrega completa → faturamento"]
+    - squad: "squad-ops"
+      triggers: ["novo processo → compliance review", "automacao → access audit"]
+
+notes: |
+  O squad-adm e a retaguarda que permite o front operar.
+  Sem financeiro organizado, nao sabe se tem dinheiro.
+  Sem RH estruturado, nao consegue crescer o time.
+  Sem juridico, um contrato mal feito custa 10x mais.
+  Sem compliance, LGPD vira bomba-relogio.
+  Sem facilities, ferramentas se acumulam sem controle.
+
+  Ray Dalio (Chief) orquestra com Radical Transparency.
+  Cada especialista e o melhor do mundo no seu dominio.
+  5 pipelines cobrem 95% das demandas administrativas.
+  Tasks standalone cobrem os outros 5%.

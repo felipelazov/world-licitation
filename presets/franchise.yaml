@@ -1,0 +1,63 @@
+# World OS Preset: franchise
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "franchise"
+  nome: "Franquia / Licenciamento"
+  descricao: "Negocio que escala via modelo de franquia ou licenciamento. Foco em padronizacao operacional, replicabilidade do modelo e estrutura de escala."
+
+fases:
+  descoberta:
+    status: "ignorado"
+    motivo: "Opcional - o modelo de negocio ja esta validado; descoberta pessoal nao e prioridade, mas pode ser ativada se o fundador desejar"
+  proposito:
+    status: "pendente"
+    motivo: "Essencial para definir a missao e valores que serao replicados em cada unidade franqueada"
+  produto:
+    status: "pendente"
+    motivo: "O produto/servico precisa estar padronizado e documentado para replicacao"
+  visao-produto:
+    status: "pendente"
+    motivo: "Roadmap do produto e fundamental para evolucao consistente da rede"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "ignorado"
+    motivo: "Opcional - a identidade visual pode ja existir; ativar se precisar de rebranding para o modelo de franquia"
+  conteudo:
+    status: "ignorado"
+    motivo: "Opcional - conteudo de marketing nao e prioridade inicial; foco esta na estrutura operacional"
+  vendas:
+    status: "pendente"
+    motivo: "Venda de franquias exige estrategia propria - funil de candidatos, qualificacao, closing de franqueados"
+  aquisicao:
+    status: "ignorado"
+    motivo: "Opcional - marketing de rede de franquias e ativado apos estruturar a operacao e ter unidades piloto"
+  retencao:
+    status: "pendente"
+    motivo: "Retencao de franqueados e saude da rede sao criticos - churn de franqueado e muito caro"
+  operacao:
+    status: "pendente"
+    motivo: "Critico - processos operacionais padronizados sao a base de qualquer franquia"
+  escala:
+    status: "pendente"
+    motivo: "Razao de existir deste preset - estrutura de expansao, manuais, treinamento e suporte a franqueados"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-franchise"
+  - "squad-agency"
+  - "squad-sales"
+
+ordem_sugerida:
+  - "proposito"
+  - "produto"
+  - "visao-produto"
+  - "business-dna"
+  - "operacao"
+  - "vendas"
+  - "retencao"
+  - "escala"
+
+notas: "Franquias exigem documentacao rigorosa de processos antes de escalar. Vendas aqui significa vender franquias (nao produto final). Retencao foca na saude da relacao com franqueados. Marketing da rede pode ser ativado depois. As fases opcionais (descoberta, identidade, conteudo) podem ser ativadas conforme necessidade."

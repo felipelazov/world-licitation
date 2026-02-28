@@ -1,0 +1,167 @@
+pack:
+  name: squad-customer-success
+  version: 1.0.0
+  short-title: CS Squad
+  description: >-
+    Squad de Customer Success completo com AI Head de CS (Lincoln Murphy) liderando
+    4 especialistas de elite: Onboarding Specialist (Donna Weber), Suporte (Shep Hyken),
+    CS/Retencao (Joey Coleman) e CS Strategist (Wayne McCulloch). Da boas-vindas ao
+    cliente ate prevencao de churn, com framework estrategico dos 7 Pilares.
+  author: World OS
+  icon: "🤝"
+  slashPrefix: squad-customer-success
+
+# Pattern Library
+pattern_library:
+  prefix: CS
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "CS-ON-001"
+  categories:
+    - id: ON
+      name: "Onboarding Patterns"
+      description: "Patterns for client onboarding"
+    - id: SP
+      name: "Support Patterns"
+      description: "Patterns for ticket handling and resolution"
+    - id: RT
+      name: "Retention Patterns"
+      description: "Patterns for health monitoring and churn prevention"
+    - id: QG
+      name: "Quality Gate Patterns"
+      description: "Patterns for CS quality validation"
+
+# Agents
+agents:
+  lincoln-murphy:
+    role: "AI Head de CS (Chief)"
+    tier: orchestrator
+    mind: "Lincoln Murphy"
+    domain: "CS strategy, health monitoring, churn tracking, NPS, routing"
+
+  donna-weber:
+    role: "Onboarding Specialist"
+    tier: 1
+    mind: "Donna Weber"
+    domain: "Welcome, setup, first value, handoff to CS"
+
+  shep-hyken:
+    role: "Suporte"
+    tier: 1
+    mind: "Shep Hyken"
+    domain: "Ticket triage, resolution, escalation, reporting"
+
+  joey-coleman:
+    role: "CS / Retencao"
+    tier: 1
+    mind: "Joey Coleman"
+    domain: "Health check, engagement, upsell detection, churn prevention"
+
+  wayne-mcculloch:
+    role: "CS Strategist / Frameworks Architect"
+    tier: 2
+    mind: "Wayne McCulloch"
+    domain: "CS strategy frameworks, journey mapping, segmentation, playbooks, success plans, health scores"
+
+# Tasks (12 total)
+tasks:
+  # Onboarding Specialist (Donna Weber) — 4 tasks
+  welcome-client:
+    owner: donna-weber
+    input: "Cliente fechado (de Vendas)"
+    output: "Boas-vindas + proximos passos enviados"
+
+  setup-account:
+    owner: donna-weber
+    input: "Cliente recebeu welcome"
+    output: "Configuracao feita + materiais enviados"
+
+  first-value:
+    owner: donna-weber
+    input: "Cliente configurado"
+    output: "Primeira vitoria documentada + feedback"
+
+  handoff:
+    owner: donna-weber
+    input: "Cliente ativado"
+    output: "Contexto documentado + CS apresentado"
+
+  # Suporte (Shep Hyken) — 4 tasks
+  ticket-triage:
+    owner: shep-hyken
+    input: "Ticket aberto"
+    output: "Classificacao (N1/N2/N3) + prioridade + direcao"
+
+  resolve:
+    owner: shep-hyken
+    input: "Ticket N1"
+    output: "Solucao aplicada + documentada"
+
+  escalate:
+    owner: shep-hyken
+    input: "Ticket N2/N3"
+    output: "Encaminhamento + contexto + acompanhamento"
+
+  report:
+    owner: shep-hyken
+    input: "Metricas da semana"
+    output: "Relatorios (SLA, satisfacao) + problemas recorrentes → PRODUTO"
+
+  # CS/Retencao (Joey Coleman) — 4 tasks
+  health-check:
+    owner: joey-coleman
+    input: "Base de clientes"
+    output: "Health score atualizado + riscos identificados"
+
+  engagement:
+    owner: joey-coleman
+    input: "Clientes ativos"
+    output: "Contatos proativos + novidades compartilhadas"
+
+  upsell-detection:
+    owner: joey-coleman
+    input: "Clientes saudaveis"
+    output: "Oportunidade + VENDAS (SDR)"
+
+  churn-prevention:
+    owner: joey-coleman
+    input: "Cliente em risco"
+    output: "Acao de recuperacao + motivo documentado"
+
+# Pipeline Architecture
+pipeline:
+  flow: "Vendas fecha → Onboarding ativa → Suporte atende → CS/Retencao mantem"
+  stages:
+    - name: "Onboarding"
+      owner: "donna-weber"
+      tasks: ["welcome-client", "setup-account", "first-value", "handoff"]
+      gate: "Cliente ativado + primeira vitoria documentada"
+      metrics: ["time-to-first-value", "activation-rate", "onboarding-completion"]
+
+    - name: "Suporte"
+      owner: "shep-hyken"
+      tasks: ["ticket-triage", "resolve", "escalate", "report"]
+      gate: "SLA cumprido + satisfacao >= 4/5"
+      metrics: ["first-response-time", "resolution-time", "csat", "tickets-per-client"]
+
+    - name: "CS / Retencao"
+      owner: "joey-coleman"
+      tasks: ["health-check", "engagement", "upsell-detection", "churn-prevention"]
+      gate: "Health score >= 70 + churn < 5%"
+      metrics: ["health-score", "nps", "churn-rate", "expansion-revenue", "ltv"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: false
+  allow_manual_override: true
+  cross_squad_handoffs:
+    - from: "squad-sales"
+      to: "donna-weber"
+      trigger: "Cliente fechado"
+    - from: "shep-hyken"
+      to: "squad-ops"
+      trigger: "Precisa criar processo"
+    - from: "joey-coleman"
+      to: "squad-sales"
+      trigger: "Upsell detectado → SDR"

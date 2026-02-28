@@ -1,0 +1,360 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# WORLD OS — Project State v1.0
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Este arquivo e a MEMORIA VIVA do projeto.
+# Todo agente LE antes de agir. Todo agente ESCREVE ao concluir.
+# Cada clone da Matriz tem o seu. Nasce vazio, acumula tudo.
+#
+# REGRAS:
+# - "decisoes" so cresce (append-only). Nunca apaga.
+# - "sinapses" sao consumidas: status pendente → entregue.
+# - "negocio" e o contexto compartilhado por TODOS os agentes.
+# - "ultima_sessao" gera o greeting do Maestro.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# ─── PROJETO ──────────────────────────────────────────────────
+projeto:
+  nome: ""
+  cliente: ""
+  inicio: ""
+  tipo: ""  # negocio | app | hibrido — detectado durante sessao advisor
+  matriz_versao: "1.0"
+  template_origem: "world"
+
+# ─── PROGRESSO ────────────────────────────────────────────────
+# Cada fase tem um peso. O progresso geral e calculado
+# automaticamente pelo Maestro com base nos pesos.
+# Status: pendente | em_andamento | concluido | ignorado
+progresso:
+  geral: 0
+  fase_atual: ""
+  fases:
+    # --- FUNDACAO (quem sou, o que defendo) ---
+    - id: "descoberta"
+      nome: "Descoberta & Autoconhecimento"
+      squad: "squad-zona-genialidade"
+      chief: "zona-genialidade-chief"
+      status: "pendente"
+      peso: 8
+      descricao: "Perfil de genialidade, zona de flow, talentos dominantes"
+
+    - id: "proposito"
+      nome: "Proposito & Posicionamento"
+      squad: "squad-advisor"
+      chief: "advisor-chief"
+      agent: "simon-sinek"
+      status: "pendente"
+      peso: 12
+      descricao: "WHY, Golden Circle, causa, posicionamento de marca"
+
+    # --- OFERTA (o que vendo, como) ---
+    - id: "produto"
+      nome: "Produto & Oferta"
+      squad: "squad-advisor"
+      chief: "advisor-chief"
+      agent: "alex-hormozi"
+      status: "pendente"
+      peso: 12
+      descricao: "Grand Slam Offer, pricing, value equation, escala"
+
+    - id: "visao-produto"
+      nome: "Visao de Produto & Foco"
+      squad: "squad-advisor"
+      chief: "advisor-chief"
+      agent: "steve-jobs"
+      status: "pendente"
+      peso: 8
+      descricao: "Simplificacao, foco, experiencia, design thinking"
+
+    # --- CONSOLIDACAO (DNA do negocio, briefs, scorecard) ---
+    - id: "business-dna"
+      nome: "Business DNA Blueprint"
+      squad: "squad-product"
+      chief: "marty-cagan"
+      status: "pendente"
+      peso: 10
+      descricao: "Consolidacao estrategica: narrativa, oferta, produto, anti-briefing, briefs por squad, scorecard"
+
+    # --- MARCA (como pareco, o que digo) ---
+    - id: "identidade"
+      nome: "Identidade Visual & Design"
+      squad: "squad-design"
+      chief: "design-chief"
+      status: "pendente"
+      peso: 10
+      descricao: "Brand, logo, design system, tokens, componentes"
+
+    - id: "conteudo"
+      nome: "Conteudo & Distribuicao"
+      squad: "squad-content-distillery"
+      chief: "distillery-chief"
+      status: "pendente"
+      peso: 10
+      descricao: "Extracao de conhecimento, atomizacao, multi-plataforma"
+
+    # --- COMERCIAL (como vendo, como atraio, como retenho) ---
+    - id: "vendas"
+      nome: "Vendas & Comercial"
+      squad: "squad-sales"
+      chief: "alex-hormozi"
+      status: "pendente"
+      peso: 10
+      descricao: "Funil de vendas, prospeccao, closing, scripts, metas de revenue"
+
+    - id: "aquisicao"
+      nome: "Marketing & Aquisicao"
+      squad: "squad-marketing"
+      chief: "thiago-finch"
+      status: "pendente"
+      peso: 10
+      descricao: "Canais pagos e organicos, campanhas, analytics, email marketing"
+
+    - id: "retencao"
+      nome: "Retencao & Customer Success"
+      squad: "squad-customer-success"
+      chief: "lincoln-murphy"
+      status: "pendente"
+      peso: 8
+      descricao: "Onboarding de clientes, health score, churn prevention, upsell"
+
+    # --- ESCALA (como opero, como escalo) ---
+    - id: "operacao"
+      nome: "Operacao & Sistemas"
+      squad: "squad-agency"
+      chief: "ia-agency-chief"
+      status: "pendente"
+      peso: 6
+      descricao: "Diagnostico, agentes IA, automacoes, onboarding"
+
+    - id: "escala"
+      nome: "Escala & Franquia"
+      squad: "squad-franchise"
+      chief: "franchise-chief"
+      status: "pendente"
+      peso: 6
+      descricao: "Franqueabilidade, operacoes, expansao, rede"
+
+# ─── DECISOES ─────────────────────────────────────────────────
+# Append-only. Cada decisao e um registro permanente.
+# "impacta" indica quais squads precisam saber dessa decisao.
+decisoes: []
+  # Formato:
+  # - decisao: "O que foi decidido"
+  #   contexto: "Por que essa decisao foi tomada"
+  #   autor: "agent-id"
+  #   squad: "squad-id"
+  #   fase: "fase-id"
+  #   data: "YYYY-MM-DD"
+  #   impacta:
+  #     - "squad-id-1"
+  #     - "squad-id-2"
+
+# ─── SINAPSES ─────────────────────────────────────────────────
+# Comunicacao entre squads. Quando o destino consome, marca entregue.
+# O Maestro mostra sinapses pendentes no dashboard.
+sinapses: []
+  # Formato:
+  # - id: "SIN-001"
+  #   de: "squad-origem"
+  #   para: "squad-destino"
+  #   decisao: "O que foi decidido que o destino precisa saber"
+  #   contexto: "Por que o destino precisa dessa informacao"
+  #   acao: "O que o destino deve fazer com isso"
+  #   data: "YYYY-MM-DD"
+  #   status: "pendente"  # pendente | entregue
+
+# ─── NEGOCIO ──────────────────────────────────────────────────
+# Contexto compartilhado. TODO agente le isso antes de agir.
+# Preenchido progressivamente conforme decisoes sao tomadas.
+negocio:
+  # Core
+  publico_alvo: ""
+  problema_principal: ""
+  proposta_valor: ""
+
+  # Posicionamento (Sinek)
+  why: ""
+  how: ""
+  what: ""
+  causa: ""
+
+  # Oferta (Hormozi)
+  oferta_principal: ""
+  preco: ""
+  dream_outcome: ""
+  garantia: ""
+  diferenciais: []
+
+  # Produto (Jobs)
+  produto_core: ""
+  features_essenciais: []
+  features_cortadas: []
+
+  # Business DNA (Product)
+  business_dna_status: ""  # pendente | em_andamento | concluido
+  business_dna_score: ""   # score da validacao (ex: "32/38")
+  business_dna_date: ""    # data de conclusao
+  prd_status: ""           # "" | gerado | n/a — PRD tecnico condicional
+
+  # Identidade (Design)
+  tom_de_voz: ""
+  personalidade_marca: ""
+  cores: []
+  tipografia: []
+  logo_descricao: ""
+
+  # Conteudo (Distillery)
+  pilares_conteudo: []
+  plataformas: []
+  frequencia: ""
+
+  # Vendas (Sales)
+  meta_vendas: ""
+  ticket_medio: ""
+  canal_vendas: ""
+  funil: []
+  scripts_venda: []
+  cadencia_prospeccao: ""
+
+  # Marketing (Aquisicao)
+  canais_aquisicao: []
+  estrategia_marketing: ""
+  metricas_trafego: []
+  orcamento_marketing: ""
+  campanhas_ativas: []
+
+  # Retencao (Customer Success)
+  metricas_retencao: []
+  churn_rate: ""
+  nps: ""
+  health_score: ""
+  fluxo_onboarding_cliente: ""
+
+  # Operacao (Agency)
+  servicos: []
+  ferramentas: []
+  automacoes: []
+
+# ─── ULTIMA SESSAO ────────────────────────────────────────────
+# O Maestro usa isso para gerar o greeting contextual.
+ultima_sessao:
+  data: ""
+  squad: ""
+  agent: ""
+  fase: ""
+  resumo: ""
+  proximo_passo: ""
+  decisoes_tomadas: []
+
+# ─── QUALITY GATES ────────────────────────────────────────────
+# Registro de checklists executados. O Maestro usa para saber
+# quando foi o ultimo health check, audit, etc.
+quality_gates: []
+  # Formato:
+  # - checklist: "phase-transition"
+  #   data: "YYYY-MM-DD"
+  #   score: "28/33"
+  #   resultado: "APROVADO"
+  #   fase_contexto: "proposito → produto"
+
+# ─── SQUADS DISPONIVEIS ──────────────────────────────────────
+# Referencia dos squads na Matriz. Nao editar manualmente.
+squads:
+  squad-adm:
+    domain: "Gestao Administrativa, Financeira, Juridica, RH, Facilities e Compliance"
+    chief: "ray-dalio-adm-chief"
+    agents: ["dave-ramsey-financeiro", "patrick-lencioni-rh", "ken-adams-juridico", "marie-kondo-facilities", "ray-dalio-compliance"]
+    tasks: ["financial-health-check", "team-health-check", "contract-review", "tools-audit", "compliance-audit"]
+    negocio_fields: []
+
+  squad-advisor:
+    domain: "Strategic Business Advisory"
+    chief: "advisor-chief"
+    agents: ["simon-sinek", "alex-hormozi", "steve-jobs"]
+    tasks: ["strategic-advisory", "board-meeting"]
+    negocio_fields: ["why", "how", "what", "causa", "publico_alvo", "posicionamento", "oferta_principal", "preco", "dream_outcome", "garantia", "diferenciais", "produto_core", "features_essenciais", "features_cortadas"]
+
+  squad-agency:
+    domain: "AI Agency OS"
+    chief: "ia-agency-chief"
+    agents: ["estrategista-negocios", "construtor-agentes", "gestor-conteudo", "gestor-operacional", "pedro-sobral"]
+    tasks: ["diagnostico-cliente", "proposta-comercial", "conteudo-diario", "onboarding-cliente"]
+    negocio_fields: ["servicos", "ferramentas", "automacoes"]
+
+  squad-content-distillery:
+    domain: "Content Extraction & Repurposing"
+    chief: "distillery-chief"
+    agents: ["tacit-extractor", "model-identifier", "knowledge-architect", "content-atomizer", "idea-multiplier", "ecosystem-designer", "production-ops", "youtube-strategist"]
+    tasks: ["ingest-youtube", "extract-tacit-knowledge", "identify-frameworks", "atomize-content", "produce-batch", "build-knowledge-base", "cross-reference-frameworks", "design-ecosystem", "distill-single-live", "multiply-ideas", "optimize-youtube", "progressive-summarize"]
+    negocio_fields: ["pilares_conteudo", "plataformas", "frequencia"]
+
+  squad-creator:
+    domain: "Meta-Squad for Creating AI Agent Squads"
+    chief: "squad-chief"
+    agents: ["oalanicolas", "pedro-valerio", "jose-amorim"]
+    tasks: ["an-assess-sources", "an-clone-review", "an-design-clone", "an-diagnose-clone", "an-extract-dna", "an-extract-framework", "an-fidelity-score", "an-validate-clone", "auto-acquire-sources", "collect-sources", "create-agent", "create-documentation", "create-pipeline", "create-squad", "create-task", "create-template", "create-workflow", "deconstruct", "deep-research-pre-agent", "discover-tools", "extract-implicit", "extract-knowledge", "extract-sop", "extract-thinking-dna", "extract-voice-dna", "find-0.8", "install-commands", "migrate-workflows-to-yaml", "optimize", "pv-audit", "pv-axioma-assessment", "pv-modernization-score", "qa-after-creation", "refresh-registry", "squad-analytics", "squad-fusion", "sync-ide-command", "update-mind", "upgrade-squad", "validate-extraction", "validate-squad"]
+    negocio_fields: []
+
+  squad-customer-success:
+    domain: "Customer Success, Onboarding, Support & Retention"
+    chief: "lincoln-murphy"
+    agents: ["donna-weber", "shep-hyken", "joey-coleman", "wayne-mcculloch"]
+    tasks: ["welcome-client", "setup-account", "first-value", "handoff", "health-check", "engagement", "churn-prevention", "upsell-detection", "ticket-triage", "resolve", "escalate", "report"]
+    negocio_fields: ["metricas_retencao", "churn_rate", "nps", "health_score", "fluxo_onboarding_cliente"]
+
+  squad-design:
+    domain: "Elite Design System & Visual Design"
+    chief: "design-chief"
+    agents: ["brad-frost", "marty-neumeier", "dave-malouf", "chris-do", "aaron-draplin", "paddy-galloway", "joe-mcnally", "peter-mckinnon", "premium-design"]
+    tasks: ["a11y-audit", "aria-audit", "atomic-refactor-execute", "atomic-refactor-plan", "audit-reading-experience", "audit-tailwind-config", "b-roll-editing", "bootstrap-shadcn-library", "brand-charisma-audit", "brand-differentiation", "brand-gap-analysis", "brand-naming", "brand-portfolio-strategy", "bundle-audit", "channel-visual-strategy", "client-discovery-call", "color-grading", "contrast-matrix", "create-doc", "dead-code-detection", "design-business-positioning", "design-compare", "design-pricing-strategy", "design-process-optimization", "design-proposal-creation", "design-review-orchestration", "design-team-scaling", "design-tooling-audit", "design-triage", "designops-maturity-assessment", "designops-metrics-setup", "ds-audit-codebase", "ds-build-component", "ds-calculate-roi", "ds-compose-molecule", "ds-consolidate-patterns", "ds-extend-pattern", "ds-extract-tokens", "ds-generate-documentation", "ds-generate-migration-strategy", "ds-generate-shock-report", "ds-health-metrics", "ds-integrate-squad", "ds-rebuild-artifact", "ds-scan-artifact", "ds-setup-design-system", "execute-checklist", "export-design-tokens-dtcg", "focus-order-audit", "lighting-setup-design", "lighting-troubleshooting", "location-lighting", "logo-design-process", "logo-simplification", "logo-system-creation", "one-light-portrait", "photo-editing-workflow", "preset-creation", "tailwind-upgrade", "thumbnail-ab-testing", "thumbnail-audit", "thumbnail-design", "thumbnail-swipe-analysis", "token-usage-analytics", "validate-design-fidelity", "vintage-badge-design", "visual-qa"]
+    negocio_fields: ["tom_de_voz", "personalidade_marca", "cores", "tipografia", "logo_descricao"]
+
+  squad-franchise:
+    domain: "Franchise Consulting & Development"
+    chief: "franchise-chief"
+    agents: ["mark-siebert", "rick-bisio", "michael-gerber", "greg-nathan", "marcelo-cherto", "joe-mathews", "denis-santini", "scott-greenberg"]
+    tasks: ["evaluate-franchisability", "systemize-operations", "franchise-sales-strategy", "diagnose-relationship", "format-franchise-brazil", "franchise-buyer-assessment", "franchise-marketing-plan", "franchisee-performance-audit"]
+    negocio_fields: []
+
+  squad-marketing:
+    domain: "Marketing Operations & Strategy"
+    chief: "thiago-finch"
+    agents: ["gary-vaynerchuk", "depesh-mandalia", "andre-chaperon", "joe-pulizzi", "avinash-kaushik"]
+    tasks: ["social-media-audit", "campaign-meta-ads", "email-sequence", "content-strategy", "analytics-setup"]
+    negocio_fields: ["canais_aquisicao", "estrategia_marketing", "metricas_trafego", "orcamento_marketing", "campanhas_ativas"]
+
+  squad-ops:
+    domain: "Operations Architecture & Process Design"
+    chief: "ops-chief"
+    agents: ["process-mapper", "architect", "automation-architect", "qa-architect"]
+    tasks: ["map-process", "design-system-structure", "design-automation", "quality-gate"]
+    negocio_fields: []
+
+  squad-product:
+    domain: "Product Vision, Discovery, Positioning & Retention"
+    chief: "marty-cagan"
+    agents: ["melissa-perri", "april-dunford", "nir-eyal"]
+    tasks: ["discovery", "roadmap", "positioning", "vision-alignment", "launch-narrative", "prioritization", "product-review", "hook-analysis", "habit-design", "churn-diagnosis", "engagement-metrics", "opportunity-mapping", "category-design", "sales-pitch", "generate-business-dna"]
+    negocio_fields: ["roadmap", "features_mvp", "metricas_produto", "business_dna_status", "business_dna_score", "business_dna_date", "prd_status"]
+
+  squad-reino:
+    domain: "Biblical Wisdom"
+    chief: "jesus-cristo"
+    agents: []
+    tasks: ["conselho-biblico", "estudo-tematico"]
+    negocio_fields: []
+
+  squad-sales:
+    domain: "Sales Operations & Revenue"
+    chief: "alex-hormozi"
+    agents: ["jeb-blount", "jeremy-miner", "jacco-van-der-kooij"]
+    tasks: ["prospecting-cadence", "closing-framework", "revenue-architecture", "sales-strategy"]
+    negocio_fields: ["meta_vendas", "ticket_medio", "canal_vendas", "funil", "scripts_venda", "cadencia_prospeccao"]
+
+  squad-zona-genialidade:
+    domain: "Genius Zone Assessment & Monetization"
+    chief: "zona-genialidade-chief"
+    agents: ["gay-hendricks", "don-clifton", "dan-sullivan", "roger-hamilton", "alex-hormozi", "kathy-kolbe", "sally-hogshead"]
+    tasks: ["start", "run-assessment", "analyze-genius-profile", "recommend-squad", "generate-blueprint"]
+    negocio_fields: []

@@ -1,0 +1,61 @@
+# Squad Advisor Configuration
+squad:
+  name: "Squad Advisor"
+  id: "advisor"
+  version: "1.0.0"
+  description: "Board de conselheiros pessoais de elite. 3 mentes visionarias para decisoes estrategicas de negocios, produto e lideranca."
+  icon: "🧠"
+  color: "teal"
+  status: "active"
+  created_date: "2026-02-24"
+
+agents:
+  - id: "advisor-chief"
+    name: "Advisor Chief"
+    role: "orchestrator"
+    file: "agents/advisor-chief.md"
+
+  - id: "simon-sinek"
+    name: "Simon Sinek"
+    role: "advisor"
+    tier: 0
+    domain: "Purpose, Leadership, Infinite Game"
+    file: "agents/simon-sinek.md"
+
+  - id: "alex-hormozi"
+    name: "Alex Hormozi"
+    role: "advisor"
+    tier: 0
+    domain: "Monetization, Offers, Scale"
+    file: "agents/alex-hormozi.md"
+
+  - id: "steve-jobs"
+    name: "Steve Jobs"
+    role: "advisor"
+    tier: 0
+    domain: "Product, Vision, Simplicity"
+    file: "agents/steve-jobs.md"
+
+tasks:
+  - id: "strategic-advisory"
+    file: "tasks/strategic-advisory.md"
+  - id: "board-meeting"
+    file: "tasks/board-meeting.md"
+
+commands:
+  namespace: "squad-advisor"
+  prefix: "/squad-advisor"
+
+metadata:
+  total_agents: 4
+  total_tasks: 2
+  total_workflows: 0
+  elite_minds: 3
+  domain: "Strategic Business Advisory"
+  tags:
+    - business-advisory
+    - strategic-counsel
+    - leadership
+    - product-vision
+    - monetization
+    - scaling

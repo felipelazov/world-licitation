@@ -1,0 +1,97 @@
+# Support Escalation Workflow
+# Fluxo de suporte: ticket-triage → resolve → escalate → report
+
+workflow:
+  id: "support-escalation"
+  name: "Support Escalation Workflow"
+  description: "Fluxo de suporte ao cliente. Da triagem do ticket ate a resolucao ou escalacao, com relatorio final de qualidade e aprendizados."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "customer-success"
+  chief: "lincoln-murphy"
+  created_date: "2026-02-25"
+  tags: [support, escalation, ticket-triage, resolution]
+
+inputs:
+  client_name: { type: "string", required: true, description: "Nome do cliente" }
+  ticket_description: { type: "string", required: true, description: "Descricao do problema" }
+  severity: { type: "enum", options: ["low", "medium", "high", "critical"], default: "medium" }
+
+steps:
+  - id: "step_1_triage"
+    name: "Ticket Triage"
+    phase: "Triagem"
+    task: "ticket-triage"
+    agent: "shep-hyken"
+    description: "Triagem inicial com foco em experiencia. Shep Hyken classifica prioridade, identifica categoria e define SLA. Cliente se sente ouvido desde o primeiro contato."
+    inputs: { client_name: "{{client_name}}", ticket_description: "{{ticket_description}}", severity: "{{severity}}" }
+    outputs:
+      triage_result: "outputs/customer-success/{{client_name}}/support/triage-result.yaml"
+      sla_definition: "outputs/customer-success/{{client_name}}/support/sla-definition.yaml"
+    success_criteria:
+      - "Ticket classificado por categoria e prioridade"
+      - "SLA definido e comunicado ao cliente"
+      - "Responsavel designado"
+
+  - id: "step_2_resolve"
+    name: "Ticket Resolution"
+    phase: "Resolucao"
+    task: "resolve"
+    agent: "shep-hyken"
+    description: "Resolucao com foco na experiencia amazement de Shep Hyken. Transformar momento de atrito em oportunidade de fidelizacao."
+    inputs: { client_name: "{{client_name}}", triage_result: "{{step_1_triage.triage_result}}" }
+    outputs:
+      resolution_doc: "outputs/customer-success/{{client_name}}/support/resolution.md"
+      resolution_status: "outputs/customer-success/{{client_name}}/support/resolution-status.yaml"
+    success_criteria:
+      - "Problema resolvido dentro do SLA"
+      - "Decisao: RESOLVED / NEEDS_ESCALATION"
+
+  - id: "step_3_escalate"
+    name: "Escalation"
+    phase: "Escalacao"
+    task: "escalate"
+    agent: "lincoln-murphy"
+    skip_condition: "step_2_resolve.resolution_status == RESOLVED"
+    description: "Escalacao para Lincoln Murphy quando resolucao padrao nao e suficiente. Avaliar impacto no relacionamento e envolver stakeholders necessarios."
+    inputs: { client_name: "{{client_name}}", triage_result: "{{step_1_triage.triage_result}}", resolution_status: "{{step_2_resolve.resolution_status}}" }
+    outputs:
+      escalation_doc: "outputs/customer-success/{{client_name}}/support/escalation.md"
+      action_plan: "outputs/customer-success/{{client_name}}/support/escalation-action-plan.yaml"
+    success_criteria:
+      - "Causa raiz identificada"
+      - "Plano de acao com stakeholders definidos"
+      - "Timeline comunicada ao cliente"
+
+  - id: "step_4_report"
+    name: "Support Report"
+    phase: "Relatorio"
+    task: "report"
+    agent: "shep-hyken"
+    description: "Relatorio final com metricas de qualidade, tempo de resolucao, satisfacao e aprendizados. Alimenta base de conhecimento."
+    inputs: { client_name: "{{client_name}}", triage_result: "{{step_1_triage.triage_result}}", resolution_doc: "{{step_2_resolve.resolution_doc}}" }
+    outputs:
+      support_report: "outputs/customer-success/{{client_name}}/support/support-report.md"
+      lessons_learned: "outputs/customer-success/{{client_name}}/support/lessons-learned.yaml"
+    success_criteria:
+      - "Relatorio completo com metricas"
+      - "CSAT e tempo de resolucao registrados"
+      - "Aprendizados documentados"
+
+outputs:
+  support_complete: { type: "boolean", source: "step_4_report.success" }
+  resolution_type: { type: "enum", options: ["RESOLVED_L1", "RESOLVED_ESCALATED", "PENDING"], source: "step_2_resolve.resolution_status" }
+
+governance:
+  review_points:
+    - { step: "step_1_triage", gate: "Ticket classificado e SLA definido" }
+    - { step: "step_2_resolve", gate: "Resolucao tentada dentro do SLA" }
+    - { step: "step_4_report", gate: "Relatorio completo e aprendizados registrados" }
+
+notes:
+  - "Shep Hyken lidera triagem, resolucao e relatorio (experiencia amazement)"
+  - "Lincoln Murphy assume escalacoes com visao estrategica do relacionamento"
+  - "SLAs: critical 2h, high 8h, medium 24h, low 48h"
+  - "CRITICO: Tickets critical notificam lincoln-murphy imediatamente"

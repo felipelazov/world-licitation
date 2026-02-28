@@ -1,0 +1,427 @@
+# Blueprint Generation Workflow
+# De dados do perfil ao documento estrategico final
+
+workflow:
+  id: "blueprint-generation"
+  name: "Geracao do Blueprint Estrategico"
+  description: |
+    Workflow que transforma o Genius Profile e o Talent Map em um Blueprint
+    estrategico acionavel. Conecta talentos do fundador a oportunidade de
+    mercado, modelo de negocio, posicionamento e plano de acao de 90 dias.
+    Executado pelo chief com contribuicoes especificas de Hormozi e Hamilton.
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "zona-genialidade-chief"
+  created_date: "2026-02-25"
+  last_modified: "2026-02-25"
+  squad: "squad-zona-genialidade"
+  template: "blueprint-tmpl.md"
+  tags:
+    - blueprint
+    - monetizacao
+    - estrategia
+    - squad-recommendation
+    - plano-acao
+
+inputs:
+  genius_profile:
+    type: "string"
+    description: "Caminho para o Genius Profile integrado"
+    required: true
+
+  talent_map:
+    type: "string"
+    description: "Caminho para o Talent Map com cruzamentos"
+    required: true
+
+  hormozi_analysis:
+    type: "string"
+    description: "Analise do agente Hormozi (monetizacao e mercado)"
+    required: true
+
+  hamilton_analysis:
+    type: "string"
+    description: "Analise do agente Hamilton (perfil de riqueza)"
+    required: true
+
+  fundador_nome:
+    type: "string"
+    description: "Nome do fundador"
+    required: true
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # FASE 1: EXTRACAO DE INSUMOS
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_extract_superpoder"
+    name: "Extrair Superpoder do Fundador"
+    phase: "Extracao"
+    type: "analysis"
+    agent: "zona-genialidade-chief"
+    description: |
+      Ler o Genius Profile e o Talent Map para extrair:
+      1. Declaracao de Zona de Genialidade (1 frase)
+      2. Superpoder unico (convergencia dos 7 frameworks)
+      3. Top 3 intersecoes de alto impacto do Talent Map
+      Esses elementos sao a fundacao do Blueprint inteiro.
+    inputs:
+      genius_profile: "{{genius_profile}}"
+      talent_map: "{{talent_map}}"
+    outputs:
+      superpoder_statement: "Declaracao sintetica do superpoder"
+      intersecoes_chave: "3 intersecoes mais fortes entre frameworks"
+      zona_genialidade_frase: "Frase da zona de genialidade"
+    success_criteria:
+      - "Superpoder descrito em 1 paragrafo claro"
+      - "Zona de genialidade em 1 frase"
+      - "Intersecoes baseadas em pelo menos 3 frameworks cada"
+    error_handling:
+      strategy: "fail"
+      message: "Sem superpoder claro nao ha Blueprint — revisar Genius Profile"
+
+  # ---------------------------------------------------------------------------
+  # FASE 2: OPORTUNIDADE DE MERCADO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_2_market_opportunity"
+    name: "Definir Oportunidade de Mercado"
+    phase: "Mercado"
+    type: "analysis"
+    agent: "zona-genialidade-chief"
+    contributors: ["alex-hormozi"]
+    description: |
+      Usando a analise Hormozi + o superpoder do fundador, definir:
+      1. Nicho de mercado mais alinhado com a zona de genialidade
+      2. Dor principal do mercado que o fundador resolve naturalmente
+      3. Dream outcome do cliente final
+      4. Value Equation completa (resultado x probabilidade / tempo x esforco)
+      5. Diferencial competitivo baseado na zona de genialidade
+    inputs:
+      hormozi_analysis: "{{hormozi_analysis}}"
+      superpoder_statement: "{{step_1_extract_superpoder.superpoder_statement}}"
+    outputs:
+      nicho_recomendado: "Definicao do nicho de mercado"
+      dor_mercado: "Dor principal que o fundador resolve"
+      dream_outcome: "Resultado dos sonhos do cliente"
+      value_equation: "Value Equation completa com scores"
+      diferencial: "Diferencial baseado em zona de genialidade"
+    success_criteria:
+      - "Nicho e especifico (nao generico)"
+      - "Dor e urgente e dolorosa o suficiente para pagar por solucao"
+      - "Diferencial vem da zona de genialidade, nao de feature ou preco"
+    validation_rule: |
+      SE diferencial_competitivo NAO referencia zona_de_genialidade:
+        REJEITAR — diferenciais genericos nao servem.
+      SE nicho == "todo mundo" ou "empreendedores em geral":
+        REJEITAR — nicho deve ser especifico.
+    error_handling:
+      strategy: "warn"
+      on_fail: "Documentar incerteza e marcar para validacao com fundador"
+
+  # ---------------------------------------------------------------------------
+  # FASE 3: MODELO DE NEGOCIO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_3_business_model"
+    name: "Definir Modelo de Negocio e Escada de Valor"
+    phase: "Modelo"
+    type: "analysis"
+    agent: "zona-genialidade-chief"
+    contributors: ["roger-hamilton", "alex-hormozi"]
+    description: |
+      Baseado no perfil Wealth Dynamics (Hamilton) e na Value Equation (Hormozi),
+      definir o modelo de negocio mais alinhado com o modo natural de operar
+      do fundador. Incluir escada de valor com 3 niveis de oferta.
+    inputs:
+      hamilton_analysis: "{{hamilton_analysis}}"
+      hormozi_analysis: "{{hormozi_analysis}}"
+      genius_profile: "{{genius_profile}}"
+      nicho_recomendado: "{{step_2_market_opportunity.nicho_recomendado}}"
+    outputs:
+      modelo_negocio: "Modelo de negocio recomendado"
+      escada_valor: "3 niveis de oferta (entrada, core, premium)"
+      alavancas_escala: "Alavancas de escala identificadas"
+      justificativa_perfil: "Porque este modelo se encaixa no perfil"
+    success_criteria:
+      - "Modelo de negocio justificado pelo perfil Wealth Dynamics"
+      - "Escada de valor com faixas de preco coerentes"
+      - "Pelo menos 2 alavancas de escala identificadas"
+    validation_rule: |
+      SE perfil_WD == "Creator" E modelo == "operacao manual/servico por hora":
+        ALERTAR — Creators precisam de alavanca criativa, nao operacional.
+      SE perfil_WD == "Mechanic" E modelo == "personal branding puro":
+        ALERTAR — Mechanics prosperam com sistemas, nao com imagem pessoal.
+    error_handling:
+      strategy: "warn"
+      message: "Modelos conflitantes com perfil sao sinalizados como alerta"
+
+  # ---------------------------------------------------------------------------
+  # FASE 4: POSICIONAMENTO E COMUNICACAO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_positioning"
+    name: "Definir Posicionamento e Tom de Comunicacao"
+    phase: "Posicionamento"
+    type: "analysis"
+    agent: "zona-genialidade-chief"
+    description: |
+      Usando o arquetipo Hogshead + a zona de genialidade Hendricks,
+      definir como o fundador deve se posicionar e se comunicar.
+      Inclui Anthem, tom de voz e mensagem central.
+    inputs:
+      genius_profile: "{{genius_profile}}"
+      nicho_recomendado: "{{step_2_market_opportunity.nicho_recomendado}}"
+      diferencial: "{{step_2_market_opportunity.diferencial}}"
+    outputs:
+      anthem: "Declaracao de valor percebido (Hogshead)"
+      tom_comunicacao: "Tom primario e secundario de comunicacao"
+      mensagem_central: "Mensagem central do posicionamento"
+    success_criteria:
+      - "Anthem e memoravel e diferenciado"
+      - "Tom de comunicacao reflete o arquetipo de fascinacao"
+      - "Mensagem central conecta zona de genialidade com dor do mercado"
+    error_handling:
+      strategy: "warn"
+      message: "Posicionamento pode ser refinado na fase proposito com squad-advisor"
+
+  # ---------------------------------------------------------------------------
+  # FASE 5: RECOMENDACAO DE SQUAD
+  # ---------------------------------------------------------------------------
+
+  - id: "step_5_squad_recommendation"
+    name: "Recomendar Squad Ideal"
+    phase: "Recomendacao"
+    type: "task"
+    task: "recommend-squad"
+    agent: "zona-genialidade-chief"
+    description: |
+      Baseado no perfil completo (especialmente Wealth Dynamics + Kolbe + Clifton),
+      recomendar qual squad o fundador deveria criar/operar.
+      Definir papel do fundador e perfis complementares para contratar.
+    inputs:
+      genius_profile: "{{genius_profile}}"
+      modelo_negocio: "{{step_3_business_model.modelo_negocio}}"
+      hamilton_analysis: "{{hamilton_analysis}}"
+    outputs:
+      squad_recomendado: "Squad ideal com justificativa"
+      papel_fundador: "Papel do fundador dentro do squad"
+      contratacoes_prioritarias: "3 primeiras contratacoes recomendadas"
+      squad_alternativo: "Opcao B com justificativa"
+    success_criteria:
+      - "Squad recomendado com justificativa em pelo menos 3 frameworks"
+      - "Papel do fundador alinhado com zona de genialidade"
+      - "Contratacoes cobrem as maiores lacunas do perfil"
+    error_handling:
+      strategy: "warn"
+      message: "Recomendacao pode ter mais de uma opcao valida"
+
+  # ---------------------------------------------------------------------------
+  # FASE 6: PLANO DE ACAO 90 DIAS
+  # ---------------------------------------------------------------------------
+
+  - id: "step_6_action_plan"
+    name: "Elaborar Plano de Acao de 90 Dias"
+    phase: "Plano"
+    type: "analysis"
+    agent: "zona-genialidade-chief"
+    description: |
+      Traduzir toda a estrategia em 3 prioridades executaveis para os
+      proximos 90 dias. Cada prioridade calibrada para o modo conativo
+      do fundador (Kolbe) com metricas claras e primeiro passo imediato.
+    inputs:
+      modelo_negocio: "{{step_3_business_model.modelo_negocio}}"
+      escada_valor: "{{step_3_business_model.escada_valor}}"
+      squad_recomendado: "{{step_5_squad_recommendation.squad_recomendado}}"
+      genius_profile: "{{genius_profile}}"
+    outputs:
+      prioridades_90_dias: "3 prioridades com prazos e metricas"
+      anti_padroes: "O que NAO fazer baseado no perfil"
+      riscos_mitigacoes: "Riscos identificados com mitigacoes"
+    success_criteria:
+      - "3 prioridades, nenhuma mais"
+      - "Cada prioridade tem 'primeiro passo amanha'"
+      - "Acoes calibradas para o modo conativo do fundador"
+      - "Anti-padroes baseados em evidencia do perfil"
+    validation_rule: |
+      SE modo_kolbe == "Quick Start alto" E prioridade requer "planejamento de 30 dias antes de agir":
+        AJUSTAR — Quick Starters precisam de acao rapida com ajustes iterativos.
+      SE modo_kolbe == "Fact Finder alto" E prioridade e "lance amanha sem pesquisar":
+        AJUSTAR — Fact Finders precisam de dados antes de agir.
+    error_handling:
+      strategy: "fail"
+      message: "Blueprint sem plano de acao nao e entregavel"
+
+  # ---------------------------------------------------------------------------
+  # FASE 7: COMPILACAO DO BLUEPRINT
+  # ---------------------------------------------------------------------------
+
+  - id: "step_7_compile"
+    name: "Compilar Blueprint Final"
+    phase: "Compilacao"
+    type: "synthesis"
+    agent: "zona-genialidade-chief"
+    description: |
+      Compilar todos os outputs das fases 1-6 no documento final
+      usando blueprint-tmpl.md. Garantir coerencia narrativa,
+      linguagem acessivel e auto-suficiencia do documento.
+    inputs:
+      superpoder_statement: "{{step_1_extract_superpoder.superpoder_statement}}"
+      zona_genialidade_frase: "{{step_1_extract_superpoder.zona_genialidade_frase}}"
+      nicho_recomendado: "{{step_2_market_opportunity.nicho_recomendado}}"
+      value_equation: "{{step_2_market_opportunity.value_equation}}"
+      modelo_negocio: "{{step_3_business_model.modelo_negocio}}"
+      escada_valor: "{{step_3_business_model.escada_valor}}"
+      anthem: "{{step_4_positioning.anthem}}"
+      tom_comunicacao: "{{step_4_positioning.tom_comunicacao}}"
+      squad_recomendado: "{{step_5_squad_recommendation.squad_recomendado}}"
+      prioridades_90_dias: "{{step_6_action_plan.prioridades_90_dias}}"
+      anti_padroes: "{{step_6_action_plan.anti_padroes}}"
+      riscos_mitigacoes: "{{step_6_action_plan.riscos_mitigacoes}}"
+    outputs:
+      blueprint: "deliverables/descoberta/blueprint.md"
+    success_criteria:
+      - "Documento usa blueprint-tmpl.md como estrutura"
+      - "Todas as secoes preenchidas"
+      - "Linguagem acessivel para o fundador"
+      - "Documento e autocontido"
+    error_handling:
+      strategy: "fail"
+      message: "Blueprint e o deliverable principal da fase descoberta"
+
+  # ---------------------------------------------------------------------------
+  # FASE 8: QUALITY GATE E REGISTRO
+  # ---------------------------------------------------------------------------
+
+  - id: "step_8_quality_gate"
+    name: "Quality Gate: Blueprint Validado"
+    phase: "Validacao"
+    type: "checklist"
+    checklist: "blueprint-validation-checklist"
+    agent: "zona-genialidade-chief"
+    description: |
+      Aplicar blueprint-validation-checklist.md para garantir que o
+      documento final atende todos os criterios de qualidade antes da entrega.
+    inputs:
+      blueprint: "{{step_7_compile.blueprint}}"
+      genius_profile: "{{genius_profile}}"
+    outputs:
+      qg_result: "data/quality-gates/{{fundador_nome}}/qg-blueprint.md"
+    success_criteria:
+      - "Score >= 75% (27/36 itens)"
+    error_handling:
+      strategy: "fail"
+      on_fail: "Retornar ao step correspondente a secao com falha"
+
+  - id: "step_9_register_decisions"
+    name: "Registrar Decisoes no Project State"
+    phase: "Registro"
+    type: "task"
+    agent: "zona-genialidade-chief"
+    description: |
+      Registrar no project-state.yaml as 5 decisoes da fase descoberta:
+      1. genius_zone — declaracao de zona de genialidade
+      2. dominant_talents — top 5 talentos ordenados
+      3. wealth_profile — perfil Wealth Dynamics
+      4. conative_strength — modo conativo dominante
+      5. fascination_archetype — arquetipo de fascinacao
+      Criar sinapses para squads impactados (advisor, design, content-distillery).
+    inputs:
+      blueprint: "{{step_7_compile.blueprint}}"
+      genius_profile: "{{genius_profile}}"
+    outputs:
+      state_updated: "project-state.yaml atualizado"
+      sinapses_created: "Sinapses criadas para squads destino"
+    success_criteria:
+      - "5 decisoes registradas no project-state.yaml"
+      - "Sinapses criadas para squad-advisor, squad-design, squad-content-distillery"
+      - "Fase descoberta marcada como concluida no progresso"
+    error_handling:
+      strategy: "warn"
+      message: "Sinapse protocol e aditivo — falha nao bloqueia entrega"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  blueprint_complete:
+    type: "boolean"
+    description: "Blueprint gerado e validado com sucesso"
+    source: "step_8_quality_gate.success"
+
+  blueprint_path:
+    type: "string"
+    description: "Caminho para o Blueprint final"
+    source: "step_7_compile.blueprint"
+
+  squad_recommendation:
+    type: "string"
+    description: "Squad recomendado para o fundador"
+    source: "step_5_squad_recommendation.squad_recomendado"
+
+  decisions_registered:
+    type: "boolean"
+    description: "Decisoes registradas no project-state.yaml"
+    source: "step_9_register_decisions.state_updated"
+
+# =============================================================================
+# ERROR HANDLING & GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+governance:
+  review_points:
+    - step: "step_2_market_opportunity"
+      gate: "Nicho deve ser especifico e diferencial deve vir da zona de genialidade"
+
+    - step: "step_3_business_model"
+      gate: "Modelo deve ser coerente com perfil Wealth Dynamics"
+
+    - step: "step_6_action_plan"
+      gate: "Prioridades devem ser calibradas para o modo conativo Kolbe"
+
+    - step: "step_8_quality_gate"
+      gate: "Blueprint deve passar no checklist de validacao com >= 75%"
+
+# =============================================================================
+# PRINCIPIOS GUIA
+# =============================================================================
+
+guiding_principles:
+  - name: "Perfil determina estrategia, nao o contrario"
+    application: "Toda recomendacao deve ter raiz em pelo menos 1 framework do perfil"
+
+  - name: "Simplicidade > Sofisticacao"
+    application: "Fundador deve entender e executar o Blueprint sem ajuda externa"
+
+  - name: "Modo conativo e lei"
+    application: "Nunca recomendar acoes que violem o modo natural de operar do Kolbe"
+
+  - name: "Zona de Genialidade, nao Zona de Excelencia"
+    application: "Se a estrategia leva o fundador para a zona de excelencia, rejeitar"
+
+# =============================================================================
+# NOTAS
+# =============================================================================
+
+notes:
+  - "Este workflow e a FASE 4 do genius-zone-pipeline.yaml"
+  - "Pode ser executado independentemente se genius profile ja existe"
+  - "Hormozi e Hamilton sao os 2 agentes mais consultados neste workflow"
+  - "Validation rules alertam sobre incoerencias perfil-estrategia"
+  - "Sinapse protocol garante que decisoes fluam para proximos squads"
+  - "Proxima fase apos Blueprint: proposito (squad-advisor)"

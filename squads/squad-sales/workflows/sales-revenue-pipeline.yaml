@@ -1,0 +1,418 @@
+# ============================================================
+# Workflow: Sales Revenue Pipeline
+# ============================================================
+# Pipeline completo de vendas: da estrategia ate a analise de receita.
+# Orquestrado por Alex Hormozi, cada fase tem 1 especialista.
+# 4 fases: Strategy → Prospecting → Closing → Revenue Analysis
+# ============================================================
+
+metadata:
+  name: "Sales Revenue Pipeline"
+  id: "sales-revenue-pipeline"
+  squad: "squad-sales"
+  chief: "alex-hormozi"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "Pipeline completo de vendas: estrategia, prospecao, fechamento e analise de receita"
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - oferta: "Produto/servico sendo vendido (idealmente do squad-advisor)"
+    - meta_receita: "Meta de receita mensal/anual"
+    - tamanho_time: "Solo founder / Pequeno (2-5) / Medio (6-15) / Grande (15+)"
+  optional:
+    - ticket_medio: "Valor medio por venda"
+    - taxa_conversao_atual: "% de propostas que fecham"
+    - canais_aquisicao: "Como leads chegam hoje"
+    - cac_atual: "Custo de aquisicao por cliente"
+    - ciclo_venda: "Tempo medio entre primeiro contato e fechamento"
+
+# ── FASES ───────────────────────────────────────────────────
+
+phases:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 1: SALES STRATEGY & TEAM ARCHITECTURE
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 1
+    name: "Sales Strategy & Architecture"
+    id: "strategy"
+    agent: "alex-hormozi"
+    task: "sales-strategy"
+    description: "Definir estrategia de vendas, scripts CLOSER e arquitetura do time"
+    duration: "50 minutos"
+
+    steps:
+      - step: 1
+        name: "Value Equation Analysis"
+        duration: "10 min"
+        action: |
+          Analisar oferta nas 4 variaveis:
+          - Dream Outcome (quanto o cliente deseja?)
+          - Perceived Likelihood (quanto acredita que funciona?)
+          - Time Delay (quao rapido vem o resultado?)
+          - Effort & Sacrifice (quao facil e pro cliente?)
+          Se oferta fraca → PARAR e rotear pro squad-advisor
+        output: "Score da oferta + gaps identificados"
+
+      - step: 2
+        name: "CLOSER Framework Scripts"
+        duration: "12 min"
+        action: |
+          Construir script em 6 estagios:
+          C — Clarify (esclarecer situacao atual)
+          L — Label (rotular o problema)
+          O — Overview (visao geral do passado)
+          S — Sell the Vacation (vender o resultado, nao o aviao)
+          E — Explain Away Concerns (resolver objecoes)
+          R — Reinforce (reforcar decisao)
+        output: "Script CLOSER customizado"
+
+      - step: 3
+        name: "Team Architecture"
+        duration: "10 min"
+        action: |
+          Definir estrutura por tamanho:
+          - Solo: Founder faz tudo (script simplificado)
+          - Pequeno: Setter + Closer
+          - Medio: SDR team + Closer team + Manager
+          - Grande: Full sales org com RevOps
+        output: "Estrutura do time definida"
+
+      - step: 4
+        name: "KPI Targets"
+        duration: "10 min"
+        action: |
+          Para cada role, definir:
+          - Leading indicators (atividades: calls, propostas, reunioes)
+          - Lagging indicators (resultados: vendas, receita, churn)
+          - Metas diarias, semanais, mensais
+        output: "Framework de KPIs por role"
+
+      - step: 5
+        name: "Accountability System"
+        duration: "8 min"
+        action: |
+          - Daily standup (5 min, numeros do dia anterior)
+          - Weekly review (pipeline, conversao, bloqueios)
+          - Monthly MBR (receita, tendencias, ajustes)
+          - Public scoreboard (visibilidade total)
+        output: "Sistema de accountability definido"
+
+    quality_gate:
+      name: "QG-SALES-004"
+      checklist: "checklists/pipeline-health-checklist.md"
+      threshold: "Oferta validada + scripts prontos + KPIs definidos"
+      fail_action: "Se oferta fraca → squad-advisor. Se time indefinido → simplificar pra founder model"
+
+    deliverables:
+      - "deliverables/vendas/sales-strategy.md (template sales-playbook-tmpl.md)"
+
+    synapses:
+      - para: "squad-sales (prospecting)"
+        decisao: "Estrategia definida"
+        acao: "Iniciar prospecao com ICP e scripts"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 2: PROSPECTING & PIPELINE GENERATION
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 2
+    name: "Prospecting & Pipeline"
+    id: "prospecting"
+    agent: "jeb-blount"
+    task: "prospecting-cadence"
+    depends_on: "strategy"
+    description: "Definir ICP, cadencia multi-canal e gerar pipeline"
+    duration: "45 minutos"
+
+    steps:
+      - step: 1
+        name: "ICP Detalhado"
+        duration: "8 min"
+        action: |
+          Definir perfil ideal completo:
+          - Demografico: cargo, empresa, setor, tamanho, localizacao
+          - Psicografico: motivacoes, medos, aspiracoes
+          - Comportamental: onde consome conteudo, como compra
+          - BANT: Budget, Authority, Need, Timeline
+          - Red flags: sinais de que NAO e ICP
+        output: "ICP detalhado com criterios de qualificacao"
+
+      - step: 2
+        name: "Pipeline Math"
+        duration: "8 min"
+        action: |
+          Calculo reverso da meta:
+          Meta receita → Deals necessarios → Propostas → Reunioes → Contatos
+          Exemplo: R$50k → 10 deals x R$5k → 20 propostas (50% close) → 40 reunioes (50% show) → 200 contatos (20% resposta)
+        output: "Pipeline math com numeros por estagio"
+
+      - step: 3
+        name: "Daily Cadence"
+        duration: "10 min"
+        action: |
+          Desenhar dia ideal do SDR:
+          - Power Hours (blocos de prospecao pura)
+          - Distribuicao por canal (phone, email, WhatsApp, LinkedIn)
+          - Sequencia de toques (21-day cadence: quantos toques, quais canais, espacamento)
+        output: "Cadencia diaria com time blocks"
+
+      - step: 4
+        name: "Scripts de Abordagem"
+        duration: "10 min"
+        action: |
+          Para cada canal, criar script:
+          - Phone: abertura, qualificacao, agendamento
+          - Email: subject + corpo (3 templates por tipo)
+          - WhatsApp: mensagem cold personalizada
+          - LinkedIn: conexao + mensagem
+          + Top 5 objecoes com turnaround
+        output: "Scripts por canal + handling de objecoes"
+
+      - step: 5
+        name: "Activity KPIs"
+        duration: "9 min"
+        action: |
+          - Metas diarias de atividade (calls, emails, mensagens)
+          - Metas semanais de resultado (reunioes agendadas, pipeline gerado)
+          - Taxas de conversao por canal
+          - Rotina semanal do SDR
+        output: "KPIs de atividade com rotina"
+
+    quality_gate:
+      name: "QG-SALES-001"
+      checklist: "checklists/prospecting-quality-checklist.md"
+      threshold: "ICP definido + math calculado + cadencia desenhada + scripts prontos"
+      fail_action: "ICP generico → refinar. Sem canais → definir pelo menos 2"
+
+    deliverables:
+      - "deliverables/vendas/prospecting-playbook.md (template prospecting-cadence-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 3: CLOSING FRAMEWORK
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 3
+    name: "Closing Framework"
+    id: "closing"
+    agent: "jeremy-miner"
+    task: "closing-framework"
+    depends_on: "prospecting"
+    description: "Construir framework de fechamento consultivo com NEPQ"
+    duration: "50 minutos"
+
+    steps:
+      - step: 1
+        name: "Buyer Psychology Map"
+        duration: "10 min"
+        action: |
+          Mapear psicologia do comprador:
+          - Status quo bias (por que nao muda?)
+          - Dor latente vs ativa (ja sabe que tem o problema?)
+          - Gatilhos emocionais (o que motiva acao?)
+          - Jornada de decisao (estagios mentais)
+          - Stakeholders (quem influencia a decisao?)
+        output: "Mapa psicologico do comprador"
+
+      - step: 2
+        name: "NEPQ Questions"
+        duration: "12 min"
+        action: |
+          Criar banco de perguntas em 4 fases:
+          1. Situation Questions: rapport + entender cenario
+          2. Problem Awareness: fazer o comprador SENTIR a dor
+          3. Solution Awareness: criar visao do futuro ideal
+          4. Consequence Questions: urgencia natural (nao fabricada)
+          Minimo 12 perguntas (3 por fase)
+        output: "Banco de perguntas NEPQ (12+)"
+
+      - step: 3
+        name: "Objection Handling"
+        duration: "10 min"
+        action: |
+          Para cada objecao top 5:
+          Framework em 4 passos:
+          1. Acknowledge (validar sem concordar)
+          2. Ask (perguntar pra entender a raiz)
+          3. Reframe (reposicionar a perspectiva)
+          4. Advance (mover pra proxima etapa)
+        output: "Scripts de objecao (top 5 com 4 passos cada)"
+
+      - step: 4
+        name: "Closing Techniques"
+        duration: "8 min"
+        action: |
+          3 tecnicas consultivas:
+          1. Natural Close (a decisao e consequencia logica da conversa)
+          2. Gradual Commitment (micro-sim ao longo da call)
+          3. Alternative Close (escolha entre opcoes, nao sim/nao)
+        output: "3 tecnicas de fechamento com scripts"
+
+      - step: 5
+        name: "Follow-up Cadence"
+        duration: "10 min"
+        action: |
+          Pos-reuniao:
+          - Dia 1: Recap + materiais
+          - Dia 3: Conteudo de valor
+          - Dia 5: Check-in leve
+          - Dia 7: Urgencia (sem ser desesperado)
+          - Dia 10: Break-up email
+          - Dia 30: Re-engagement
+        output: "Cadencia de follow-up com templates"
+
+    quality_gate:
+      name: "QG-SALES-002"
+      checklist: "checklists/closing-readiness-checklist.md"
+      threshold: "NEPQ completo + objecoes mapeadas + tecnicas definidas"
+      fail_action: "Sem objecoes mapeadas → entrevistar vendedores. Sem NEPQ → nao vender consultivo"
+
+    deliverables:
+      - "deliverables/vendas/closing-framework.md"
+      - "deliverables/vendas/objection-scripts.md"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 4: REVENUE ANALYSIS & OPTIMIZATION
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 4
+    name: "Revenue Analysis & Optimization"
+    id: "revenue-analysis"
+    agent: "jacco-van-der-kooij"
+    task: "revenue-architecture"
+    depends_on: "closing"
+    description: "Montar revenue architecture completa com metricas e forecast"
+    duration: "60 minutos"
+
+    steps:
+      - step: 1
+        name: "Revenue Model Mapping"
+        duration: "12 min"
+        action: |
+          Mapear modelo de receita atual:
+          - Streams de receita (setup, recorrente, upsell, indicacao)
+          - Unit economics (CAC, LTV, payback)
+          - Eficiencia (receita por vendedor, receita por lead)
+          - Gaps (onde esta perdendo dinheiro?)
+        output: "Modelo de receita documentado"
+
+      - step: 2
+        name: "Pipeline Stage Design"
+        duration: "12 min"
+        action: |
+          Definir estagios com criterios de entrada/saida:
+          Lead → MQL → SQL → Meeting → Proposal → Negotiation → Won/Lost
+          Para cada estagio: criterio de entrada, exit, conversion rate esperado
+        output: "Pipeline com estagios e criterios"
+
+      - step: 3
+        name: "Metrics Framework"
+        duration: "12 min"
+        action: |
+          Bow Tie Model:
+          Leading: atividades, pipeline gerado, velocity
+          Lagging: receita, win rate, CAC, LTV, NRR, churn
+          Para cada metrica: formula, fonte de dados, frequencia, dono
+        output: "Framework de metricas completo"
+
+      - step: 4
+        name: "Forecasting"
+        duration: "12 min"
+        action: |
+          3 metodos complementares:
+          1. Pipeline Weighted (valor x probabilidade por estagio)
+          2. Historical + Trend (dados passados extrapolados)
+          3. Capacity-based (capacidade do time x conversao)
+        output: "3 forecasts + cenarios (conservador, realista, otimista)"
+
+      - step: 5
+        name: "Handoff Points"
+        duration: "12 min"
+        action: |
+          Definir SLAs de transicao:
+          - Marketing → Sales: criterios MQL/SQL
+          - Sales → CS: onboarding handoff
+          - CS → Sales: expansion/upsell signal
+        output: "Handoff matrix com SLAs"
+
+    quality_gate:
+      name: "QG-SALES-003"
+      checklist: "checklists/deal-qualification-checklist.md"
+      threshold: "Revenue model + pipeline + metricas + forecast definidos"
+      fail_action: "Sem dados historicos → usar capacity-based forecast. Sem CRM → recomendar implementacao"
+
+    deliverables:
+      - "deliverables/vendas/revenue-architecture.md (template revenue-model-tmpl.md)"
+
+# ── OUTPUTS FINAIS ──────────────────────────────────────────
+
+outputs:
+  deliverables:
+    strategy: ["deliverables/vendas/sales-strategy.md"]
+    prospecting: ["deliverables/vendas/prospecting-playbook.md"]
+    closing: ["deliverables/vendas/closing-framework.md", "deliverables/vendas/objection-scripts.md"]
+    revenue: ["deliverables/vendas/revenue-architecture.md"]
+
+  project_state_updates:
+    negocio:
+      - "icp_definido, pipeline_stages, kpis_vendas, forecast"
+
+# ── EXECUTION MODES ────────────────────────────────────────
+
+execution_modes:
+  full_pipeline:
+    description: "Todas as 4 fases sequenciais"
+    duration: "3.5 horas"
+    use_when: "Setup completo de vendas do zero"
+
+  prospecting_focus:
+    description: "Fases 1 + 2 (estrategia + prospecao)"
+    duration: "1.5 hora"
+    use_when: "Pipeline fraco, precisa gerar leads"
+
+  closing_focus:
+    description: "Fase 3 isolada (fechamento)"
+    duration: "50 min"
+    use_when: "Leads chegam mas nao fecha"
+
+  revenue_audit:
+    description: "Fase 4 isolada (analise de receita)"
+    duration: "1 hora"
+    use_when: "Vendendo mas sem visibilidade de metricas"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  veto_conditions:
+    - "Oferta indefinida → Rotear pro squad-advisor antes de qualquer coisa"
+    - "ICP generico → Nao prospectar ate refinar"
+    - "Sem objecoes mapeadas → Nao fazer call de fechamento"
+    - "Revenue target irreal → Ajustar antes de definir KPIs"
+
+  synapses_externas:
+    - para: "squad-advisor"
+      decisao: "Oferta fraca identificada"
+      acao: "Revisitar Value Equation com Hormozi (advisor)"
+    - para: "squad-marketing"
+      decisao: "ICP definido"
+      acao: "Alinhar targeting de conteudo e ads com ICP"
+    - para: "squad-content-distillery"
+      decisao: "Objecoes mapeadas"
+      acao: "Criar conteudo que antecipa e resolve objecoes"
+
+notes: |
+  Este pipeline e a maquina de receita do negocio.
+  Sem vendas, nada mais importa.
+
+  Alex Hormozi (Chief) define a estrategia e garante que a oferta e forte.
+  Jeb Blount gera pipeline com prospecao fanatica.
+  Jeremy Miner fecha com NEPQ (venda consultiva, nao empurracao).
+  Jacco van der Kooij mede tudo e garante que a maquina escala.
+
+  Regra #1: Se a oferta e fraca, nao adianta vender melhor.
+  Regra #2: Se nao prospecta, nao tem pipeline.
+  Regra #3: Se nao mede, nao sabe o que otimizar.

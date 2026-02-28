@@ -1,0 +1,123 @@
+pack:
+  name: squad-ops
+  version: 1.0.0
+  short-title: OPS Squad
+  description: >-
+    Squad de operações completo com AI Head de OPS (Pedro Valério) liderando
+    4 especialistas — todos Pedro Valério em roles distintos: Process Mapper,
+    Architect, Automation Architect e QA. O arquiteto da casa: desenha a planta
+    que todos os outros squads seguem. Sem OPS, cada squad inventa suas regras.
+  author: World OS
+  icon: "⚙️"
+  slashPrefix: squad-ops
+
+# Pattern Library
+pattern_library:
+  prefix: OP
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "OP-TP-001"
+  categories:
+    - id: TP
+      name: "Task Patterns"
+      description: "Patterns for OPS task structure"
+    - id: EP
+      name: "Executor Patterns"
+      description: "Patterns for executor assignment"
+    - id: PP
+      name: "Process Patterns"
+      description: "Patterns for OPS workflows"
+    - id: QG
+      name: "Quality Gate Patterns"
+      description: "Patterns for quality validation"
+
+# Agents
+agents:
+  ops-chief:
+    role: "AI Head de OPS (Chief)"
+    tier: orchestrator
+    mind: "Pedro Valério"
+    domain: "Routing, demand management, progress tracking, delivery"
+
+  process-mapper:
+    role: "Process Mapper"
+    tier: 1
+    mind: "Pedro Valério"
+    domain: "Process discovery, process design, gap analysis, stakeholder interviews"
+
+  architect:
+    role: "Architect"
+    tier: 1
+    mind: "Pedro Valério"
+    domain: "System architecture, ClickUp structure, status flows, executor matrix"
+
+  automation-architect:
+    role: "Automation Architect"
+    tier: 1
+    mind: "Pedro Valério"
+    domain: "Task definitions, automation rules, triggers, integrations, fallbacks"
+
+  qa-architect:
+    role: "QA Architect"
+    tier: 2
+    mind: "Pedro Valério"
+    domain: "Quality gates, checklists, validation execution, approval/rejection"
+
+# One Mind Multiple Hats Pattern
+one_mind_pattern:
+  mind: "Pedro Valério"
+  shared_dna:
+    voice: "Assinatura Linguística PV (Show, cara, beleza, tá?)"
+    thinking: "Impossibilitar Caminhos + 3 heuristics (PV_BS_001, PV_PA_001, PV_PM_001)"
+    values: "Ordem sobre Caos, Verdade Sistêmica, Fluxo Unidirecional"
+  differentiation: "Each role has unique SCOPE, commands, tools, quality gates, and handoffs"
+
+# Task Standards
+task_standards:
+  enforce_anatomy: true
+  validator: "OP-TP-001"
+  required_fields:
+    - task_name
+    - status
+    - responsible_executor
+    - execution_type
+    - input
+    - output
+    - action_items
+    - acceptance_criteria
+
+# Pipeline Architecture
+pipeline:
+  flow: "Demanda → Process Mapper → Architect → Automation Architect → QA → ENTREGA"
+  quality_gate_threshold: 0.70
+  stages:
+    - name: "Discovery & Design"
+      owner: "process-mapper"
+      tasks: ["discovery-process", "create-process"]
+      gate: "Quality Gate >70% → passa pro Architect"
+      metrics: ["gaps found", "stakeholders interviewed", "paths blocked"]
+
+    - name: "Architecture"
+      owner: "architect"
+      tasks: ["design-architecture", "design-executors"]
+      gate: "Quality Gate >70% → passa pro Automation Architect"
+      metrics: ["folders defined", "fields configured", "views created"]
+
+    - name: "Automation"
+      owner: "automation-architect"
+      tasks: ["create-task-definitions", "create-automations"]
+      gate: "Quality Gate >70% → passa pro QA"
+      metrics: ["automations created", "triggers configured", "fallbacks tested"]
+
+    - name: "Quality Assurance"
+      owner: "qa-architect"
+      tasks: ["design-qa-gates", "execute-qa-validation"]
+      gate: "Quality Gate FINAL >70% → ENTREGA"
+      metrics: ["gates defined", "checklists validated", "issues found"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: true
+  allow_manual_override: false
+  unidirectional: true  # Pedro's law: Nada volta num fluxo. NUNCA.

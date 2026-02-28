@@ -1,0 +1,317 @@
+# Franchise Development Pipeline
+# Complete business franchising: feasibility → systemization → formatting → sales → marketing
+
+workflow:
+  id: "franchise-development-pipeline"
+  name: "Franchise Development Pipeline"
+  description: "Pipeline completo para transformar um negocio em franquia. Da avaliacao de franchisability ate a estrategia de vendas e marketing da rede."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Franchise Squad"
+  created_date: "2026-02-24"
+  last_modified: "2026-02-24"
+  squad: "franchise"
+  tags:
+    - franchise-development
+    - franchisability
+    - systemization
+    - expansion
+    - franchise-sales
+    - franchise-marketing
+
+inputs:
+  business_name:
+    type: "string"
+    description: "Nome do negocio a ser franqueado"
+    required: true
+
+  business_segment:
+    type: "string"
+    description: "Segmento de atuacao (alimentacao, servicos, educacao, etc.)"
+    required: true
+
+  current_units:
+    type: "number"
+    description: "Numero atual de unidades operando"
+    required: true
+    default: 1
+
+  market:
+    type: "enum"
+    description: "Mercado-alvo da franquia"
+    options:
+      - "brazil"
+      - "usa"
+      - "international"
+    required: false
+    default: "brazil"
+
+  scope:
+    type: "enum"
+    description: "Escopo do pipeline"
+    options:
+      - "full"                    # Pipeline completo (todas as fases)
+      - "feasibility-only"        # Apenas avaliacao de franchisability
+      - "systemize-only"          # Apenas sistematizacao de operacoes
+      - "expansion-only"          # Apenas vendas + marketing (negocio ja formatado)
+    required: false
+    default: "full"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # PHASE 1: FEASIBILITY ASSESSMENT
+  # Agent: mark-siebert (Tier 0)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_franchisability"
+    name: "Franchise Feasibility Assessment"
+    phase: "Feasibility"
+    type: "task"
+    task: "evaluate-franchisability"
+    agent: "mark-siebert"
+    description: |
+      Avaliar se o negocio pode ser franqueado usando os 12 Criterios de
+      Franchisability de Mark Siebert. Inclui Multiplier Model scoring,
+      analise dos Six Costly Mistakes, e Four Pillars of Quality Control.
+    inputs:
+      business_name: "{{business_name}}"
+      business_segment: "{{business_segment}}"
+      current_units: "{{current_units}}"
+    outputs:
+      franchisability_scorecard: "outputs/franchise/{{business_name}}/feasibility/franchisability-scorecard.yaml"
+      feasibility_report: "outputs/franchise/{{business_name}}/feasibility/feasibility-report.md"
+    success_criteria:
+      - "12 Criterios scored (1-5 each)"
+      - "Total score calculado (minimo 36/60 para GO)"
+      - "Six Costly Mistakes verificados"
+      - "Decisao clara: GO / CONDITIONAL / NO-GO"
+    quality_gate: "QG-FR-001"
+    error_handling:
+      strategy: "fail"
+      message: "Cannot proceed without franchisability assessment. Score < 36/60 = NO-GO."
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2: OPERATIONS SYSTEMIZATION
+  # Agent: michael-gerber (Tier 1)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_2_systemization"
+    name: "Operations Systemization"
+    phase: "Systemization"
+    type: "task"
+    task: "systemize-operations"
+    agent: "michael-gerber"
+    description: |
+      Criar o Franchise Prototype usando a metodologia E-Myth de Michael Gerber.
+      Sistematizar todas as operacoes para que o negocio funcione SEM o dono.
+      Aplicar IQO cycle e Seven Centers of Management Attention.
+    inputs:
+      business_name: "{{business_name}}"
+      feasibility_report: "{{step_1_franchisability.feasibility_report}}"
+    outputs:
+      operations_blueprint: "outputs/franchise/{{business_name}}/systemization/operations-blueprint.md"
+      franchise_prototype: "outputs/franchise/{{business_name}}/systemization/franchise-prototype.yaml"
+      operations_manual_outline: "outputs/franchise/{{business_name}}/systemization/manual-outline.md"
+    success_criteria:
+      - "Franchise Prototype documentado (6 regras aplicadas)"
+      - "IQO cycle completo para processos-chave"
+      - "Seven Centers mapeados"
+      - "Negocio funciona sem dependencia do dono"
+    quality_gate: "QG-FR-002"
+    error_handling:
+      strategy: "fail"
+      message: "Operations must be systemized before franchise formatting"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 3: FRANCHISE FORMATTING (Brazil)
+  # Agent: marcelo-cherto (Tier 1) — conditional: market == brazil
+  # ---------------------------------------------------------------------------
+
+  - id: "step_3_brazil_formatting"
+    name: "Franchise Formatting for Brazil"
+    phase: "Formatting"
+    type: "task"
+    task: "format-franchise-brazil"
+    agent: "marcelo-cherto"
+    condition: "{{market}} == 'brazil'"
+    description: |
+      Formatar a franquia para o mercado brasileiro usando a metodologia de
+      Marcelo Cherto. Inclui compliance com Lei 13.966/2019, estruturacao
+      da COF, e aplicacao dos 3 Pilares (Formatacao/Expansao/Gestao).
+    inputs:
+      business_name: "{{business_name}}"
+      business_segment: "{{business_segment}}"
+      franchise_prototype: "{{step_2_systemization.franchise_prototype}}"
+      operations_blueprint: "{{step_2_systemization.operations_blueprint}}"
+    outputs:
+      formatting_roadmap: "outputs/franchise/{{business_name}}/formatting/formatting-roadmap.md"
+      cof_draft: "outputs/franchise/{{business_name}}/formatting/cof-draft.md"
+      legal_checklist: "outputs/franchise/{{business_name}}/formatting/legal-compliance-checklist.md"
+    success_criteria:
+      - "3 Pilares endereçados"
+      - "COF draft com todos os elementos obrigatorios"
+      - "Compliance com Lei 13.966/2019 verificado"
+      - "7 Pecados Capitais checados (zero encontrados)"
+    quality_gate: "QG-FR-003"
+    error_handling:
+      strategy: "fail"
+      message: "Legal compliance is mandatory for Brazilian market"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 4: FRANCHISE SALES STRATEGY
+  # Agent: joe-mathews (Tier 2)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_sales_strategy"
+    name: "Franchise Sales Strategy"
+    phase: "Sales"
+    type: "task"
+    task: "franchise-sales-strategy"
+    agent: "joe-mathews"
+    description: |
+      Criar estrategia de vendas de franquias usando KASH Model e Tipping Point
+      de Joe Mathews. Definir Buyer Generation, lifecycle de franqueados,
+      e targets de expansao.
+    inputs:
+      business_name: "{{business_name}}"
+      business_segment: "{{business_segment}}"
+      feasibility_report: "{{step_1_franchisability.feasibility_report}}"
+      formatting_roadmap: "{{step_3_brazil_formatting.formatting_roadmap}}"
+    outputs:
+      sales_strategy: "outputs/franchise/{{business_name}}/sales/franchise-sales-strategy.md"
+      expansion_targets: "outputs/franchise/{{business_name}}/sales/expansion-targets.yaml"
+      sales_playbook: "outputs/franchise/{{business_name}}/sales/sales-playbook.md"
+    success_criteria:
+      - "KASH assessment completo para equipe de vendas"
+      - "Tipping Point identificado"
+      - "Buyer Generation strategy definida"
+      - "Targets de expansao com timeline"
+    error_handling:
+      strategy: "warn"
+      message: "Sales strategy can be refined iteratively"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5: FRANCHISE MARKETING PLAN
+  # Agent: denis-santini (Tier 2)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_5_marketing"
+    name: "Franchise Network Marketing Plan"
+    phase: "Marketing"
+    type: "task"
+    task: "franchise-marketing-plan"
+    agent: "denis-santini"
+    description: |
+      Criar plano de marketing da rede usando os 5 Pilares de Denis Santini.
+      Inclui governanca do Fundo de Marketing, estrategia de Opening Marketing,
+      e 7 Franquehabitos.
+    inputs:
+      business_name: "{{business_name}}"
+      business_segment: "{{business_segment}}"
+      sales_strategy: "{{step_4_sales_strategy.sales_strategy}}"
+    outputs:
+      marketing_plan: "outputs/franchise/{{business_name}}/marketing/franchise-marketing-plan.md"
+      marketing_budget: "outputs/franchise/{{business_name}}/marketing/marketing-budget.yaml"
+      opening_marketing: "outputs/franchise/{{business_name}}/marketing/opening-marketing-checklist.md"
+    success_criteria:
+      - "5 Pilares endereçados"
+      - "Fundo de Marketing estruturado"
+      - "Opening Marketing para novas unidades"
+      - "KPIs definidos"
+    error_handling:
+      strategy: "warn"
+      message: "Marketing plan can evolve as network grows"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 6: SYNTHESIS & HANDOFF
+  # Agent: franchise-chief (Orchestrator)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_6_synthesis"
+    name: "Franchise Development Synthesis"
+    phase: "Synthesis"
+    type: "synthesis"
+    agent: "franchise-chief"
+    description: |
+      Compilar todos os entregaveis em um Plano de Desenvolvimento de Franquia
+      completo. Criar roadmap de implementacao com fases, prazos e responsaveis.
+    inputs:
+      feasibility_report: "{{step_1_franchisability.feasibility_report}}"
+      operations_blueprint: "{{step_2_systemization.operations_blueprint}}"
+      formatting_roadmap: "{{step_3_brazil_formatting.formatting_roadmap}}"
+      sales_strategy: "{{step_4_sales_strategy.sales_strategy}}"
+      marketing_plan: "{{step_5_marketing.marketing_plan}}"
+    outputs:
+      franchise_development_plan: "outputs/franchise/{{business_name}}/franchise-development-plan.md"
+      executive_summary: "outputs/franchise/{{business_name}}/executive-summary.md"
+      implementation_roadmap: "outputs/franchise/{{business_name}}/implementation-roadmap.md"
+    success_criteria:
+      - "All phases synthesized"
+      - "Executive summary is actionable"
+      - "Roadmap has clear phases, deadlines, and owners"
+      - "All quality gates passed"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "Pipeline completo executado com sucesso"
+    source: "step_6_synthesis.success"
+
+  franchisability_score:
+    type: "number"
+    description: "Score de franchisability (de 60)"
+    source: "step_1_franchisability.franchisability_scorecard"
+
+  franchise_development_plan:
+    type: "string"
+    description: "Caminho para o plano completo de desenvolvimento"
+    source: "step_6_synthesis.franchise_development_plan"
+
+# =============================================================================
+# GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+governance:
+  review_points:
+    - step: "step_1_franchisability"
+      gate: "QG-FR-001: Score >= 36/60 para prosseguir"
+
+    - step: "step_2_systemization"
+      gate: "QG-FR-002: Franchise Prototype completo"
+
+    - step: "step_3_brazil_formatting"
+      gate: "QG-FR-003: Legal compliance verificado"
+
+    - step: "step_6_synthesis"
+      gate: "Review final antes de implementacao"
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  - "Pipeline baseado nas metodologias de 5 elite minds: Siebert, Gerber, Cherto, Mathews, Santini"
+  - "Phase 3 (Brazil Formatting) e condicional — so executa se market == brazil"
+  - "Para mercados internacionais, substituir Phase 3 por consultoria juridica local"
+  - "Cada step pode ser executado independentemente usando a task correspondente"
+  - "Pipeline completo tipicamente leva 4-8 semanas com envolvimento do stakeholder"
+  - "Handoff para Greg Nathan: apos rede operando, usar diagnose-relationship para saude da rede"
+  - "Handoff para Scott Greenberg: usar franchisee-performance-audit para melhorar performance"

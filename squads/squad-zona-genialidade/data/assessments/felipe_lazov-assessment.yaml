@@ -1,0 +1,133 @@
+assessment_result:
+  metadata:
+    id: "assessment_felipe_lazov_2026-02-21"
+    name: "Felipe Lazov Nunes de Oliveira"
+    date: "2026-02-21"
+    version: "1.0.0"
+    completeness_score: "100%"
+    questions_answered: 43
+    questions_total: 43
+    open_questions_quality: "5/5 substantivas (todas >20 chars)"
+    previous_assessments: "Nenhum"
+
+  section_1_context:
+    nome: "Felipe Lazov Nunes de Oliveira"
+    area_atuacao: "Gestao / Lideranca (loja online ha 5 anos)"
+    tempo_experiencia: "5 a 10 anos"
+    descricao_dia_a_dia: |
+      Hoje tem loja online de roupas esportivas (DRFT Shop - @drft.shop @drft.shopp @sportsbr.on),
+      regatas de basquete, camisas NFL, MLB, futebol. Cuida da gestao, financeiro, pedidos.
+      Socio cuida do comercial. Empresa desde 2019, so os 2.
+      Em paralelo: BM MARKET (mercados autonomos em condominios) - 3 unidades
+      (Portella Franco, Monte Carlos, Varandas do Sul) + centro de distribuicao.
+      1 ano de operacao, 2 socios, esposa Juliana nos abastecimentos.
+      Gestao de trafego para amigo (@dayaraujosummer - biquinis).
+      Consultoria na BM Cesta Basica (2 meses, organizando operacao, implantando sistema).
+      Estudando IA ha 3 meses, AIOS ha 1 semana. Quer focar em IA mas renda ainda nao vem dela.
+    se_dinheiro_nao_importasse: |
+      Dar mentorias, ensinar pessoas. Sociedades estrategicas na parte criativa (nao operacional).
+      Ja criou empresa que faturava R$1.5M, vendeu participacao por R$400k (enganado, entrando na justica).
+      Escritorio de alto padrao com solucoes avancadas de IA. Equipe de 5-10 pessoas.
+      Viajar o mundo 4x/ano. Ajudar pessoas financeiramente e com recursos.
+      Cristao, proposito alinhado com Deus - ser potencializador do Reino.
+    espectro_introextro: "Equilibrado tendendo a extrovertido (limitado por contexto financeiro atual)"
+    espectro_analitico_intuitivo: "Mais intuitivo que analitico"
+    espectro_estrutura_flex: "Estrutura total - cronogramas, checklists, processos definidos"
+    frameworks_fed:
+      - "ALL: identificacao basica e contexto rico"
+      - "hamilton: introextro equilibrado + intuitivo = Creator axis"
+      - "kolbe: estrutura total = Follow Thru alto"
+      - "hogshead: potencial extrovertido = Power indicator"
+      - "hendricks: 'se dinheiro nao fosse problema' = sinal forte de Zona de Genialidade"
+      - "sullivan: descricao rica com multiplos negocios = contexto UA"
+
+  section_2_activities:
+    atividades_drenam:
+      - "Tarefas administrativas e burocraticas"
+      - "Trabalho repetitivo e operacional"
+      - "Analise detalhada de numeros e planilhas"
+    atividades_energizam:
+      - "Criar coisas novas (produtos, conteudo)"
+      - "Ensinar e mentorar pessoas"
+      - "Resolver problemas complexos"
+      - "Planejar estrategias e visao de longo prazo"
+    outros_agradecem_por: "Ter ideias criativas e inovadoras"
+    perde_tempo_em: "Pesquisando/aprendendo coisas novas E conversando/ensinando"
+    como_inicia_projetos: "Comecar a executar logo e ajustar no caminho"
+    como_resolve_problemas: "Agir rapido com melhor opcao + criar padroes para nao repetir"
+    manual_vs_conceitual: "Mais tangivel - gosta de ver resultados concretos"
+    nivel_detalhe: "Cuida dos detalhes importantes mas nao se perde nos pequenos"
+    estilo_delegacao: "Muita dificuldade - prefere fazer ele mesmo (em transicao - aprendendo a delegar mas socios acomodam)"
+    ritmo_trabalho: "Explosoes intensas seguidas de descanso (sprint/recovery)"
+    inovacao_vs_otimizacao: "Criar do zero E melhorar o existente (ambos, com leve preferencia por melhoria)"
+    foco_vs_multitask: "Prefere foco total numa coisa, mas nunca conseguiu (forcado a multitask por necessidade financeira)"
+    frameworks_fed:
+      - "hendricks: drena operacional + energiza criacao = CLASSICO genius vs competence"
+      - "sullivan: agradecem ideias + flow em aprender/ensinar + criar E melhorar = UA forte"
+      - "kolbe: executa rapido + cria padroes + detalhe medio + dificuldade delegar = Quick Start + Follow Thru"
+      - "clifton: energiza 4 atividades estrategicas + padrao criativo = Strategic Thinking domain"
+      - "hamilton: sprint/recovery + executa logo + cria do zero = Creator/Mechanic"
+
+  section_3_talents:
+    padrao_sucesso: "Disciplina e organizacao em todos negocios que iniciou do zero"
+    como_outros_descrevem: "Criativo e visionario (primario), pratico e resolutivo, corajoso e ousado, confiavel"
+    facilidade_natural: "Aprender coisas novas rapidamente + enxergar oportunidades + organizar informacoes"
+    dominio_strengths: "Hoje executor (por necessidade), mas se da melhor como pensador estrategico + construtor de relacionamentos"
+    frustracao_recorrente: "Processos lentos/burocraticos + falta cumprimento prazos + falta autonomia"
+    estilo_comunicacao: "Direto e objetivo (natural), deseja desenvolver storytelling/inspirador"
+    estilo_aprendizado: "Procura mentor + pratica fazendo + videos/tutoriais (combinacao de 3)"
+    reacao_feedback: "Analisa friamente e extrai o util"
+    contribuicao_mundo: "Multiplo: gerar riqueza para ajudar pessoas + ensinar/capacitar + criar produtos + inspirar"
+    competencia_vs_genialidade: "SIM"
+    competencia_vs_genialidade_detalhe: |
+      Faz BEM: Processos organizacionais, bracais, operacional. Mas NAO e fa.
+      Prefere: Partes estrategicas. Curtindo muito IA.
+      UPPER LIMIT SIGNAL: 'Pessoal elogia que tudo que coloco a mao da certo, mas nao penso assim.
+      Sempre chego quase la e os socios fazem algo que me faz voltar umas casinhas.'
+    produtos_extras_mencionados:
+      - "Lavador de grelha (prototipo fisico - suporte com cerdas, nao existe no mercado, potencial nacional/continental)"
+      - "GPS da Biblia (mapa mental digital, vendendo mas sem tracao)"
+    frameworks_fed:
+      - "clifton: disciplina + criativo + aprendizado rapido + estrategico = Strategic + Learner + Ideation"
+      - "hogshead: criativo visionario + direto = Innovation + Power advantages"
+      - "hendricks: operacional BEM mas nao gosta = ZONA DE EXCELENCIA confirmada"
+      - "hendricks: 'sempre chego quase la e volto' = UPPER LIMIT PROBLEM padrao classico"
+      - "sullivan: contribuicao multipla + facilidade 3 areas = Unique Ability rica"
+
+  section_4_business:
+    modelo_preferido: "Criar produtos (digitais pela facilidade) + servicos especializados. Aberto a oportunidades e conexoes. Valor = qualidade."
+    tolerancia_risco: "Alto risco natural - largou CLT em 2019, empreende desde novo. Padrao: ganha dinheiro -> volta casinhas. Dificuldade com controle financeiro, gosta de gastar, investe em negocios."
+    solo_vs_time: "Pensava que era socio, mas TODOS os socios acomodaram quando ele entregava mais. Precisa acertar socios. Aberto a time ou suporte."
+    timing_mercado: "Entrar cedo com algo ja validado (fast follower)"
+    fonte_receita_ideal: "Servicos especializados em paralelo com produtos"
+    relacao_preco: "Cobra justo mas sabe que poderia cobrar mais"
+    escala_vs_profundidade: "Numero medio com boa qualidade (group coaching, turmas)"
+    perfil_wealth_dynamics: "CRIADOR - muitas ideias, visionario"
+    frameworks_fed:
+      - "hamilton: CRIADOR auto-identificado + fast follower + alto risco = Creator profile forte"
+      - "hormozi: servicos + produtos + cobra menos que devia = Value Equation gap"
+      - "sullivan: socios que acomodam + quer time = Who Not How necessidade critica"
+      - "hendricks: risco alto + gasta + volta casinhas = Upper Limit Problem financeiro"
+
+  section_5_vision:
+    resultado_90_dias: |
+      R$20k/mes com IA. Desenvolvendo software e agentes de IA (WhatsApp vendas,
+      agendamento, agentes robustos), agentes de gestao de trafego. Desenvolvendo apps
+      que resolvem vida de empresas. 10 clientes. Possibilidade de agencia e aumento de time.
+    meta_receita_mensal: "R$50.000 a R$100.000/mes (6 meses)"
+    maior_bloqueio: |
+      1. Falta de tempo (muitos negocios, BM Cesta Basica = 2 dias presenciais por R$5k/mes, temporario).
+      2. Conhecimento de IA ainda raso (crescendo).
+      3. Capital falta mas e questao de tempo.
+    tempo_disponivel: "10 a 20 horas/semana"
+    nivel_ai: |
+      Intermediario-Avancado:
+      - App de gestao para BM Cesta Basica (em ajustes, testar semana que vem)
+      - Agente de IA WhatsApp criado via n8n (precisa ajustes)
+      - App para igreja (em desenvolvimento)
+      - Usa AIOS ha 1 semana
+    frameworks_fed:
+      - "hormozi: meta R$20k/90d + 10 clientes + servicos IA = execution roadmap claro"
+      - "hendricks: bloqueio = dispersao em muitos negocios + padroes de auto-sabotagem"
+      - "sullivan: resultado_90d = gap vs gain - gap grande entre atual e desejado"
+      - "ALL: 10-20h/semana e constraint principal, IA intermediario-avancado"

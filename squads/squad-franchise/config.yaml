@@ -1,0 +1,78 @@
+# Franchise Squad Configuration
+# Version: 1.0.0
+# Created: 2026-02-24
+
+pack:
+  name: franchise
+  title: Franchise Squad
+  version: 1.0.0
+  author: squad-architect
+  description: >
+    Squad completo para o domínio de franquias. 8 elite minds clonados
+    cobrindo todo o ciclo: avaliação de franchisability, compra de franquias,
+    sistematização de operações, gestão de rede, relacionamento
+    franqueador-franqueado, vendas, marketing e liderança do franqueado.
+    Inclui contexto brasileiro (lei de franquias, ABF, mercado BR).
+
+  slash_prefix: SquadFranchise
+  pattern_prefix: FR
+  category: franchise-consulting
+  icon: "🏪"
+
+agents:
+  orchestrator:
+    - franchise-chief
+
+  tier_0:
+    - mark-siebert          # Franchise Development (Multiplier Model)
+    - rick-bisio            # Franchise Evaluation/Buying (Educated Franchisee)
+
+  tier_1:
+    - michael-gerber        # Operations Systemization (E-Myth / Franchise Prototype)
+    - greg-nathan           # Franchise Relationships (E-Factor / 6-Stage Model)
+    - marcelo-cherto        # Brazilian Franchise Lifecycle (13 books, co-founded ABF)
+
+  tier_2:
+    - joe-mathews           # Franchise Sales (KASH Model / Tipping Point)
+    - denis-santini         # Franchise Marketing (Marketing Para Franquias)
+    - scott-greenberg       # Franchisee Leadership (Wealthy Franchisee / 30-Second Leadership)
+
+workflows:
+  - franchise-development-pipeline    # Avaliar + formatar + expandir
+  - franchise-evaluation-pipeline     # Avaliar + comprar franquia
+  - franchise-operations-setup        # Sistematizar operações
+
+tasks:
+  - evaluate-franchisability          # Siebert: avaliar se negócio pode franquear
+  - franchise-buyer-assessment        # Bisio: avaliar se candidato deve comprar
+  - systemize-operations              # Gerber: criar franchise prototype
+  - diagnose-relationship             # Nathan: diagnosticar saúde da relação
+  - format-franchise-brazil           # Cherto: formatação para mercado BR
+  - franchise-sales-strategy          # Mathews: estratégia de vendas
+  - franchise-marketing-plan          # Santini: plano de marketing de rede
+  - franchisee-performance-audit      # Greenberg: auditoria de performance
+
+quality_gates:
+  - id: QG-FR-001
+    name: Franchisability Assessment Complete
+    type: blocking
+  - id: QG-FR-002
+    name: Operations Systemized
+    type: blocking
+  - id: QG-FR-003
+    name: Legal/COF Compliance
+    type: blocking
+  - id: QG-FR-004
+    name: Network Management Ready
+    type: advisory
+
+target_user: "Empreendedores e consultores de franquias"
+use_cases:
+  - Avaliar se um negócio pode ser franqueado
+  - Avaliar e comprar uma franquia existente
+  - Sistematizar operações para replicação
+  - Gerenciar rede de franqueados
+  - Resolver conflitos franqueador-franqueado
+  - Criar estratégia de vendas de franquias
+  - Marketing para redes de franquias
+  - Melhorar performance de franqueados

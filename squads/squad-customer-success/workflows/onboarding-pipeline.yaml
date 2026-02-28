@@ -1,0 +1,94 @@
+# Onboarding Pipeline
+# Fluxo completo de onboarding: welcome → setup-account → first-value → handoff
+
+workflow:
+  id: "onboarding-pipeline"
+  name: "Client Onboarding Pipeline"
+  description: "Pipeline de onboarding de novos clientes. Da boas-vindas ate a entrega para o time de sucesso, garantindo primeiro valor rapido."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "customer-success"
+  chief: "lincoln-murphy"
+  created_date: "2026-02-25"
+  tags: [onboarding, welcome, first-value, client-setup]
+
+inputs:
+  client_name: { type: "string", required: true, description: "Nome do cliente" }
+  project_type: { type: "string", required: true, description: "Tipo de projeto/servico contratado" }
+  urgency: { type: "enum", options: ["standard", "accelerated", "vip"], default: "standard" }
+
+steps:
+  - id: "step_1_welcome"
+    name: "Welcome Client"
+    phase: "Welcome"
+    task: "welcome-client"
+    agent: "donna-weber"
+    description: "Primeira interacao com o cliente. Criar experiencia de boas-vindas memoravel, definir expectativas e estabelecer o tom do relacionamento."
+    inputs: { client_name: "{{client_name}}", project_type: "{{project_type}}" }
+    outputs:
+      welcome_package: "outputs/customer-success/{{client_name}}/onboarding/welcome-package.md"
+      expectations_doc: "outputs/customer-success/{{client_name}}/onboarding/expectations.yaml"
+    success_criteria:
+      - "Kit de boas-vindas entregue"
+      - "Expectativas documentadas e alinhadas"
+      - "Canais de comunicacao definidos"
+
+  - id: "step_2_setup"
+    name: "Setup Account"
+    phase: "Setup"
+    task: "setup-account"
+    agent: "donna-weber"
+    description: "Configurar conta e ambiente do cliente. Garantir ferramentas, acessos e recursos prontos antes do trabalho efetivo."
+    inputs: { client_name: "{{client_name}}", welcome_package: "{{step_1_welcome.welcome_package}}" }
+    outputs:
+      account_config: "outputs/customer-success/{{client_name}}/onboarding/account-config.yaml"
+    success_criteria:
+      - "Conta configurada e acessos validados"
+      - "Checklist de setup completo"
+
+  - id: "step_3_first_value"
+    name: "First Value Delivery"
+    phase: "First Value"
+    task: "first-value"
+    agent: "joey-coleman"
+    description: "Entregar primeiro valor tangivel o mais rapido possivel. Joey Coleman cria momentos de experiencia que consolidam a decisao de compra."
+    inputs: { client_name: "{{client_name}}", account_config: "{{step_2_setup.account_config}}", project_type: "{{project_type}}" }
+    outputs:
+      first_value_report: "outputs/customer-success/{{client_name}}/onboarding/first-value-report.md"
+      experience_moments: "outputs/customer-success/{{client_name}}/onboarding/experience-moments.yaml"
+    success_criteria:
+      - "Primeiro resultado tangivel entregue"
+      - "Cliente confirmou valor percebido"
+      - "Momentos de experiencia criados nas primeiras 48h"
+
+  - id: "step_4_handoff"
+    name: "Handoff to Success Team"
+    phase: "Handoff"
+    task: "handoff"
+    agent: "donna-weber"
+    description: "Transicao estruturada do onboarding para o time de sucesso continuo. Todo contexto e expectativas transferidos sem perda."
+    inputs: { client_name: "{{client_name}}", first_value_report: "{{step_3_first_value.first_value_report}}" }
+    outputs:
+      handoff_doc: "outputs/customer-success/{{client_name}}/onboarding/handoff-document.md"
+      success_plan: "outputs/customer-success/{{client_name}}/onboarding/success-plan.yaml"
+    success_criteria:
+      - "Documento de handoff completo"
+      - "Plano de sucesso definido com metas claras"
+
+outputs:
+  onboarding_complete: { type: "boolean", source: "step_4_handoff.success" }
+  success_plan: { type: "string", source: "step_4_handoff.success_plan" }
+
+governance:
+  review_points:
+    - { step: "step_1_welcome", gate: "Cliente recebeu boas-vindas e expectativas alinhadas" }
+    - { step: "step_3_first_value", gate: "Primeiro valor entregue e confirmado pelo cliente" }
+    - { step: "step_4_handoff", gate: "Transicao completa sem perda de contexto" }
+
+notes:
+  - "Donna Weber lidera welcome, setup e handoff (metodologia Onboarding Matters)"
+  - "Joey Coleman cria momentos de experiencia memoraveis na fase First Value"
+  - "SLAs: standard 7-14 dias, accelerated 3-5 dias, vip 1-3 dias"
+  - "CRITICO: Primeiro valor deve ser entregue nas primeiras 48 horas"

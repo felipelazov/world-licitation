@@ -1,0 +1,58 @@
+# World OS Preset: corporate
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "corporate"
+  nome: "Operacao Corporativa Interna"
+  descricao: "Estruturacao de operacoes corporativas internas. Foco em clareza de proposito organizacional, padronizacao de processos e visao de produto/servico interno."
+
+fases:
+  descoberta:
+    status: "ignorado"
+    motivo: "Nao aplicavel - contexto corporativo ja tem diretrizes estrategicas definidas"
+  proposito:
+    status: "pendente"
+    motivo: "Alinhamento do proposito organizacional com a estrategia e cultura da empresa"
+  produto:
+    status: "pendente"
+    motivo: "Definicao clara dos produtos ou servicos internos que a operacao entrega"
+  visao-produto:
+    status: "pendente"
+    motivo: "Roadmap de evolucao dos produtos/servicos internos alinhado ao planejamento estrategico"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "ignorado"
+    motivo: "Nao aplicavel - identidade visual corporativa ja existe e e gerida por outro departamento"
+  conteudo:
+    status: "ignorado"
+    motivo: "Nao aplicavel - comunicacao corporativa segue canais e processos proprios"
+  vendas:
+    status: "ignorado"
+    motivo: "Nao aplicavel - vendas corporativas seguem estrutura comercial propria da empresa"
+  aquisicao:
+    status: "ignorado"
+    motivo: "Nao aplicavel - marketing corporativo segue canais e orcamento proprios"
+  retencao:
+    status: "ignorado"
+    motivo: "Opcional - ativado se a operacao interna tem clientes internos que precisam de CS"
+  operacao:
+    status: "pendente"
+    motivo: "Core deste preset - estruturacao de processos, fluxos e governanca operacional"
+  escala:
+    status: "ignorado"
+    motivo: "Nao aplicavel - escala corporativa segue planejamento estrategico independente"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-agency"
+
+ordem_sugerida:
+  - "proposito"
+  - "produto"
+  - "visao-produto"
+  - "business-dna"
+  - "operacao"
+
+notas: "Preset mais enxuto, focado em eficiencia operacional. Ideal para departamentos ou unidades de negocio que precisam estruturar processos internos. Nao envolve branding, conteudo externo, vendas ou escala independente. Fases comerciais podem ser ativadas se a unidade tiver autonomia de revenue."

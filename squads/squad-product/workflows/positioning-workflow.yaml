@@ -1,0 +1,97 @@
+# Positioning Workflow
+# Fluxo de posicionamento: positioning → category-design → launch-narrative → sales-pitch
+
+workflow:
+  id: "positioning-workflow"
+  name: "Positioning Workflow"
+  description: "Fluxo de posicionamento de produto. Da definicao estrategica ate o pitch de vendas, garantindo que o mercado entenda o valor do produto."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  squad: "product"
+  chief: "marty-cagan"
+  created_date: "2026-02-25"
+  tags: [positioning, category-design, launch-narrative, sales-pitch]
+
+inputs:
+  product_name: { type: "string", required: true, description: "Nome do produto" }
+  competitive_landscape: { type: "string", required: true, description: "Cenario competitivo" }
+  target_segment: { type: "string", required: true, description: "Segmento-alvo principal" }
+  current_positioning: { type: "string", required: false, description: "Posicionamento atual (se existir)" }
+
+steps:
+  - id: "step_1_positioning"
+    name: "Strategic Positioning"
+    phase: "Posicionamento"
+    task: "positioning"
+    agent: "april-dunford"
+    description: "April Dunford lidera com metodologia Obviously Awesome. Mapear alternativas competitivas, atributos unicos, valor entregue, segmento ideal e categoria."
+    inputs: { product_name: "{{product_name}}", competitive_landscape: "{{competitive_landscape}}", target_segment: "{{target_segment}}", current_positioning: "{{current_positioning}}" }
+    outputs:
+      positioning_canvas: "outputs/product/{{product_name}}/positioning/positioning-canvas.md"
+      competitive_analysis: "outputs/product/{{product_name}}/positioning/competitive-analysis.yaml"
+    success_criteria:
+      - "5 componentes do posicionamento definidos"
+      - "Diferenciacao clara vs alternativas mapeada"
+      - "Posicionamento validado com evidencias"
+
+  - id: "step_2_category_design"
+    name: "Category Design"
+    phase: "Categoria"
+    task: "category-design"
+    agent: "april-dunford"
+    description: "Avaliar se o produto compete em categoria existente ou cria nova. Definir narrativa de categoria que enquadra problema e solucao de forma unica."
+    inputs: { product_name: "{{product_name}}", positioning_canvas: "{{step_1_positioning.positioning_canvas}}" }
+    outputs:
+      category_strategy: "outputs/product/{{product_name}}/positioning/category-strategy.md"
+      category_narrative: "outputs/product/{{product_name}}/positioning/category-narrative.yaml"
+    success_criteria:
+      - "Decisao: categoria existente ou nova categoria"
+      - "Narrativa de categoria definida"
+      - "Ponto de vista sobre o mercado articulado"
+
+  - id: "step_3_launch_narrative"
+    name: "Launch Narrative"
+    phase: "Narrativa"
+    task: "launch-narrative"
+    agent: "april-dunford"
+    description: "Construir narrativa de lancamento que traduz posicionamento em historia convincente. Estruturar jornada do status quo ao novo mundo."
+    inputs: { product_name: "{{product_name}}", positioning_canvas: "{{step_1_positioning.positioning_canvas}}", category_strategy: "{{step_2_category_design.category_strategy}}" }
+    outputs:
+      launch_narrative: "outputs/product/{{product_name}}/positioning/launch-narrative.md"
+      messaging_framework: "outputs/product/{{product_name}}/positioning/messaging-framework.yaml"
+    success_criteria:
+      - "Narrativa completa (setup, conflito, resolucao)"
+      - "Framework de mensagens para diferentes canais"
+
+  - id: "step_4_sales_pitch"
+    name: "Sales Pitch"
+    phase: "Pitch"
+    task: "sales-pitch"
+    agent: "april-dunford"
+    description: "Estruturar pitch de vendas baseado no posicionamento e narrativa. Levar o prospect do problema a solucao de forma logica e convincente."
+    inputs: { product_name: "{{product_name}}", positioning_canvas: "{{step_1_positioning.positioning_canvas}}", launch_narrative: "{{step_3_launch_narrative.launch_narrative}}" }
+    outputs:
+      sales_pitch: "outputs/product/{{product_name}}/positioning/sales-pitch.md"
+      pitch_deck_outline: "outputs/product/{{product_name}}/positioning/pitch-deck-outline.yaml"
+    success_criteria:
+      - "Pitch estruturado com fluxo logico completo"
+      - "Outline do pitch deck com slides-chave"
+      - "Objecoes antecipadas e respostas preparadas"
+
+outputs:
+  positioning_complete: { type: "boolean", source: "step_4_sales_pitch.success" }
+  positioning_canvas: { type: "string", source: "step_1_positioning.positioning_canvas" }
+
+governance:
+  review_points:
+    - { step: "step_1_positioning", gate: "Posicionamento validado com os 5 componentes" }
+    - { step: "step_2_category_design", gate: "Estrategia de categoria definida e aprovada" }
+    - { step: "step_4_sales_pitch", gate: "Pitch de vendas testado e refinado" }
+
+notes:
+  - "April Dunford lidera TODO o fluxo (metodologia Obviously Awesome)"
+  - "Marty Cagan valida alinhamento do posicionamento com visao de produto"
+  - "Posicionamento deve ser revisitado a cada pivot ou mudanca de mercado"
+  - "CRITICO: Posicionamento precede qualquer esforco de marketing ou vendas"

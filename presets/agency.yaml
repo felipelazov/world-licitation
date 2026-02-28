@@ -1,0 +1,65 @@
+# World OS Preset: agency
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "agency"
+  nome: "Agencia / Servico Recorrente"
+  descricao: "Agencia de servicos ou negocio baseado em prestacao recorrente. Foco em posicionamento, oferta clara, identidade profissional e operacao eficiente."
+
+fases:
+  descoberta:
+    status: "ignorado"
+    motivo: "Opcional - pode ser ativada se o fundador quiser alinhar talentos pessoais com a oferta da agencia"
+  proposito:
+    status: "pendente"
+    motivo: "Define o posicionamento e diferencial da agencia no mercado"
+  produto:
+    status: "pendente"
+    motivo: "Estruturacao dos servicos, pacotes e modelos de entrega"
+  visao-produto:
+    status: "pendente"
+    motivo: "Roadmap de evolucao dos servicos e expansao de ofertas"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Identidade visual profissional e essencial para credibilidade com clientes"
+  conteudo:
+    status: "pendente"
+    motivo: "Conteudo de autoridade e cases sao fundamentais para aquisicao de clientes"
+  vendas:
+    status: "pendente"
+    motivo: "Funil de vendas e prospeccao sao vitais para agencia - a maioria vive de outbound e indicacao"
+  aquisicao:
+    status: "pendente"
+    motivo: "Trafego pago e conteudo de autoridade sao canais primarios de aquisicao para agencias"
+  retencao:
+    status: "pendente"
+    motivo: "Retencao e churn sao criticos em modelo recorrente - onboarding define os proximos 12 meses"
+  operacao:
+    status: "pendente"
+    motivo: "Processos de entrega, onboarding de clientes e gestao de equipe"
+  escala:
+    status: "ignorado"
+    motivo: "Inicialmente ignorado - escala e ativada apos estabilizar operacao e ter demanda consistente"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-agency"
+  - "squad-content-distillery"
+  - "squad-sales"
+
+ordem_sugerida:
+  - "proposito"
+  - "produto"
+  - "visao-produto"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "vendas"
+  - "aquisicao"
+  - "retencao"
+  - "operacao"
+
+notas: "Agencias devem priorizar clareza de oferta e identidade antes de vender. Vendas e aquisicao vem antes de operacao porque agencia precisa de clientes para validar processos. Retencao e critica em modelo recorrente. Escala pode ser ativada quando a operacao estiver rodando com previsibilidade."

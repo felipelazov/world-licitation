@@ -1,0 +1,603 @@
+# ============================================================
+# Workflow: Marketing Execution Pipeline
+# ============================================================
+# Pipeline completo de marketing: da pesquisa ate a otimizacao.
+# Orquestrado por Thiago Finch, cada fase tem 1 especialista lider.
+# 8 fases: Research → Strategy → Content → Social → Email → Traffic → Measurement → Optimization
+# ============================================================
+
+metadata:
+  name: "Marketing Execution Pipeline"
+  id: "marketing-execution-pipeline"
+  squad: "squad-marketing"
+  chief: "thiago-finch"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "Pipeline completo de marketing: pesquisa, estrategia, conteudo, social, email, trafego, medicao e otimizacao"
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - objetivo: "Objetivo de marketing (lancamento, escala, branding, leads, vendas)"
+    - produto_servico: "O que sera promovido"
+    - publico_alvo: "Quem e o publico (idealmente do squad-advisor)"
+  optional:
+    - orcamento_mensal: "Budget disponivel para trafego pago"
+    - canais_ativos: "Plataformas ja em uso (Instagram, Email, Meta Ads, etc.)"
+    - metricas_atuais: "Dados de performance atuais (se existirem)"
+    - posicionamento: "Output do squad-advisor (WHY, oferta, diferenciacao)"
+
+# ── FASES ───────────────────────────────────────────────────
+
+phases:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 1: RESEARCH & ANALYTICS SETUP
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 1
+    name: "Research & Analytics Setup"
+    id: "research"
+    agent: "avinash-kaushik"
+    task: "analytics-setup"
+    description: "Montar framework de medicao DMMM + See-Think-Do-Care"
+    duration: "50 minutos"
+
+    steps:
+      - step: 1
+        name: "See-Think-Do-Care Mapping"
+        duration: "10 min"
+        action: |
+          Mapear os 4 estagios do publico:
+          - SEE: Audiencia mais ampla qualificada
+          - THINK: Considerando solucoes (pesquisando)
+          - DO: Pronto pra comprar (intencao)
+          - CARE: Ja cliente (retencao e advocacy)
+        output: "Mapa STDC com acoes por estagio"
+
+      - step: 2
+        name: "KPIs por Canal em 3 Niveis"
+        duration: "12 min"
+        action: |
+          Para cada canal ativo, definir:
+          - Nivel 1: Metricas de vaidade (alcance, impressoes, seguidores)
+          - Nivel 2: Metricas de engajamento (CTR, ER, saves, shares)
+          - Nivel 3: Metricas de resultado (leads, vendas, CAC, ROAS)
+        output: "Framework de KPIs hierarquico"
+
+      - step: 3
+        name: "Estrutura de Dashboard"
+        duration: "12 min"
+        action: |
+          Criar 3 views:
+          - Executivo: Receita, CAC, ROAS, ROI geral
+          - Canal: Performance por plataforma
+          - Funil: Conversao por estagio STDC
+        output: "Spec de dashboard com 3 views"
+
+      - step: 4
+        name: "Metas e Benchmarks"
+        duration: "8 min"
+        action: |
+          - Definir metas por KPI (30/60/90 dias)
+          - Calcular CPA reverso (da receita alvo ate custo por lead)
+          - Definir benchmarks do mercado
+        output: "Metas quantificadas com benchmarks"
+
+      - step: 5
+        name: "Plano de Implementacao"
+        duration: "8 min"
+        action: |
+          - UTM conventions padronizadas
+          - Plano de 4 semanas pra implementar tracking
+          - Ferramentas necessarias (GA4, pixels, tags)
+        output: "Plano de implementacao do tracking"
+
+    quality_gate:
+      name: "QG-MKT-001"
+      checklist: "checklists/analytics-setup-checklist.md"
+      threshold: "7/7 checks aprovados"
+      fail_action: "Completar setup de analytics antes de seguir"
+
+    deliverables:
+      - "deliverables/marketing/measurement-framework.md (template analytics-dashboard-tmpl.md)"
+
+    synapses:
+      - para: "squad-marketing (estrategia)"
+        decisao: "Framework de medicao definido"
+        acao: "Usar KPIs como base pra todas as decisoes de marketing"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 2: ESTRATEGIA (Chief)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 2
+    name: "Estrategia de Marketing"
+    id: "estrategia"
+    agent: "thiago-finch"
+    depends_on: "research"
+    description: "Definir estrategia geral, funnel architecture e prioridades"
+    duration: "30-45 minutos"
+
+    steps:
+      - step: 1
+        name: "Diagnostico da Situacao Atual"
+        action: |
+          - Ler outputs do squad-advisor (posicionamento, oferta, visao)
+          - Analisar metricas atuais (se existirem)
+          - Identificar gaps e oportunidades
+        output: "Diagnostico com gaps e oportunidades"
+
+      - step: 2
+        name: "Definicao de Estrategia"
+        action: |
+          Escolher abordagem:
+          - Lancamento (produto novo → awareness + conversao rapida)
+          - Escala (produto validado → amplificar o que funciona)
+          - Branding (longo prazo → conteudo + posicionamento)
+          - Performance (curto prazo → trafego pago focado em ROI)
+        output: "Estrategia definida com justificativa"
+
+      - step: 3
+        name: "Funnel Architecture"
+        action: |
+          Desenhar funil:
+          - Topo: Como atrair (canais, conteudo)
+          - Meio: Como engajar (email, retargeting)
+          - Fundo: Como converter (oferta, urgencia, prova social)
+          - Pos-venda: Como reter (acompanhamento, upsell)
+        output: "Funnel architecture com acoes por estagio"
+
+      - step: 4
+        name: "Priorizacao e Routing"
+        action: |
+          - Definir quais fases executar primeiro (quick wins)
+          - Rotear pra especialistas: Joe (conteudo), Gary (social), Andre (email), Depesh (ads)
+          - Definir timeline de execucao
+        output: "Plano de execucao priorizado com routing"
+
+    deliverables:
+      - "deliverables/marketing/estrategia-marketing.md"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 3: CONTENT STRATEGY
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 3
+    name: "Estrategia de Conteudo"
+    id: "conteudo"
+    agent: "joe-pulizzi"
+    task: "content-strategy"
+    depends_on: "estrategia"
+    description: "Definir Content Tilt, pilares, editorial calendar de 30 dias"
+    duration: "55 minutos"
+
+    steps:
+      - step: 1
+        name: "Content Mission Statement"
+        duration: "8 min"
+        action: "Definir: '[marca] ajuda [publico] a [transformacao] via [tipo de conteudo]'"
+        output: "Mission statement formatado"
+
+      - step: 2
+        name: "Pilares Tematicos"
+        duration: "10 min"
+        action: |
+          Definir 3-5 pilares com % de alocacao:
+          - Cada pilar conectado ao posicionamento (squad-advisor)
+          - Exemplo: Educacao 40%, Cases 30%, Bastidores 20%, CTA 10%
+        output: "Pilares com distribuicao percentual"
+
+      - step: 3
+        name: "Content Tilt"
+        duration: "8 min"
+        action: |
+          Encontrar o angulo unico:
+          - O que NINGUEM mais esta fazendo nesse nicho?
+          - Formato assinatura (serie recorrente)
+          - Tilt = interseçao de expertise + gap de mercado
+        output: "Content Tilt definido com formato assinatura"
+
+      - step: 4
+        name: "Editorial Calendar 30 Dias"
+        duration: "18 min"
+        action: |
+          Preencher calendario dia-a-dia:
+          - Plataforma, pilar, formato, tema, horario
+          - Respeitar distribuicao dos pilares
+          - Incluir datas importantes do mercado
+        output: "Calendario editorial completo de 30 dias"
+
+      - step: 5
+        name: "Plano de Distribuicao"
+        duration: "11 min"
+        action: |
+          - Estrategia por plataforma (nativo, nao cross-post generico)
+          - Regras de repurpose (1 conteudo → 5+ formatos)
+          - Frequencia ideal por plataforma
+        output: "Plano de distribuicao multi-plataforma"
+
+    quality_gate:
+      name: "QG-MKT-002"
+      checklist: "checklists/content-quality-checklist.md"
+      threshold: "8/8 checks aprovados"
+      fail_action: "Revisar pilares ou tilt antes de produzir conteudo"
+
+    deliverables:
+      - "deliverables/marketing/content-strategy.md"
+      - "deliverables/marketing/editorial-calendar.md (template content-calendar-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 4: SOCIAL MEDIA DISTRIBUTION
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 4
+    name: "Social Media Distribution"
+    id: "social"
+    agent: "gary-vaynerchuk"
+    task: "social-media-audit"
+    depends_on: "conteudo"
+    description: "Auditar presenca social, otimizar perfis e distribuir conteudo"
+    duration: "45 minutos"
+
+    steps:
+      - step: 1
+        name: "Profile Scan"
+        duration: "8 min"
+        action: "Auditar bio, visual, conteudo recente, highlights de cada plataforma"
+        output: "Status de cada perfil social"
+
+      - step: 2
+        name: "Content Mix Analysis"
+        duration: "10 min"
+        action: |
+          Calcular distribuicao atual:
+          - Educativo vs Inspiracional vs Promocional vs Entretenimento vs Autoridade
+          - Comparar com ideal
+        output: "Analise de mix com gaps identificados"
+
+      - step: 3
+        name: "Engagement Evaluation"
+        duration: "8 min"
+        action: |
+          Medir contra benchmarks:
+          - Engagement Rate, View Rate, Share Rate, Save Rate
+          - Identificar top 3 posts e por que funcionaram
+        output: "Metricas de engajamento vs benchmarks"
+
+      - step: 4
+        name: "Competitor Benchmarking"
+        duration: "10 min"
+        action: "Analisar 2+ concorrentes: frequencia, mix, ER, formatos, tom"
+        output: "Benchmark competitivo"
+
+      - step: 5
+        name: "Action Plan 30 Dias"
+        duration: "9 min"
+        action: |
+          - Correcoes imediatas (bio, visual, highlights)
+          - Plano semanal de distribuicao
+          - Formatos prioritarios por plataforma
+          - Aplicar JJJRH + $1.80 strategy
+        output: "Plano de acao social de 30 dias"
+
+    quality_gate:
+      name: "QG-MKT-003"
+      checklist: "checklists/social-media-audit-checklist.md"
+      threshold: "7/7 checks aprovados"
+      fail_action: "Corrigir perfis antes de distribuir conteudo"
+
+    deliverables:
+      - "deliverables/marketing/social-audit-report.md (template social-audit-report-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 5: EMAIL NURTURING
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 5
+    name: "Email Nurturing"
+    id: "email"
+    agent: "andre-chaperon"
+    task: "email-sequence"
+    depends_on: "conteudo"
+    description: "Criar sequencias de email narrativas (Soap Opera / ARM)"
+    duration: "50 minutos"
+
+    steps:
+      - step: 1
+        name: "Awareness Spectrum Mapping"
+        duration: "8 min"
+        action: |
+          Mapear audiencia nos 5 estagios:
+          Unaware → Problem Aware → Solution Aware → Product Aware → Most Aware
+        output: "Mapeamento do espectro de consciencia"
+
+      - step: 2
+        name: "Sequence Strategy"
+        duration: "10 min"
+        action: |
+          Escolher framework:
+          - Soap Opera Sequence (narrativa com arcos dramaticos)
+          - Autoresponder Madness (educacional com escala de intensidade)
+          - Sphere of Influence (autoridade via conteudo denso)
+        output: "Framework escolhido com justificativa"
+
+      - step: 3
+        name: "Email Outlines"
+        duration: "15 min"
+        action: |
+          Para 5-7 emails:
+          - Subject line (max 50 chars, 3 opcoes cada)
+          - Hook, corpo, CTA
+          - Arco narrativo (cada email avanca a historia)
+        output: "5-7 emails com copy outlines"
+
+      - step: 4
+        name: "Subject Lines e Timing"
+        duration: "8 min"
+        action: |
+          - 3 opcoes de subject por email
+          - Espacamento entre emails (por tipo de sequencia)
+          - Horarios otimos de envio
+        output: "Subjects finalizados + timing"
+
+      - step: 5
+        name: "CTAs e Metricas"
+        duration: "9 min"
+        action: |
+          - CTAs progressivos (nao pedir venda no email 1)
+          - Metas: open rate, click rate, reply rate
+          - Triggers de segmentacao (quem clicou → sequencia Y)
+        output: "CTAs + metricas de sucesso"
+
+    quality_gate:
+      name: "QG-MKT-004"
+      checklist: "checklists/email-sequence-checklist.md"
+      threshold: "8/8 checks aprovados"
+      fail_action: "Revisar sequencia antes de ativar automacao"
+
+    deliverables:
+      - "deliverables/marketing/email-sequence.md (template email-sequence-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 6: TRAFEGO PAGO
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 6
+    name: "Trafego Pago & Scaling"
+    id: "trafego"
+    agent: "depesh-mandalia"
+    task: "campaign-meta-ads"
+    depends_on: "social"
+    description: "Construir campanhas Meta Ads com estrutura Test-Prospect-Scale"
+    duration: "60 minutos"
+    condition: "Executar apenas se orcamento >= R$500/mes"
+
+    steps:
+      - step: 1
+        name: "Diagnostico do Cenario"
+        duration: "10 min"
+        action: |
+          - Maturidade do pixel (novo/intermediario/maduro)
+          - Budget vs objetivo (realista?)
+          - CPA maximo aceitavel
+        output: "Diagnostico com viabilidade"
+
+      - step: 2
+        name: "Arquitetura de Audiencia"
+        duration: "12 min"
+        action: |
+          3 camadas:
+          - Cold: Interesses, lookalikes, broad
+          - Warm: Engajamento, visitantes, video viewers
+          - Hot: Retargeting, cart abandoners, leads
+        output: "3 camadas de audiencia configuradas"
+
+      - step: 3
+        name: "Estrategia de Criativos"
+        duration: "12 min"
+        action: |
+          11 tipos de criativos:
+          - Imagem estatica, carrossel, video curto, video longo
+          - UGC, depoimento, before/after, demo
+          - Urgencia, prova social, educativo
+        output: "Plano de criativos com 5+ variacoes"
+
+      - step: 4
+        name: "Estrutura TPS"
+        duration: "15 min"
+        action: |
+          - Test (40% budget): Testar audiencias e criativos
+          - Prospect (35% budget): Escalar winners
+          - Retargeting (25% budget): Converter engajados
+        output: "Estrutura de campanha pronta pro Ads Manager"
+
+      - step: 5
+        name: "Budget e KPIs"
+        duration: "11 min"
+        action: |
+          - Alocacao por fase (T/P/R)
+          - 6 KPIs com thresholds: CPM, CTR, CPC, CPA, ROAS, Frequency
+          - Regras de otimizacao (kill/scale/adjust)
+        output: "Budget alocado + KPIs com regras"
+
+    quality_gate:
+      name: "QG-MKT-005"
+      checklist: "checklists/campaign-launch-checklist.md"
+      threshold: "7/7 checks aprovados"
+      fail_action: "Corrigir estrutura antes de ativar campanhas"
+
+    deliverables:
+      - "deliverables/marketing/campaign-blueprint.md (template campaign-brief-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 7: MEASUREMENT
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 7
+    name: "Measurement & Reporting"
+    id: "measurement"
+    agent: "avinash-kaushik"
+    depends_on: ["social", "email", "trafego"]
+    description: "Medir resultados vs KPIs, diagnosticar performance, identificar otimizacoes"
+    frequency: "Semanal (report) + Mensal (deep analysis)"
+
+    steps:
+      - step: 1
+        name: "Coleta de Dados"
+        action: "Consolidar metricas de todos os canais no framework DMMM"
+        output: "Dados consolidados"
+
+      - step: 2
+        name: "Analise vs KPIs"
+        action: |
+          Para cada canal:
+          - Resultado vs meta (verde/amarelo/vermelho)
+          - Tendencia (subindo/estavel/caindo)
+          - Anomalias (picos ou quedas nao explicados)
+        output: "Dashboard atualizado com status por KPI"
+
+      - step: 3
+        name: "Diagnostico de Performance"
+        action: |
+          - O que funcionou? (top 3 acoes com maior ROI)
+          - O que nao funcionou? (bottom 3 com analise de causa)
+          - Oportunidades identificadas
+        output: "Diagnostico com insights acionaveis"
+
+      - step: 4
+        name: "Recomendacoes"
+        action: |
+          Para cada insight:
+          - Acao recomendada
+          - Especialista responsavel (Joe/Gary/Andre/Depesh)
+          - Impacto esperado
+          - Prioridade (alta/media/baixa)
+        output: "Lista priorizada de otimizacoes"
+
+    deliverables:
+      - "deliverables/marketing/performance-report.md"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 8: OPTIMIZATION LOOP
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 8
+    name: "Optimization Loop"
+    id: "otimizacao"
+    agent: "thiago-finch"
+    depends_on: "measurement"
+    description: "Chief analisa dados e roteia otimizacoes pros especialistas"
+    frequency: "Mensal (ciclo continuo)"
+
+    steps:
+      - step: 1
+        name: "Review de Performance"
+        action: "Analisar report da Fase 7 com visao estrategica"
+        output: "Insights estrategicos"
+
+      - step: 2
+        name: "Routing de Otimizacoes"
+        action: |
+          Direcionar para o especialista correto:
+          - Conteudo fraco → Joe Pulizzi (revisar pilares/tilt)
+          - Social baixo → Gary Vee (ajustar mix/formatos)
+          - Email ruim → Andre Chaperon (revisar sequencia)
+          - Ads ineficiente → Depesh Mandalia (otimizar TPS)
+          - Metricas confusas → Avinash (revisar framework)
+        output: "Briefings de otimizacao por especialista"
+
+      - step: 3
+        name: "Decisao Estrategica"
+        action: |
+          - Manter estrategia atual? (se KPIs ok)
+          - Pivotar? (se KPIs consistentemente ruins)
+          - Escalar? (se KPIs acima da meta)
+          - Cortar canal? (se ROI negativo apos 60 dias)
+        output: "Decisao estrategica documentada"
+
+    notes: |
+      Fase 8 alimenta de volta as Fases 3-6.
+      O loop e: Executar → Medir → Otimizar → Executar novamente.
+      Ciclo minimo: mensal. Ciclo ideal: quinzenal pra trafego pago.
+
+# ── OUTPUTS FINAIS ──────────────────────────────────────────
+
+outputs:
+  deliverables:
+    research: ["deliverables/marketing/measurement-framework.md"]
+    estrategia: ["deliverables/marketing/estrategia-marketing.md"]
+    conteudo: ["deliverables/marketing/content-strategy.md", "deliverables/marketing/editorial-calendar.md"]
+    social: ["deliverables/marketing/social-audit-report.md"]
+    email: ["deliverables/marketing/email-sequence.md"]
+    trafego: ["deliverables/marketing/campaign-blueprint.md"]
+    measurement: ["deliverables/marketing/performance-report.md"]
+
+  project_state_updates:
+    negocio:
+      - "canais_marketing, estrategia_conteudo, kpis_definidos"
+    progresso:
+      - "conteudo: pendente → em_andamento → concluido"
+
+# ── EXECUTION MODES ────────────────────────────────────────
+
+execution_modes:
+  full_pipeline:
+    description: "Executar todas as 8 fases em sequencia"
+    duration: "4-5 horas (total)"
+    use_when: "Novo cliente, zero marketing, tudo do zero"
+
+  quick_start:
+    description: "Fases 1 + 3 + 4 (analytics + conteudo + social)"
+    duration: "2.5 horas"
+    use_when: "Sem budget pra ads, foco em organico"
+
+  performance_only:
+    description: "Fases 1 + 6 + 7 (analytics + ads + measurement)"
+    duration: "2 horas"
+    use_when: "Conteudo ok, precisa escalar com trafego pago"
+
+  optimization_sprint:
+    description: "Fases 7 + 8 (medir + otimizar)"
+    duration: "1 hora"
+    use_when: "Marketing rodando, precisa melhorar resultados"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  review_points:
+    - after: "phase_1"
+      action: "Validar framework de medicao antes de definir estrategia"
+    - after: "phase_2"
+      action: "Aprovar estrategia antes de executar"
+    - after: "phase_6"
+      action: "Validar campanhas antes de ativar (budget envolvido)"
+
+  veto_conditions:
+    - "Budget < R$500/mes → Nao executar Fase 6 (trafego pago)"
+    - "Sem landing page → Nao ativar ads (criar LP primeiro)"
+    - "Sem pixel instalado → Instalar antes de qualquer campanha"
+    - "Frequencia acima da capacidade → Reduzir calendario"
+    - "Content Tilt indefinido → Nao produzir conteudo generico"
+
+  synapses_externas:
+    - para: "squad-design"
+      decisao: "Identidade visual e tom definidos"
+      acao: "Criar materiais de marketing alinhados a marca"
+    - para: "squad-content-distillery"
+      decisao: "Pilares e calendario definidos"
+      acao: "Produzir conteudo atomizado"
+    - para: "squad-sales"
+      decisao: "Leads gerados pelo marketing"
+      acao: "Qualificar e converter leads"
+
+notes: |
+  Este pipeline e o motor de crescimento do negocio. Cada fase alimenta a proxima.
+  A Fase 1 (research) NUNCA pode ser pulada — sem dados, tudo e achismo.
+  A Fase 2 (estrategia) e onde o Chief decide a direcao — sem estrategia, tatica e barulho.
+  As Fases 3-6 podem rodar em paralelo quando fizer sentido (conteudo + email ao mesmo tempo).
+  A Fase 7-8 e o loop de aprendizado — sem medir, nao otimiza.
+
+  Thiago Finch (Chief) orquestra. Os 5 especialistas executam.
+  Cada um e o melhor do mundo no que faz.

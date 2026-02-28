@@ -1,0 +1,518 @@
+# ============================================================
+# Workflow: OPS Demand Pipeline
+# ============================================================
+# Pipeline operacional completo: da demanda ate a entrega.
+# Orquestrado por ops-chief (Pedro Valerio), 4 especialistas.
+# Sequencial: Discovery → Architecture → Automation → QA → ENTREGA
+# "Nada volta num fluxo. NUNCA." [SOURCE: Pedro Valerio]
+# ============================================================
+
+metadata:
+  name: "OPS Demand Pipeline"
+  id: "ops-demand-pipeline"
+  squad: "squad-ops"
+  chief: "ops-chief"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "Pipeline completo: demanda operacional → discovery → architecture → automation → QA → entrega"
+  mind: "Pedro Valerio"
+  pattern: "One Mind Multiple Hats"
+  unidirectional: true
+  quality_gate_threshold: 0.70
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - demanda: "Descricao da demanda operacional"
+    - squad_origem: "Squad que solicitou (squad-sales, squad-agency, etc.)"
+  optional:
+    - processos_existentes: "Documentacao de processos atuais"
+    - ferramentas: "Ferramentas ja em uso (ClickUp, n8n, etc.)"
+    - stakeholders: "Pessoas envolvidas no processo"
+    - urgencia: "Prioridade: maxima (Maestro) / alta (bloqueia squad) / media / normal"
+
+# ── REGRAS ABSOLUTAS ────────────────────────────────────────
+
+absolute_rules:
+  - rule: "Nada volta num fluxo. NUNCA."
+    source: "Pedro Valerio"
+    enforcement: "Pipeline unidirecional. Se passou pro proximo, nao volta."
+
+  - rule: "A melhor coisa e impossibilitar caminhos"
+    source: "Pedro Valerio"
+    enforcement: "Sistema bloqueia caminhos errados. Nao avisa — IMPEDE."
+
+  - rule: "Automacao antes de delegacao"
+    source: "Pedro Valerio"
+    enforcement: "Se algo se repete 2x, automatiza antes de delegar pra humano."
+
+  - rule: "O que nao tem responsavel sera feito por ninguem"
+    source: "Pedro Valerio"
+    enforcement: "Toda demanda TEM que ter dono, prazo e acceptance criteria."
+
+  - rule: "Se nao esta documentado, nao aconteceu"
+    source: "Pedro Valerio"
+    enforcement: "Tudo que o pipeline produz DEVE estar documentado como entregavel."
+
+  - rule: "A culpa e sempre do comunicador"
+    source: "Pedro Valerio"
+    enforcement: "Se o especialista entregou errado, o briefing foi ruim. Refazer briefing."
+
+# ── FASES ───────────────────────────────────────────────────
+
+phases:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 0: INTAKE & ROUTING (ops-chief)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 0
+    name: "Intake & Routing"
+    id: "intake"
+    agent: "ops-chief"
+    description: "Receber demanda, analisar e decidir roteamento"
+
+    steps:
+      - step: 1
+        name: "Analisar Demanda"
+        action: |
+          1. Ler demanda completa
+          2. Classificar: qual especialista? Pipeline completo ou direto?
+          3. Verificar dependencias e contexto
+          Heuristica H-OPS-001 (Routing por Natureza):
+          - Entender/descobrir processo → process-mapper
+          - Estruturar/organizar → architect
+          - Automatizar/trigger → automation-architect
+          - Validar/testar → qa-architect
+          - Tudo acima → pipeline completo
+        output: "Demanda classificada com routing definido"
+
+      - step: 2
+        name: "Definir Prioridade"
+        action: |
+          Heuristica H-OPS-004:
+          - Veio do Maestro (world-os) → PRIORIDADE MAXIMA
+          - Bloqueia outro squad → PRIORIDADE ALTA
+          - Melhoria de processo existente → PRIORIDADE MEDIA
+          - Nova e nao bloqueia ninguem → PRIORIDADE NORMAL
+        output: "Prioridade definida"
+
+      - step: 3
+        name: "Preparar Handoff"
+        action: |
+          Montar briefing completo:
+          - Demanda original
+          - Squad de origem
+          - O que ja foi feito (se houver)
+          - Deliverables esperados
+          - Acceptance criteria
+          - Quality gate que precisa passar
+          "A culpa e sempre do comunicador" [SOURCE: Pedro Valerio]
+        output: "Briefing pronto para primeiro especialista"
+
+    decision_tree:
+      pipeline_completo: "Seguir para Fase 1 (process-mapper)"
+      direct_route_mapper: "Seguir direto para Fase 1"
+      direct_route_architect: "Pular para Fase 2"
+      direct_route_automation: "Pular para Fase 3"
+      direct_route_qa: "Pular para Fase 4"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 1: DISCOVERY & PROCESS DESIGN
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 1
+    name: "Discovery & Process Design"
+    id: "discovery"
+    agent: "process-mapper"
+    task: "map-process"
+    depends_on: "intake"
+    description: "Mapear processo de tras pra frente, identificar gaps, definir owners"
+    duration: "45-90 minutos"
+
+    steps:
+      - step: 1
+        name: "Definir Estado Final"
+        duration: "5 min"
+        action: "Comecar pelo FIM: qual e o resultado desejado do processo?"
+        output: "Estado final definido com clareza"
+
+      - step: 2
+        name: "Mapear de Tras pra Frente"
+        duration: "20-40 min"
+        action: |
+          Heuristica PV_BS_001 (Future Back-Casting):
+          - Projetar resultado desejado
+          - Trabalhar de tras pra frente: o que precisa estar pronto?
+          - Identificar cada etapa, input, output, owner
+          REGRA: Sempre de TRAS pra FRENTE, nunca linear
+        output: "Processo mapeado com todas as etapas"
+
+      - step: 3
+        name: "Identificar Responsaveis"
+        duration: "10 min"
+        action: "Para cada etapa: quem executa? 1 dono por etapa (nunca 'equipe')"
+        output: "RACI matrix preenchida"
+
+      - step: 4
+        name: "Documentar Gaps e Vetos"
+        duration: "10 min"
+        action: |
+          - Gaps: onde o processo pode falhar?
+          - Veto conditions: o que IMPEDE caminhos errados?
+          - Wrong paths: listar e bloquear
+        output: "Gaps documentados + veto conditions"
+
+      - step: 5
+        name: "Entrevistar Stakeholders"
+        duration: "5-20 min"
+        action: "Validar mapeamento com quem executa o processo"
+        output: "Processo validado pelos executores"
+
+    quality_gate:
+      name: "QG-OPS-001"
+      checklist: "checklists/process-mapping-checklist.md"
+      threshold: ">70% (7/10 items)"
+      pass_action: "Seguir pro Architect"
+      fail_action: "Voltar pro Process Mapper com feedback especifico"
+
+    deliverables:
+      - "deliverables/ops/process-map-{nome}.md (template process-map-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 2: ARCHITECTURE & EXECUTORS
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 2
+    name: "Architecture & Executors"
+    id: "architecture"
+    agent: "architect"
+    task: "design-system-structure"
+    depends_on: "discovery"
+    description: "Transformar processo em estrutura de sistema (ClickUp, status flows, views)"
+    duration: "60-120 minutos"
+
+    steps:
+      - step: 1
+        name: "Hierarquia Folder/List"
+        duration: "15-25 min"
+        action: |
+          Definir estrutura no ClickUp:
+          - Space > Folder > List
+          - Cada list = 1 etapa do processo
+          - Nomes descritivos e consistentes
+        output: "Hierarquia completa definida"
+
+      - step: 2
+        name: "Status Flows Unidirecionais"
+        duration: "10-20 min"
+        action: |
+          Para cada list:
+          - Status sequenciais (NUNCA volta)
+          - Transicoes definidas (quem move, quando)
+          - "Nada volta num fluxo. NUNCA." [SOURCE: Pedro Valerio]
+        output: "Status flows unidirecionais"
+
+      - step: 3
+        name: "Custom Fields Obrigatorios"
+        duration: "10-20 min"
+        action: |
+          Para cada list:
+          - Campos que DEVEM ser preenchidos
+          - Tipos: dropdown, date, number, text
+          - "Se o campo nao e obrigatorio, sera vazio" [SOURCE: Pedro Valerio]
+        output: "Custom fields definidos por list"
+
+      - step: 4
+        name: "Task Templates"
+        duration: "10-15 min"
+        action: "Templates com instrucoes inline (nao referencia externa)"
+        output: "Templates auto-contidos"
+
+      - step: 5
+        name: "Views por Executor"
+        duration: "10-15 min"
+        action: "Cada executor ve SO o que precisa. Nada mais."
+        output: "Views configuradas"
+
+      - step: 6
+        name: "Executor Matrix + SLAs"
+        duration: "10-20 min"
+        action: |
+          Para cada etapa:
+          - 1 Responsible (executa)
+          - 1 Accountable (responde)
+          - SLA numerico (horas, nao "ASAP")
+          - Escalation path
+        output: "Executor matrix com SLAs"
+
+    quality_gate:
+      name: "QG-OPS-002"
+      checklist: "checklists/system-architecture-checklist.md"
+      threshold: ">70%"
+      pass_action: "Seguir pro Automation Architect"
+      fail_action: "Voltar pro Architect com feedback"
+
+    deliverables:
+      - "deliverables/ops/system-design-{nome}.md (template system-design-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 3: AUTOMATION & INTEGRATIONS
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 3
+    name: "Automation & Integrations"
+    id: "automation"
+    agent: "automation-architect"
+    task: "design-automation"
+    depends_on: "architecture"
+    description: "Criar task definitions, automacoes com 5 guardrails, integracoes"
+    duration: "60-120 minutos"
+
+    steps:
+      - step: 1
+        name: "Identificar Candidatos"
+        duration: "10-15 min"
+        action: |
+          Heuristica PV_PM_001 (Automation Tipping Point):
+          - Repetiu 2x? → AUTOMATIZAR
+          - Tarefa unica? → MANUAL
+          - Alta frequencia + alto impacto + alta automatizabilidade → PRIORIDADE
+        output: "Lista priorizada de automacoes"
+
+      - step: 2
+        name: "Task Definitions"
+        duration: "15-25 min"
+        action: |
+          Para cada task:
+          - ID, nome, status, executor, tipo
+          - Inputs (com tipos e validacao)
+          - Outputs (formato, destino)
+          - Acceptance criteria (quando ta pronto?)
+          - Dependencies (o que precisa antes?)
+          - Blockers (o que impede?)
+          - Done examples (exemplos concretos de "feito")
+        output: "Task definitions completas"
+
+      - step: 3
+        name: "5 Guardrails Obrigatorios"
+        duration: "15-25 min"
+        action: |
+          Para CADA automacao:
+          1. Loop Prevention: dedup + max iterations + cooldown
+          2. Idempotency: mesmo input = mesmo output sempre
+          3. Audit Trail: log who/when/what/result
+          4. Manual Escape: humano pode intervir a qualquer momento
+          5. Retry Logic: exponential backoff + fallback final
+          "Automacao sem guardrail nao sai daqui" [SOURCE: Pedro Valerio]
+        output: "5 guardrails por automacao"
+
+      - step: 4
+        name: "Triggers e Conditions"
+        duration: "10-15 min"
+        action: "Definir evento que dispara, condicoes, e acoes por cenario"
+        output: "Triggers configurados"
+
+      - step: 5
+        name: "Integracoes"
+        duration: "10-20 min"
+        action: "Specs de integracao com APIs externas, webhooks, etc."
+        output: "Integration specs"
+
+      - step: 6
+        name: "Testes"
+        duration: "15-25 min"
+        action: |
+          Para cada automacao:
+          - Happy path (fluxo normal)
+          - Error scenario 1 (input invalido)
+          - Error scenario 2 (servico externo falha)
+        output: "Resultados de teste documentados"
+
+    quality_gate:
+      name: "QG-OPS-003"
+      checklist: "checklists/automation-readiness-checklist.md"
+      threshold: ">70% (task defs 25% + guardrails 30% + tests 20% + fallbacks 15% + integracoes 10%)"
+      pass_action: "Seguir pro QA Architect"
+      fail_action: "Voltar pro Automation Architect com feedback"
+
+    deliverables:
+      - "deliverables/ops/automation-spec-{nome}.md (template automation-spec-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 4: QUALITY ASSURANCE & VALIDATION
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 4
+    name: "Quality Assurance & Validation"
+    id: "qa"
+    agent: "qa-architect"
+    task: "quality-gate"
+    depends_on: "automation"
+    description: "Validacao final com scoring de 10 dimensoes (META_AXIOMAS)"
+    duration: "30-60 minutos"
+
+    steps:
+      - step: 1
+        name: "Coletar Artefatos"
+        duration: "5 min"
+        action: "Reunir todos os outputs: process map, architecture, automations"
+        output: "Artefatos coletados"
+
+      - step: 2
+        name: "Scoring 10 Dimensoes"
+        duration: "15-30 min"
+        action: |
+          META_AXIOMAS — scorar cada dimensao (1-10):
+          D01: Ordem e Estrutura
+          D02: Impossibilidade de Erro (CRITICO — min 6.0)
+          D03: Teste da Filha (CRITICO — min 6.0)
+          D04: Fluxo Unidirecional (CRITICO — min 6.0)
+          D05: Responsabilidade Clara (CRITICO — min 6.0)
+          D06: Evidencia e Documentacao
+          D07: Simplicidade
+          D08: Escalabilidade
+          D09: Resiliencia
+          D10: Usabilidade
+        output: "Scores por dimensao com evidencias"
+
+      - step: 3
+        name: "Teste da Filha"
+        duration: "10 min"
+        action: |
+          "Se minha filha de 12 anos nao consegue usar sem pedir ajuda,
+          o sistema ta complexo demais" [SOURCE: Pedro Valerio]
+          - Alguem sem treinamento consegue usar?
+          - As instrucoes sao auto-explicativas?
+          - Se errar, o sistema avisa ou corrige?
+        output: "Resultado do Teste da Filha"
+
+      - step: 4
+        name: "Documentar Issues"
+        duration: "10-15 min"
+        action: |
+          Para cada issue:
+          - Severidade (critical/high/medium/low)
+          - Dimensao afetada
+          - Recomendacao de fix
+          - Quem deve corrigir
+        output: "Lista de issues com recomendacoes"
+
+      - step: 5
+        name: "Veredicto"
+        duration: "5 min"
+        action: |
+          - PASS: media >= 7.0 + todos criticos >= 6.0
+          - CONDITIONAL: 6.0-6.9 media + gaps aceitaveis
+          - FAIL: < 6.0 media OU qualquer critico < 6.0
+          - WAIVED: excecao rara com justificativa
+        output: "Veredicto final"
+
+    quality_gate:
+      name: "QG-OPS-FINAL"
+      checklist: "checklists/quality-gate-checklist.md"
+      threshold: ">70% + todos criticos >= 6.0"
+      pass_action: "ENTREGA — ops-chief compila pacote final"
+      fail_action: "Identificar etapa com problema e resolver (sem voltar tudo)"
+
+    deliverables:
+      - "deliverables/ops/quality-report-{nome}.md (template quality-report-tmpl.md)"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 5: DELIVERY (ops-chief)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 5
+    name: "Delivery"
+    id: "delivery"
+    agent: "ops-chief"
+    depends_on: "qa"
+    description: "Compilar entregaveis e entregar pacote final ao squad demandante"
+
+    steps:
+      - step: 1
+        name: "Verificar Quality Gates"
+        action: "Confirmar que TODOS os gates passaram (001, 002, 003, FINAL)"
+        output: "Gates verificados"
+
+      - step: 2
+        name: "Compilar Pacote"
+        action: |
+          Montar indice com todos os entregaveis:
+          1. Process map (by process-mapper)
+          2. System architecture (by architect)
+          3. Automation specs (by automation-architect)
+          4. Quality report (by qa-architect)
+        output: "Pacote final com indice"
+
+      - step: 3
+        name: "Apresentar Entrega"
+        action: |
+          Ao squad demandante:
+          - Resumo do que foi feito
+          - Numeros dos quality gates
+          - Entregaveis listados
+          - Proximos passos (implementacao)
+        output: "Entrega apresentada"
+
+      - step: 4
+        name: "Registrar no Projeto"
+        action: |
+          Via sinapse-protocol:
+          - Registrar decisoes no project-state.yaml
+          - Criar sinapses para squads impactados
+          - Atualizar progresso da fase
+        output: "Entrega registrada"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  escalation_rules:
+    - trigger: "Gate < 70% apos 2 tentativas"
+      action: "Reunir board (todos os 4 especialistas)"
+    - trigger: "Demanda bloqueada > 48h"
+      action: "ops-chief intervem diretamente"
+    - trigger: "Demanda do Maestro"
+      action: "Prioridade maxima, iniciar imediatamente"
+
+  handoff_protocol: |
+    Todo handoff entre especialistas DEVE incluir:
+    - Demanda original
+    - O que ja foi feito (outputs anteriores)
+    - Deliverables esperados
+    - Acceptance criteria
+    - Quality gate especifico
+    "A culpa e sempre do comunicador" [SOURCE: Pedro Valerio]
+
+  veto_heuristics:
+    - id: "V-OPS-001"
+      name: "Fluxo Reverso"
+      rule: "QUALQUER tentativa de voltar etapa → VETO ABSOLUTO"
+    - id: "V-OPS-002"
+      name: "Sem Responsavel"
+      rule: "Demanda sem dono → VETO ate ter responsavel"
+    - id: "V-OPS-003"
+      name: "Sem Documentacao"
+      rule: "Entrega sem docs → VETO ate documentar"
+    - id: "V-OPS-004"
+      name: "Pular Etapa"
+      rule: "Tentativa de pular etapa → VETO"
+    - id: "V-OPS-005"
+      name: "Incoerencia Sistemica"
+      rule: "Contradiz processo existente → VETO + Coherence Scan"
+
+notes: |
+  Este pipeline e a espinha dorsal operacional do World OS.
+  Sem OPS, cada squad inventa suas proprias regras. Com OPS, tudo segue um padrao.
+
+  Pedro Valerio e 1 mente com 5 chapeus:
+  - ops-chief: Recebe, roteia, acompanha, entrega
+  - process-mapper: Descobre e desenha processos
+  - architect: Estrutura sistemas
+  - automation-architect: Cria automacoes a prova de erro
+  - qa-architect: Valida tudo com rigor cientifico
+
+  Pipeline: Demanda → Discovery → Architecture → Automation → QA → ENTREGA
+  Quality Gates: >70% em cada etapa. Sem negociacao.
+  Lei fundamental: Nada volta num fluxo. NUNCA.

@@ -1,0 +1,341 @@
+# ============================================================
+# Workflow: Strategic Advisory Pipeline
+# ============================================================
+# Pipeline completo das 3 fases estrategicas do squad-advisor.
+# Orquestrado pelo advisor-chief, cada fase tem 1 advisor lider.
+# Sequencial: Proposito (Sinek) → Produto (Hormozi) → Visao (Jobs)
+# ============================================================
+
+metadata:
+  name: "Strategic Advisory Pipeline"
+  id: "strategic-advisory-pipeline"
+  squad: "squad-advisor"
+  chief: "advisor-chief"
+  version: "1.0"
+  created: "2026-02-26"
+  description: "Pipeline completo de estrategia: Proposito → Oferta → Visao de Produto"
+
+# ── INPUTS ──────────────────────────────────────────────────
+
+inputs:
+  required:
+    - genius_profile: "Output do squad-zona-genialidade (se disponivel)"
+    - contexto_negocio: "Descricao do negocio, mercado, momento atual"
+  optional:
+    - pesquisa_mercado: "Dados de mercado, concorrencia, tendencias"
+    - metricas_atuais: "Numeros atuais (se negocio existente)"
+
+# ── FASES ───────────────────────────────────────────────────
+
+phases:
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 1: PROPOSITO (Simon Sinek)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 1
+    name: "Proposito & Posicionamento"
+    id: "proposito"
+    agent: "simon-sinek"
+    task: "strategic-advisory"
+    pipeline_fase: "proposito"
+    description: "Definir WHY, Golden Circle completo e posicionamento"
+
+    steps:
+      - step: 1
+        name: "Intake & Contexto"
+        description: "Sinek le genius profile (se disponivel) e contexto do negocio"
+        action: "Entender historia do fundador, motivacoes, padroes recorrentes"
+        output: "Contexto completo para aplicar Golden Circle"
+
+      - step: 2
+        name: "Sessao Golden Circle"
+        description: "Aplicar framework WHY/HOW/WHAT com o fundador"
+        action: |
+          Perguntas guiadas:
+          - Por que voce comecou isso? (nao aceitar 'dinheiro')
+          - O que te faz levantar de manha?
+          - Se tivesse todo dinheiro do mundo, continuaria fazendo isso?
+          - O que voce quer mudar no mundo?
+          - Quem sao as pessoas que voce mais quer ajudar?
+        output: "WHY draft, HOW candidatos, WHAT articulado"
+
+      - step: 3
+        name: "Refinamento & Validacao"
+        description: "Refinar WHY ate ressoar emocionalmente"
+        action: |
+          Testar com fundador:
+          - Quando voce le isso, sente emocao?
+          - Consegue manter isso por 10+ anos?
+          - Seus melhores clientes reconheceriam isso?
+        output: "WHY finalizado, HOW (3-5 diferenciais), WHAT claro"
+
+      - step: 4
+        name: "Positioning Statement"
+        description: "Formular declaracao de posicionamento"
+        action: "Usar template: Para [publico] que [necessidade], [negocio] e [categoria] que [beneficio]"
+        output: "Positioning statement formatado"
+
+      - step: 5
+        name: "Documentacao & Registro"
+        description: "Preencher template e registrar decisoes"
+        action: |
+          - Preencher golden-circle-tmpl.md
+          - Registrar decisoes no project-state.yaml
+          - Criar sinapses para squads downstream
+          - Atualizar campos: why, how, what, causa, publico_alvo
+        output: "deliverables/proposito/golden-circle.md + decisoes registradas"
+
+    quality_gate:
+      name: "QG-ADV-001"
+      checklist: "checklists/golden-circle-checklist.md"
+      threshold: "20/23 (APROVADO)"
+      fail_action: "Retomar step 2 ou 3 com feedback especifico"
+
+    deliverables:
+      - "deliverables/proposito/golden-circle.md"
+      - "deliverables/proposito/positioning-statement.md"
+
+    synapses:
+      - para: "squad-design"
+        decisao: "Posicionamento e tom de voz definidos"
+        acao: "Derivar identidade visual do WHY e personalidade"
+      - para: "squad-content-distillery"
+        decisao: "WHY e publico definidos"
+        acao: "Definir pilares de conteudo baseados na causa"
+      - para: "squad-sales"
+        decisao: "Publico e linguagem mapeados"
+        acao: "Adaptar prospecao e messaging"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 2: PRODUTO & OFERTA (Alex Hormozi)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 2
+    name: "Produto & Oferta"
+    id: "produto"
+    agent: "alex-hormozi"
+    task: "strategic-advisory"
+    pipeline_fase: "produto"
+    depends_on: "proposito"
+    description: "Construir Grand Slam Offer usando Value Equation"
+
+    steps:
+      - step: 1
+        name: "Intake da Fase Anterior"
+        description: "Hormozi le outputs de Sinek — WHY, publico, posicionamento"
+        action: "Entender territorio de atuacao e crenca do publico"
+        output: "Contexto estrategico para construir oferta"
+
+      - step: 2
+        name: "Dream Outcome Mapping"
+        description: "Identificar o resultado ideal do cliente"
+        action: |
+          Perguntas guiadas:
+          - Se seu servico funcionasse PERFEITAMENTE, o que aconteceria?
+          - Qual resultado faria o cliente pagar 10x mais?
+          - O que o cliente quer que NINGUEM mais oferece?
+          - Quanto vale resolver esse problema pro cliente?
+        output: "Dream Outcome articulado na voz do cliente"
+
+      - step: 3
+        name: "Value Equation"
+        description: "Calcular e otimizar a equacao de valor"
+        action: |
+          Preencher 4 variaveis:
+          1. Dream Outcome → maximizar
+          2. Perceived Likelihood → maximizar (provas, credibilidade)
+          3. Time Delay → minimizar (resultado mais rapido)
+          4. Effort & Sacrifice → minimizar (mais facil pro cliente)
+        output: "Value Equation documentada com estrategia por variavel"
+
+      - step: 4
+        name: "Value Stack"
+        description: "Montar pilha de valor da oferta"
+        action: |
+          - Definir oferta principal
+          - Adicionar bonus estrategicos (cada um resolve 1 objecao)
+          - Garantir ratio valor/preco > 10x
+          - Nomear a oferta (nome proprio, memoravel)
+        output: "Value stack completo com nome e componentes"
+
+      - step: 5
+        name: "Preco, Garantia & Diferenciacao"
+        description: "Definir pricing strategy e garantia"
+        action: |
+          - Preço baseado em valor (nao custo)
+          - Garantia que remove risco do comprador
+          - Mecanismo unico de entrega
+          - Comparacao com alternativas
+        output: "Pricing + garantia + diferenciacao documentados"
+
+      - step: 6
+        name: "Documentacao & Registro"
+        description: "Preencher template e registrar decisoes"
+        action: |
+          - Preencher grand-slam-offer-tmpl.md
+          - Registrar decisoes no project-state.yaml
+          - Criar sinapses para squads downstream
+          - Atualizar campos: oferta_principal, preco, dream_outcome, garantia, diferenciais
+        output: "deliverables/produto/ completo + decisoes registradas"
+
+    quality_gate:
+      name: "QG-ADV-002"
+      checklist: "checklists/grand-slam-offer-checklist.md"
+      threshold: "25/30 (APROVADO)"
+      fail_action: "Retomar step relevante com feedback"
+
+    deliverables:
+      - "deliverables/produto/grand-slam-offer.md"
+      - "deliverables/produto/value-equation.md"
+      - "deliverables/produto/pricing.md"
+
+    synapses:
+      - para: "squad-design"
+        decisao: "Oferta e diferenciais definidos"
+        acao: "Criar materiais visuais de venda"
+      - para: "squad-content-distillery"
+        decisao: "Value stack completo"
+        acao: "Criar conteudo que demonstra cada componente"
+      - para: "squad-sales"
+        decisao: "Preco, garantia, objecoes mapeadas"
+        acao: "Montar playbook de venda e closing framework"
+      - para: "squad-advisor"
+        decisao: "Oferta completa para revisao de Jobs"
+        acao: "Filtrar features essenciais vs cortadas"
+
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  # FASE 3: VISAO DE PRODUTO (Steve Jobs)
+  # ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  - phase: 3
+    name: "Visao de Produto & Foco"
+    id: "visao-produto"
+    agent: "steve-jobs"
+    task: "strategic-advisory"
+    pipeline_fase: "visao-produto"
+    depends_on: "produto"
+    description: "Aplicar foco radical — cortar o desnecessario, focar no essencial"
+
+    steps:
+      - step: 1
+        name: "Intake das Fases Anteriores"
+        description: "Jobs le outputs de Sinek (WHY) e Hormozi (oferta)"
+        action: "Entender o territorio, a oferta e o publico"
+        output: "Contexto completo para aplicar simplificacao"
+
+      - step: 2
+        name: "The 1000 No's"
+        description: "Filtrar features — manter APENAS o essencial"
+        action: |
+          Para cada componente da oferta:
+          - Isso e ESSENCIAL para o Dream Outcome?
+          - Se cortasse, o cliente notaria?
+          - Isso torna o produto mais SIMPLES ou mais complexo?
+          - Regra: Maximo 3 features essenciais. Resto e cut list.
+        output: "Essential features (max 3) + Cut list com justificativas"
+
+      - step: 3
+        name: "User Journey"
+        description: "Mapear experiencia do usuario de ponta a ponta"
+        action: |
+          - Definir 5-7 passos da jornada
+          - Identificar "momento wow" em cada passo
+          - Eliminar pontos de friccao
+          - Garantir que e intuitivo (sem manual)
+        output: "Jornada do usuario com momentos wow mapeados"
+
+      - step: 4
+        name: "Simplicity Statement"
+        description: "Descrever o produto em UMA FRASE"
+        action: |
+          - Escrever descricao em 1 frase
+          - Testar: alguem de fora entende?
+          - Se precisa explicar → simplificar mais
+        output: "Simplicity statement validado"
+
+      - step: 5
+        name: "Padrao de Excelencia"
+        description: "Definir benchmark e padrao de qualidade"
+        action: |
+          - Identificar referencia de excelencia no mercado
+          - Definir padrao para cada feature essencial
+          - Nenhum componente pode ser "ok por enquanto"
+        output: "Benchmarks e padroes de excelencia documentados"
+
+      - step: 6
+        name: "Documentacao & Registro"
+        description: "Preencher template e registrar decisoes"
+        action: |
+          - Preencher product-vision-tmpl.md
+          - Registrar decisoes no project-state.yaml
+          - Criar sinapses para squads downstream
+          - Atualizar campos: produto_core, features_essenciais, features_cortadas
+        output: "deliverables/visao-produto/ completo + decisoes registradas"
+
+    quality_gate:
+      name: "QG-ADV-003"
+      checklist: "checklists/product-vision-checklist.md"
+      threshold: "24/29 (APROVADO)"
+      fail_action: "Retomar step relevante — provavelmente falta coragem nos cortes"
+
+    deliverables:
+      - "deliverables/visao-produto/product-vision.md"
+      - "deliverables/visao-produto/feature-map.md"
+
+    synapses:
+      - para: "squad-design"
+        decisao: "Features essenciais e jornada definidas"
+        acao: "Criar experiencia visual do produto"
+      - para: "squad-content-distillery"
+        decisao: "Foco e cut list definidos"
+        acao: "Comunicar a filosofia de simplicidade"
+      - para: "squad-ops"
+        decisao: "Jornada do usuario mapeada"
+        acao: "Mapear processos operacionais"
+
+# ── OUTPUTS FINAIS ──────────────────────────────────────────
+
+outputs:
+  deliverables:
+    proposito:
+      - "deliverables/proposito/golden-circle.md"
+      - "deliverables/proposito/positioning-statement.md"
+    produto:
+      - "deliverables/produto/grand-slam-offer.md"
+      - "deliverables/produto/value-equation.md"
+      - "deliverables/produto/pricing.md"
+    visao_produto:
+      - "deliverables/visao-produto/product-vision.md"
+      - "deliverables/visao-produto/feature-map.md"
+
+  project_state_updates:
+    negocio:
+      - "why, how, what, causa, publico_alvo"
+      - "oferta_principal, preco, dream_outcome, garantia, diferenciais"
+      - "produto_core, features_essenciais, features_cortadas"
+    progresso:
+      - "proposito: pendente → em_andamento → concluido"
+      - "produto: pendente → em_andamento → concluido"
+      - "visao-produto: pendente → em_andamento → concluido"
+
+# ── GOVERNANCE ──────────────────────────────────────────────
+
+governance:
+  review_points:
+    - after: "phase_1"
+      action: "Validar Golden Circle com fundador antes de seguir"
+    - after: "phase_2"
+      action: "Validar oferta e preco com fundador antes de Jobs filtrar"
+    - after: "phase_3"
+      action: "Validar visao final — produto esta pronto pra identidade visual"
+
+notes: |
+  Este pipeline e o CORACAO estrategico do World OS. As 3 fases aqui
+  alimentam TODOS os squads downstream. Se o proposito for fraco, tudo
+  que vem depois sera fraco. Se a oferta for vaga, o design e o conteudo
+  nao tem base. Se a visao de produto for difusa, a operacao nao sabe
+  o que construir.
+
+  Sequencia obrigatoria: Sinek → Hormozi → Jobs. Nada volta. NUNCA.
+  Cada fase tem quality gate. Se nao passa, nao segue.

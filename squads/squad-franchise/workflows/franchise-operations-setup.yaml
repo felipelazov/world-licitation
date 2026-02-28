@@ -1,0 +1,309 @@
+# Franchise Operations Setup
+# Systematize existing operations: diagnostic → systemization → relationships → performance → marketing
+
+workflow:
+  id: "franchise-operations-setup"
+  name: "Franchise Operations Setup"
+  description: "Pipeline para sistematizar operacoes de uma rede de franquias existente. Do diagnostico de operacoes ate framework de performance e marketing."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Franchise Squad"
+  created_date: "2026-02-24"
+  last_modified: "2026-02-24"
+  squad: "franchise"
+  tags:
+    - franchise-operations
+    - systemization
+    - e-myth
+    - relationship-management
+    - performance
+    - network-management
+
+inputs:
+  franchise_name:
+    type: "string"
+    description: "Nome da rede de franquias"
+    required: true
+
+  network_size:
+    type: "number"
+    description: "Numero de unidades na rede"
+    required: true
+
+  primary_issue:
+    type: "enum"
+    description: "Principal desafio da rede"
+    options:
+      - "inconsistency"         # Unidades com resultados muito diferentes
+      - "relationship"          # Conflitos franqueador-franqueado
+      - "performance"           # Performance geral abaixo do esperado
+      - "scaling"               # Dificuldade em escalar sem perder qualidade
+      - "comprehensive"         # Avaliacao completa (todos os aspectos)
+    required: false
+    default: "comprehensive"
+
+  scope:
+    type: "enum"
+    description: "Escopo do setup"
+    options:
+      - "full"                  # Pipeline completo
+      - "operations-only"       # Apenas sistematizacao
+      - "relationships-only"    # Apenas diagnostico de relacionamento
+      - "performance-only"      # Apenas auditoria de performance
+    required: false
+    default: "full"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # PHASE 1: OPERATIONS DIAGNOSTIC
+  # Agent: michael-gerber (Tier 1)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_operations_diagnostic"
+    name: "Operations Diagnostic"
+    phase: "Diagnostic"
+    type: "task"
+    task: "systemize-operations"
+    agent: "michael-gerber"
+    description: |
+      Diagnosticar o estado atual das operacoes da rede usando a metodologia
+      E-Myth. Identificar onde o negocio depende de pessoas vs sistemas.
+      Aplicar Three Personalities diagnostic e mapear os Seven Centers.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      network_size: "{{network_size}}"
+      primary_issue: "{{primary_issue}}"
+    outputs:
+      operations_diagnostic: "outputs/franchise/{{franchise_name}}/operations/diagnostic.md"
+      personality_assessment: "outputs/franchise/{{franchise_name}}/operations/personality-assessment.yaml"
+      seven_centers_map: "outputs/franchise/{{franchise_name}}/operations/seven-centers-map.yaml"
+    success_criteria:
+      - "Three Personalities balance diagnosticado"
+      - "Seven Centers mapeados com gaps"
+      - "Dependencia de pessoas vs sistemas quantificada"
+      - "Top 5 processos criticos identificados"
+    quality_gate: "QG-FR-002"
+    error_handling:
+      strategy: "fail"
+      message: "Diagnostic is required before any intervention"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2: SYSTEMIZATION
+  # Agent: michael-gerber (Tier 1)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_2_systemization"
+    name: "Franchise Prototype Creation"
+    phase: "Systemization"
+    type: "task"
+    task: "systemize-operations"
+    agent: "michael-gerber"
+    description: |
+      Criar o Franchise Prototype — o modelo operacional completo que qualquer
+      franqueado pode replicar. Aplicar IQO cycle para cada processo critico
+      identificado no diagnostico. Gerar blueprint do manual de operacoes.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      operations_diagnostic: "{{step_1_operations_diagnostic.operations_diagnostic}}"
+      seven_centers_map: "{{step_1_operations_diagnostic.seven_centers_map}}"
+    outputs:
+      franchise_prototype: "outputs/franchise/{{franchise_name}}/operations/franchise-prototype.yaml"
+      operations_manual: "outputs/franchise/{{franchise_name}}/operations/operations-manual-blueprint.md"
+      process_library: "outputs/franchise/{{franchise_name}}/operations/process-library.yaml"
+    success_criteria:
+      - "Franchise Prototype completo (6 regras)"
+      - "IQO cycle aplicado aos top 5 processos"
+      - "Manual de operacoes estruturado"
+      - "Cada processo tem Innovation + Quantification + Orchestration"
+    error_handling:
+      strategy: "fail"
+      message: "Systemization is the core deliverable of this pipeline"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 3: RELATIONSHIP HEALTH
+  # Agent: greg-nathan (Tier 1)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_3_relationships"
+    name: "Franchise Relationship Diagnostic"
+    phase: "Relationships"
+    type: "task"
+    task: "diagnose-relationship"
+    agent: "greg-nathan"
+    description: |
+      Diagnosticar a saude dos relacionamentos franqueador-franqueado.
+      Usar E-Factor 6-Stage Model para identificar o estagio atual da rede.
+      Aplicar ACE Survey, Mood Monitor, e Three-Legged Stool framework.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      network_size: "{{network_size}}"
+      operations_diagnostic: "{{step_1_operations_diagnostic.operations_diagnostic}}"
+    outputs:
+      relationship_report: "outputs/franchise/{{franchise_name}}/relationships/relationship-health-report.md"
+      efactor_stage: "outputs/franchise/{{franchise_name}}/relationships/efactor-stage.yaml"
+      action_plan_relationships: "outputs/franchise/{{franchise_name}}/relationships/action-plan.md"
+    success_criteria:
+      - "E-Factor stage identificado para a rede"
+      - "ACE scores compilados"
+      - "Mood Monitor 5 areas avaliadas"
+      - "Three-Legged Stool balance verificado"
+      - "Plano de acao com intervencoes especificas"
+    error_handling:
+      strategy: "warn"
+      message: "Relationship diagnostic informs but does not block operations"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 4: FRANCHISEE PERFORMANCE
+  # Agent: scott-greenberg (Tier 2)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_performance"
+    name: "Franchisee Performance Audit"
+    phase: "Performance"
+    type: "task"
+    task: "franchisee-performance-audit"
+    agent: "scott-greenberg"
+    description: |
+      Auditar performance dos franqueados usando o framework Wealthy Franchisee.
+      Identificar quais franqueados estao no path "Wealthy" vs "Struggling".
+      Aplicar 30-Second Leadership e HEMS para melhorar performance.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      operations_diagnostic: "{{step_1_operations_diagnostic.operations_diagnostic}}"
+      relationship_report: "{{step_3_relationships.relationship_report}}"
+    outputs:
+      performance_audit: "outputs/franchise/{{franchise_name}}/performance/performance-audit.md"
+      wealthy_scorecard: "outputs/franchise/{{franchise_name}}/performance/wealthy-scorecard.yaml"
+      improvement_plan: "outputs/franchise/{{franchise_name}}/performance/improvement-plan.md"
+    success_criteria:
+      - "Wealthy vs Struggling classification completa"
+      - "30-Second Leadership assessment feito"
+      - "HEMS 5 modules avaliados"
+      - "Plano de melhoria personalizado por perfil"
+    error_handling:
+      strategy: "warn"
+      message: "Performance audit can be iterative"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5: NETWORK MARKETING
+  # Agent: denis-santini (Tier 2)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_5_marketing"
+    name: "Network Marketing Plan"
+    phase: "Marketing"
+    type: "task"
+    task: "franchise-marketing-plan"
+    agent: "denis-santini"
+    description: |
+      Criar plano de marketing da rede com base nos 5 Pilares de Denis Santini.
+      Estruturar Fundo de Marketing, Opening Marketing para novas unidades,
+      e aplicar 7 Franquehabitos para alinhamento da rede.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      network_size: "{{network_size}}"
+      relationship_report: "{{step_3_relationships.relationship_report}}"
+      performance_audit: "{{step_4_performance.performance_audit}}"
+    outputs:
+      marketing_plan: "outputs/franchise/{{franchise_name}}/marketing/network-marketing-plan.md"
+      marketing_fund: "outputs/franchise/{{franchise_name}}/marketing/marketing-fund-structure.yaml"
+      campaign_calendar: "outputs/franchise/{{franchise_name}}/marketing/campaign-calendar.md"
+    success_criteria:
+      - "5 Pilares endereçados"
+      - "Fundo de Marketing com governanca definida"
+      - "Calendario de campanhas"
+      - "KPIs por unidade e rede"
+    error_handling:
+      strategy: "warn"
+      message: "Marketing plan evolves with network"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 6: SYNTHESIS & IMPLEMENTATION PLAN
+  # Agent: franchise-chief (Orchestrator)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_6_synthesis"
+    name: "Operations Setup Synthesis"
+    phase: "Synthesis"
+    type: "synthesis"
+    agent: "franchise-chief"
+    description: |
+      Compilar todos os diagnosticos e planos em um Operations Setup Report
+      unificado. Criar roadmap de implementacao priorizado por impacto.
+    inputs:
+      operations_diagnostic: "{{step_1_operations_diagnostic.operations_diagnostic}}"
+      franchise_prototype: "{{step_2_systemization.franchise_prototype}}"
+      relationship_report: "{{step_3_relationships.relationship_report}}"
+      performance_audit: "{{step_4_performance.performance_audit}}"
+      marketing_plan: "{{step_5_marketing.marketing_plan}}"
+    outputs:
+      operations_setup_report: "outputs/franchise/{{franchise_name}}/operations-setup-report.md"
+      implementation_roadmap: "outputs/franchise/{{franchise_name}}/implementation-roadmap.md"
+      kpi_dashboard: "outputs/franchise/{{franchise_name}}/kpi-dashboard.yaml"
+    success_criteria:
+      - "All diagnostics synthesized"
+      - "Implementation roadmap with priorities"
+      - "KPI dashboard defined"
+      - "Quick wins identified (first 30 days)"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "Operations setup pipeline completo"
+    source: "step_6_synthesis.success"
+
+  operations_setup_report:
+    type: "string"
+    description: "Caminho para o report final de operations setup"
+    source: "step_6_synthesis.operations_setup_report"
+
+  implementation_roadmap:
+    type: "string"
+    description: "Roadmap de implementacao priorizado"
+    source: "step_6_synthesis.implementation_roadmap"
+
+# =============================================================================
+# GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+governance:
+  review_points:
+    - step: "step_1_operations_diagnostic"
+      gate: "QG-FR-002: Diagnostic completo antes de intervencoes"
+
+    - step: "step_2_systemization"
+      gate: "Franchise Prototype validado"
+
+    - step: "step_6_synthesis"
+      gate: "Review final do operations setup"
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  - "Pipeline para redes EXISTENTES que precisam melhorar operacoes"
+  - "Para criar uma rede nova, use franchise-development-pipeline"
+  - "Para avaliar compra de franquia, use franchise-evaluation-pipeline"
+  - "Cada step pode ser executado independentemente usando scope parameter"
+  - "Pipeline completo tipicamente leva 2-4 semanas"
+  - "Focus priority: Phase 1-2 (Operations) > Phase 3 (Relationships) > Phase 4-5 (Performance+Marketing)"
+  - "Para redes grandes (50+ unidades), considerar executar Phase 4 em sample de 10-20% das unidades"

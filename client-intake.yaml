@@ -1,0 +1,165 @@
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# WORLD OS — Client Intake
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+#
+# Preencha este arquivo nos primeiros 5-10 minutos de projeto.
+# O Maestro usa isso para classificar o tipo de projeto,
+# configurar as fases e injetar contexto nos squads.
+#
+# REGRA: Respostas curtas. 1-2 frases por campo.
+# Se nao sabe, deixe vazio. Sera preenchido durante as fases.
+# Campos com (!) sao criticos — sem eles o sistema opera cego.
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+# ─── 1. IDENTIFICACAO ───────────────────────────────────────────
+projeto:
+  nome: ""                    # (!) Nome do projeto
+  cliente: ""                 # (!) Nome do cliente ou empresa
+  data_inicio: ""             # YYYY-MM-DD
+  responsavel: ""             # Quem esta tocando o projeto
+
+
+# ─── 2. A IDEIA ─────────────────────────────────────────────────
+# A parte mais importante. Em linguagem simples.
+ideia:
+  descricao: ""               # (!) O que o cliente quer fazer? (1-3 frases)
+  problema: ""                # (!) Qual problema resolve?
+  publico: ""                 # (!) Pra quem e isso?
+  diferencial: ""             # O que torna isso unico?
+  referencia: ""              # Algum modelo/inspiracao? (opcional)
+
+
+# ─── 3. TIPO DE PROJETO ─────────────────────────────────────────
+# O Maestro usa isso para aplicar o preset correto.
+#
+# WORLD-SYNC-START: tipo-enum
+# Opcoes:
+#   agency              → Agencia ou prestacao de servico recorrente
+#   corporate           → Operacao interna de empresa
+#   ecommerce           → Loja online / comercio eletronico
+#   franchise           → Negocio que quer escalar via franquia
+#   infoproduto         → Curso, mentoria, ebook, comunidade paga
+#   personal-brand      → Marca Pessoal / Creator / Autoridade
+#   saas                → Produto digital (SaaS, app, plataforma)
+#   servico-local       → Clinica, escritorio, salao, restaurante, academia
+#   custom         → Nenhum dos acima (fases configuradas manualmente)
+# WORLD-SYNC-END: tipo-enum
+tipo: ""
+
+
+# ─── 4. O FUNDADOR ──────────────────────────────────────────────
+# Quem esta por tras do negocio. Alimenta zona-genialidade,
+# advisor, design (tom de voz), content (autenticidade).
+fundador:
+  nome: ""                    # Nome completo
+  papel: ""                   # Fundador, CEO, socio, etc.
+  experiencia: ""             # Background em 1-2 frases
+  talentos: ""                # No que e naturalmente bom?
+  frustracao: ""              # O que mais incomoda no negocio hoje?
+  sonho: ""                   # Onde quer chegar em 2-3 anos?
+  disponibilidade: ""         # Quanto tempo/semana dedica ao projeto?
+
+
+# ─── 5. CONTEXTO DO NEGOCIO ─────────────────────────────────────
+# Se o cliente ja tem algo, descreva aqui.
+# Se esta comecando do zero, deixe vazio.
+negocio_existente:
+  tem_empresa: false          # Ja tem empresa aberta?
+  tem_produto: false          # Ja tem produto/servico definido?
+  tem_clientes: false         # Ja tem clientes pagando?
+  tem_marca: false            # Ja tem identidade visual?
+  tem_conteudo: false         # Ja produz conteudo?
+  tem_equipe: false           # Tem equipe alem do dono?
+  faturamento_mensal: ""      # Aproximado (opcional)
+  tempo_mercado: ""           # Quanto tempo existe (opcional)
+
+
+# ─── 6. MODELO DE RECEITA ───────────────────────────────────────
+# Como o dinheiro entra (ou vai entrar). Alimenta advisor, sales, marketing.
+receita:
+  modelo: ""                  # Recorrente, projeto, produto, comissao, misto?
+  ticket_medio: ""            # Valor medio por venda/contrato
+  frequencia: ""              # Mensal, avulso, anual, por lancamento?
+  meta_faturamento: ""        # Meta de faturamento mensal/anual
+  margem: ""                  # Margem aproximada (se souber)
+
+
+# ─── 7. CLIENTES ATUAIS ─────────────────────────────────────────
+# Se ja tem clientes. Alimenta customer-success, sales, marketing.
+clientes:
+  quantidade: ""              # Quantos clientes ativos?
+  perfil: ""                  # Quem sao? (porte, segmento, perfil)
+  como_chegam: ""             # Como os clientes encontram voce hoje?
+  maior_elogio: ""            # O que os clientes mais elogiam?
+  maior_reclamacao: ""        # O que mais reclamam?
+  taxa_retencao: ""           # Quantos voltam/renovam? (aproximado)
+
+
+# ─── 8. CONCORRENTES ────────────────────────────────────────────
+# Quem compete pelo mesmo publico. Alimenta advisor, marketing, sales, design.
+concorrentes:
+  principal_1: ""             # Nome do concorrente principal
+  principal_2: ""             # Segundo concorrente (opcional)
+  principal_3: ""             # Terceiro concorrente (opcional)
+  o_que_fazem_bem: ""         # O que os concorrentes fazem melhor que voce?
+  o_que_fazem_mal: ""         # Onde eles falham?
+  como_se_diferencia: ""      # Por que o cliente escolheria voce?
+
+
+# ─── 9. PRESENCA DIGITAL ────────────────────────────────────────
+# Onde o cliente ja existe online. Alimenta content, design, marketing.
+presenca_digital:
+  website: ""                 # URL (se tiver)
+  instagram: ""               # @ (se tiver)
+  youtube: ""                 # Canal (se tiver)
+  linkedin: ""                # Perfil/pagina (se tiver)
+  tiktok: ""                  # @ (se tiver)
+  outros: ""                  # Outros canais relevantes
+  principal_canal: ""         # Qual canal traz mais resultado hoje?
+  seguidores_total: ""        # Audiencia total aproximada
+
+
+# ─── 10. OBJETIVOS ──────────────────────────────────────────────
+objetivos:
+  principal: ""               # (!) O que MAIS importa nesse projeto?
+  secundario: ""              # Segundo objetivo (opcional)
+  prazo: ""                   # Tem deadline? (opcional)
+  orcamento: ""               # Tem orcamento definido? (opcional)
+  metrica_sucesso: ""         # Como vamos saber que deu certo?
+
+
+# ─── 11. PRIORIDADES ────────────────────────────────────────────
+# Ordene de 1 (mais importante) a 5 (menos importante).
+# Deixe 0 se nao se aplica.
+prioridades:
+  clareza_estrategica: 0      # Saber o WHY, posicionamento, publico
+  oferta_irresistivel: 0      # Ter produto/oferta validado
+  presenca_visual: 0          # Logo, design, identidade
+  conteudo_distribuicao: 0    # Atrair audiencia, gerar autoridade
+  vendas_receita: 0           # Vender mais, funil, comercial
+  retencao_clientes: 0        # Fidelizar, reduzir churn, CS
+  operacao_escala: 0          # Sistemas, processos, crescimento
+
+
+# ─── 12. VALORES E CULTURA ──────────────────────────────────────
+# O que importa alem do dinheiro. Alimenta reino, advisor, design.
+valores:
+  principios: ""              # 2-3 valores inegociaveis do cliente
+  causa: ""                   # Existe uma causa maior? (opcional)
+  estilo: ""                  # Formal, casual, ousado, conservador?
+  inspiracao_marca: ""        # Alguma marca que admira? Por que?
+
+
+# ─── 13. DORES E FRUSTRACOES ────────────────────────────────────
+# O que esta travando o cliente. Alimenta advisor, agency, ops.
+dores:
+  maior_dor: ""               # (!) O que mais doi no negocio hoje?
+  ja_tentou: ""               # O que ja tentou resolver e nao funcionou?
+  o_que_trava: ""             # O que impede de crescer?
+  urgencia: ""                # Qual dor precisa resolver PRIMEIRO?
+
+
+# ─── 14. NOTAS ──────────────────────────────────────────────────
+# Qualquer informacao adicional que ajude a entender o projeto.
+notas: ""

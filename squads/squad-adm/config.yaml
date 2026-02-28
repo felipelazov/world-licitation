@@ -1,0 +1,88 @@
+# Squad ADM Configuration
+# Version: 1.0.0
+# Created: 2026-02-25
+
+pack:
+  name: squad-adm
+  title: "Gestao Administrativa, Financeira, Juridica, RH, Facilities e Compliance"
+  version: 1.0.0
+  author: squad-architect
+  description: >
+    Squad responsavel por toda a operacao administrativa da empresa.
+    Cobre as 5 funcoes essenciais: financeiro, RH/people, juridico,
+    facilities/ops e compliance. 6 agentes baseados em especialistas
+    reais com frameworks documentados. Governado por Radical Transparency
+    (Ray Dalio) como principio unificador.
+
+  slash_prefix: SquadAdm
+  pattern_prefix: ADM
+  category: administration-operations
+  icon: "🏢"
+
+agents:
+  orchestrator:
+    - ray-dalio-adm-chief       # ADM Chief — routing + governance (Principles/5-Step)
+
+  tier_1:                        # Core Operations
+    - dave-ramsey-financeiro     # CFO — ZBB, Cash Flow Waterfall, Debt Snowball
+    - patrick-lencioni-rh        # CPO — ITP, 5 Dysfunctions, Working Genius
+    - ken-adams-juridico         # CLO — MSCD, CLM, Risk Assessment
+
+  tier_2:                        # Support & Governance
+    - marie-kondo-facilities     # Facilities — KonMari Corporate, PoLP, Vendor Scorecard
+    - ray-dalio-compliance       # Compliance — PBC, LGPD Framework, 5-Phase Audit
+
+workflows:
+  - adm-operations-pipeline     # 5 pipelines multi-agente (onboarding, offboarding, contrato, fechamento, auditoria)
+
+tasks:
+  # Financeiro
+  - financial-health-check      # Checkup de saude financeira (DRE, burn rate, budget)
+  # RH
+  - team-health-check           # Saude organizacional (5 Dysfunctions, ITP)
+  # Juridico
+  - contract-review             # Revisao de contratos (MSCD, red flags)
+  # Facilities
+  - tools-audit                 # Auditoria de ferramentas e acessos (KonMari, PoLP)
+  # Compliance
+  - compliance-audit            # Auditoria interna (PBC, LGPD, politicas)
+
+quality_gates:
+  - id: QG-ADM-001
+    name: Financial Accuracy
+    type: blocking
+    owner: dave-ramsey-financeiro
+    description: "Numeros conferidos, DRE bate com extratos"
+  - id: QG-ADM-002
+    name: Contract Compliance
+    type: blocking
+    owner: ken-adams-juridico
+    description: "Contrato revisado por juridico antes de assinar"
+  - id: QG-ADM-003
+    name: Access Control
+    type: advisory
+    owner: marie-kondo-facilities
+    description: "Acessos auditados, principio do menor privilegio"
+  - id: QG-ADM-004
+    name: LGPD Compliance
+    type: blocking
+    owner: ray-dalio-compliance
+    description: "Dados pessoais tratados conforme LGPD"
+  - id: QG-ADM-005
+    name: Onboarding Complete
+    type: advisory
+    owner: patrick-lencioni-rh
+    description: "Todos os passos do onboarding checklist completos"
+
+target_user: "Empresas que precisam organizar gestao administrativa, financeira, juridica, RH e compliance"
+use_cases:
+  - "Pagar fornecedor / emitir nota fiscal"
+  - "Contratar novo funcionario (recrutamento → onboarding)"
+  - "Elaborar ou revisar contrato"
+  - "Gerenciar ferramentas e acessos SaaS"
+  - "Conduzir auditoria interna"
+  - "Garantir conformidade LGPD"
+  - "Desligar funcionario (offboarding completo)"
+  - "Gerar report financeiro mensal"
+  - "Elaborar politicas internas"
+  - "Resolver disputa juridica"

@@ -1,0 +1,280 @@
+# Franchise Evaluation Pipeline
+# Complete franchise buying evaluation: self-assessment → research → investigation → decision
+
+workflow:
+  id: "franchise-evaluation-pipeline"
+  name: "Franchise Evaluation Pipeline"
+  description: "Pipeline completo para avaliar e decidir sobre a compra de uma franquia. Do autoconhecimento ate a decisao final de investimento."
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Franchise Squad"
+  created_date: "2026-02-24"
+  last_modified: "2026-02-24"
+  squad: "franchise"
+  tags:
+    - franchise-buying
+    - franchise-evaluation
+    - due-diligence
+    - investment-decision
+
+inputs:
+  candidate_name:
+    type: "string"
+    description: "Nome do candidato a franqueado"
+    required: true
+
+  franchise_name:
+    type: "string"
+    description: "Nome da franquia sendo avaliada"
+    required: false
+
+  investment_budget:
+    type: "string"
+    description: "Budget disponivel para investimento"
+    required: true
+
+  experience_level:
+    type: "enum"
+    description: "Experiencia previa com franquias"
+    options:
+      - "first-time"       # Primeiro investimento em franquia
+      - "experienced"      # Ja possui/possuiu franquias
+      - "multi-unit"       # Busca multiplas unidades
+    required: false
+    default: "first-time"
+
+  scope:
+    type: "enum"
+    description: "Escopo da avaliacao"
+    options:
+      - "full"                    # Pipeline completo
+      - "self-assessment-only"    # Apenas autoavaliacao
+      - "due-diligence-only"      # Apenas investigacao (ja decidiu segmento)
+    required: false
+    default: "full"
+
+# =============================================================================
+# WORKFLOW STEPS
+# =============================================================================
+
+steps:
+
+  # ---------------------------------------------------------------------------
+  # PHASE 1: SELF-ASSESSMENT
+  # Agent: rick-bisio (Tier 0)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_1_self_assessment"
+    name: "Franchisee Self-Assessment"
+    phase: "Self-Assessment"
+    type: "task"
+    task: "franchise-buyer-assessment"
+    agent: "rick-bisio"
+    description: |
+      Autoavaliacao do candidato usando os Seven Essential Entrepreneurial Traits
+      de Rick Bisio. Determinar se o perfil e compativel com o modelo de franquia
+      e identificar gaps a serem endereçados.
+    inputs:
+      candidate_name: "{{candidate_name}}"
+      investment_budget: "{{investment_budget}}"
+      experience_level: "{{experience_level}}"
+    outputs:
+      self_assessment: "outputs/franchise/{{candidate_name}}/evaluation/self-assessment.yaml"
+      trait_scorecard: "outputs/franchise/{{candidate_name}}/evaluation/trait-scorecard.md"
+      candidate_profile: "outputs/franchise/{{candidate_name}}/evaluation/candidate-profile.md"
+    success_criteria:
+      - "7 Traits avaliados com score"
+      - "Perfil de candidato mapeado"
+      - "Budget vs requisitos analisado"
+      - "Decisao: PROCEED / ADDRESS_GAPS / RECONSIDER"
+    error_handling:
+      strategy: "fail"
+      message: "Self-assessment is mandatory before franchise investigation"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 2: FRANCHISE RESEARCH
+  # Agent: rick-bisio (Tier 0) + mark-siebert (Tier 0)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_2_franchise_research"
+    name: "Franchise Opportunity Research"
+    phase: "Research"
+    type: "task"
+    task: "franchise-buyer-assessment"
+    agent: "rick-bisio"
+    description: |
+      Pesquisar e identificar franquias compativeis com o perfil do candidato.
+      Se ja tem franquia em mente, avaliar o FDD (Franchise Disclosure Document)
+      com analise dos 23 Items. Usar Mark Siebert como second opinion para
+      avaliar a solidez do modelo.
+    inputs:
+      candidate_profile: "{{step_1_self_assessment.candidate_profile}}"
+      franchise_name: "{{franchise_name}}"
+      investment_budget: "{{investment_budget}}"
+    outputs:
+      fdd_analysis: "outputs/franchise/{{candidate_name}}/evaluation/fdd-analysis.md"
+      franchise_comparison: "outputs/franchise/{{candidate_name}}/evaluation/franchise-comparison.yaml"
+      red_flags_report: "outputs/franchise/{{candidate_name}}/evaluation/red-flags.md"
+    success_criteria:
+      - "FDD 23 Items analisados (se franquia especifica)"
+      - "Red flags identificados"
+      - "Comparacao com alternativas"
+      - "Financial projections validadas"
+    error_handling:
+      strategy: "warn"
+      message: "Research can be iterative — refine as more data is available"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 3: RELATIONSHIP & NETWORK INVESTIGATION
+  # Agent: greg-nathan (Tier 1)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_3_relationship_check"
+    name: "Franchise Network Health Check"
+    phase: "Investigation"
+    type: "task"
+    task: "diagnose-relationship"
+    agent: "greg-nathan"
+    description: |
+      Avaliar a saude do relacionamento franqueador-franqueado na rede.
+      Usar E-Factor Model para identificar em que estagio a rede esta.
+      Aplicar ACE Survey insights e Mood Monitor para avaliar satisfacao
+      dos franqueados existentes.
+    inputs:
+      franchise_name: "{{franchise_name}}"
+      fdd_analysis: "{{step_2_franchise_research.fdd_analysis}}"
+    outputs:
+      relationship_health: "outputs/franchise/{{candidate_name}}/evaluation/relationship-health.md"
+      network_stage: "outputs/franchise/{{candidate_name}}/evaluation/network-stage.yaml"
+      franchisee_satisfaction: "outputs/franchise/{{candidate_name}}/evaluation/franchisee-satisfaction.md"
+    success_criteria:
+      - "E-Factor stage identificado"
+      - "Satisfaction indicators avaliados"
+      - "Red flags de relacionamento mapeados"
+      - "Recomendacao: HEALTHY / CAUTION / AVOID"
+    error_handling:
+      strategy: "warn"
+      message: "Network assessment informs but does not block decision"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 4: VALIDATION & INTERVIEWS
+  # Agent: rick-bisio (Tier 0)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_4_validation"
+    name: "Franchise Validation Process"
+    phase: "Validation"
+    type: "task"
+    task: "franchise-buyer-assessment"
+    agent: "rick-bisio"
+    description: |
+      Validar a oportunidade atraves de entrevistas com os 6 Types of People
+      de Rick Bisio. Confirmar ou refutar hipoteses levantadas nas fases
+      anteriores. Aplicar os 5 Keys to Success como framework final.
+    inputs:
+      candidate_profile: "{{step_1_self_assessment.candidate_profile}}"
+      fdd_analysis: "{{step_2_franchise_research.fdd_analysis}}"
+      relationship_health: "{{step_3_relationship_check.relationship_health}}"
+    outputs:
+      validation_report: "outputs/franchise/{{candidate_name}}/evaluation/validation-report.md"
+      interview_guide: "outputs/franchise/{{candidate_name}}/evaluation/interview-guide.md"
+      five_keys_assessment: "outputs/franchise/{{candidate_name}}/evaluation/five-keys-assessment.yaml"
+    success_criteria:
+      - "6 Types of People interview checklist preparado"
+      - "Key findings from interviews documented"
+      - "5 Keys to Success scored"
+      - "Validation complete"
+    error_handling:
+      strategy: "fail"
+      message: "Validation through interviews is critical for informed decision"
+
+  # ---------------------------------------------------------------------------
+  # PHASE 5: FINAL DECISION
+  # Agent: rick-bisio (Tier 0) + franchise-chief (Orchestrator)
+  # ---------------------------------------------------------------------------
+
+  - id: "step_5_decision"
+    name: "Franchise Investment Decision"
+    phase: "Decision"
+    type: "synthesis"
+    agent: "franchise-chief"
+    description: |
+      Compilar toda a evidencia coletada e gerar recomendacao final de
+      investimento. Apresentar analise de risco-retorno, condicoes para
+      sucesso, e plano de acao pos-decisao.
+    inputs:
+      self_assessment: "{{step_1_self_assessment.self_assessment}}"
+      fdd_analysis: "{{step_2_franchise_research.fdd_analysis}}"
+      relationship_health: "{{step_3_relationship_check.relationship_health}}"
+      validation_report: "{{step_4_validation.validation_report}}"
+      five_keys_assessment: "{{step_4_validation.five_keys_assessment}}"
+    outputs:
+      investment_decision: "outputs/franchise/{{candidate_name}}/evaluation/investment-decision.md"
+      risk_analysis: "outputs/franchise/{{candidate_name}}/evaluation/risk-analysis.yaml"
+      action_plan: "outputs/franchise/{{candidate_name}}/evaluation/action-plan.md"
+    success_criteria:
+      - "All evidence synthesized"
+      - "Clear recommendation: INVEST / NEGOTIATE / WALK_AWAY"
+      - "Risk-return analysis quantified"
+      - "Action plan with next steps"
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+outputs:
+  workflow_complete:
+    type: "boolean"
+    description: "Pipeline de avaliacao completo"
+    source: "step_5_decision.success"
+
+  recommendation:
+    type: "enum"
+    description: "Recomendacao final de investimento"
+    options: ["INVEST", "NEGOTIATE", "WALK_AWAY"]
+    source: "step_5_decision.investment_decision"
+
+  investment_decision:
+    type: "string"
+    description: "Caminho para documento de decisao completo"
+    source: "step_5_decision.investment_decision"
+
+# =============================================================================
+# GOVERNANCE
+# =============================================================================
+
+global_error_handling:
+  on_error: "pause"
+  notification:
+    enabled: true
+    channels:
+      - console
+
+governance:
+  review_points:
+    - step: "step_1_self_assessment"
+      gate: "Candidato tem perfil minimo para franchising"
+
+    - step: "step_2_franchise_research"
+      gate: "Red flags criticos descartados"
+
+    - step: "step_4_validation"
+      gate: "Entrevistas com franqueados realizadas"
+
+    - step: "step_5_decision"
+      gate: "Decisao informada com evidencia completa"
+
+# =============================================================================
+# NOTES
+# =============================================================================
+
+notes:
+  - "Pipeline baseado principalmente na metodologia de Rick Bisio (Educated Franchisee)"
+  - "Greg Nathan fornece analise de saude da rede (perspectiva psicologica)"
+  - "Mark Siebert pode ser consultado como second opinion na Phase 2"
+  - "Cada step pode ser executado independentemente"
+  - "Pipeline completo tipicamente leva 2-4 semanas"
+  - "CRITICAL: Nunca investir sem completar Phase 4 (Validation)"
+  - "Para mercado brasileiro: considerar compliance com Lei 13.966/2019"

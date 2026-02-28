@@ -1,0 +1,64 @@
+# World OS Preset: infoproduto
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "infoproduto"
+  nome: "Infoproduto / Curso / Mentoria"
+  descricao: "Produto digital educacional como curso online, mentoria em grupo, ebook ou comunidade paga. Foco em conteudo de autoridade, oferta irresistivel, lancamento e trafego pago."
+
+fases:
+  descoberta:
+    status: "pendente"
+    motivo: "Importante - alinhar zona de genialidade com o tema do infoproduto para autenticidade e diferenciacao"
+  proposito:
+    status: "pendente"
+    motivo: "Define o territorio de autoridade e a transformacao prometida ao aluno"
+  produto:
+    status: "pendente"
+    motivo: "Core - estruturacao do infoproduto (modulos, entrega, pricing, garantia, bonus)"
+  visao-produto:
+    status: "pendente"
+    motivo: "Roadmap de evolucao: versao 1.0 do curso, expansao para mentoria, comunidade, certificacao"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Identidade visual profissional transmite credibilidade e justifica preco premium"
+  conteudo:
+    status: "pendente"
+    motivo: "Critico - conteudo gratuito e o motor de autoridade e aquisicao de leads para lancamento"
+  vendas:
+    status: "pendente"
+    motivo: "Estrategia de lancamento (semente, interno, externo) ou vendas perpetuas com funil automatizado"
+  aquisicao:
+    status: "pendente"
+    motivo: "Trafego pago para lancamentos e funil perpetuo sao o motor de escala de infoproduto"
+  retencao:
+    status: "ignorado"
+    motivo: "Opcional - ativado quando houver modelo recorrente (assinatura, comunidade, mentoria continua)"
+  operacao:
+    status: "ignorado"
+    motivo: "Opcional - ativado quando volume de alunos exigir suporte estruturado e processos de entrega"
+  escala:
+    status: "ignorado"
+    motivo: "Opcional - ativado para licenciamento do metodo, formacao de afiliados ou modelo de franquia educacional"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-content-distillery"
+  - "squad-marketing"
+  - "squad-sales"
+
+ordem_sugerida:
+  - "descoberta"
+  - "proposito"
+  - "produto"
+  - "visao-produto"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "vendas"
+  - "aquisicao"
+
+notas: "Infoproduto vive de autoridade + oferta + trafego. Conteudo gratuito constroi audiencia, a oferta converte, trafego pago escala. A ordem proposito > produto > conteudo > vendas e critica — sem posicionamento claro, o lancamento fracassa. Retencao e ativada quando migrar para modelo recorrente (comunidade, mentoria continua). Diferente de personal-brand porque o foco e no PRODUTO, nao na pessoa."

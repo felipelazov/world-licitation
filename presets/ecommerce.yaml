@@ -1,0 +1,63 @@
+# World OS Preset: ecommerce
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "ecommerce"
+  nome: "Loja Online / E-commerce"
+  descricao: "Negocio de venda online de produtos fisicos ou digitais. Foco em catalogo de produtos, identidade visual atrativa, conteudo para conversao e operacao logistica."
+
+fases:
+  descoberta:
+    status: "ignorado"
+    motivo: "Opcional - pode ser ativada para nichar melhor o posicionamento ou explorar diferenciais do fundador"
+  proposito:
+    status: "pendente"
+    motivo: "Define o posicionamento da marca, publico-alvo e diferencial competitivo no mercado"
+  produto:
+    status: "pendente"
+    motivo: "Estruturacao do catalogo, precificacao, fornecedores e proposta de valor dos produtos"
+  visao-produto:
+    status: "ignorado"
+    motivo: "Opcional - util para planejar expansao de categorias ou lancamento de marca propria"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Identidade visual profissional e decisiva para confianca e conversao em e-commerce"
+  conteudo:
+    status: "pendente"
+    motivo: "Fotos de produto, descricoes, conteudo para redes sociais e estrategia de SEO para loja"
+  vendas:
+    status: "ignorado"
+    motivo: "Opcional - e-commerce vende via plataforma (self-service); vendas ativada se tiver modelo B2B ou atacado"
+  aquisicao:
+    status: "pendente"
+    motivo: "Critico - trafego pago e organico sao o motor de vendas de qualquer e-commerce"
+  retencao:
+    status: "pendente"
+    motivo: "Recompra e fidelizacao sao decisivos para LTV - email marketing, programas de fidelidade"
+  operacao:
+    status: "pendente"
+    motivo: "Logistica, fulfillment, atendimento ao cliente e gestao de estoque sao criticos"
+  escala:
+    status: "ignorado"
+    motivo: "Inicialmente ignorado - escala e ativada apos operacao estavel e canais de aquisicao validados"
+
+squads_prioritarios:
+  - "squad-advisor"
+  - "squad-design"
+  - "squad-marketing"
+  - "squad-content-distillery"
+
+ordem_sugerida:
+  - "proposito"
+  - "produto"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "aquisicao"
+  - "retencao"
+  - "operacao"
+
+notas: "E-commerce exige execucao simultanea de identidade e conteudo - fotos de produto e branding caminham juntos. Aquisicao e o motor de revenue. Retencao via email e fidelizacao define o LTV. Operacao logistica deve estar estruturada em paralelo. Vendas so se ativar canal B2B/atacado."

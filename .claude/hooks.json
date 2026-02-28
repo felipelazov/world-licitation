@@ -1,0 +1,15 @@
+{
+  "hooks": [
+    {
+      "name": "auto-activate-advisor",
+      "event": "on-project-open",
+      "action": "execute-skill",
+      "skill": "/squad-advisor:agents:advisor-chief",
+      "description": "Automatically activate the advisor board when project opens"
+    }
+  ],
+  "settings": {
+    "auto-activation": true,
+    "default-advisor": "advisor-chief"
+  }
+}

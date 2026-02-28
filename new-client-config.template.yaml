@@ -1,0 +1,120 @@
+# Client Configuration — World OS
+
+# Editado em: {CREATION_DATE}
+# Cliente: {CLIENT_NAME}
+# Segmento: {CLIENT_SEGMENT}
+
+# ═══════════════════════════════════════════════════════════════════════════
+# INFORMAÇÕES BÁSICAS
+# ═══════════════════════════════════════════════════════════════════════════
+
+cliente:
+  nome: {CLIENT_NAME}
+  segmento: {CLIENT_SEGMENT}
+  website: ""
+  linkedin: ""
+  fundacao: ""
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NEGÓCIO
+# ═══════════════════════════════════════════════════════════════════════════
+
+negocio:
+  # Golden Circle (Simon Sinek)
+  why: ""              # Por que você existe? Qual é a causa?
+  how: ""              # Como você age de forma diferente?
+  what: ""             # O que você faz?
+
+  # Positioning
+  publico_alvo: ""     # Quem é seu cliente ideal?
+  posicionamento: ""   # Como você quer ser percebido?
+  diferenciais: []     # O que te diferencia?
+
+  # Oferta
+  oferta_principal: "" # Qual é seu principal produto/serviço?
+  preco: ""            # Como você precifica?
+  dream_outcome: ""    # Qual resultado o cliente busca?
+  garantia: ""         # O que você garante?
+
+  # Estratégia
+  canais: []           # Onde você vende? (direto, marketplace, afiliados, etc)
+  cac: ""              # Quanto custa adquirir um cliente?
+  ltv: ""              # Qual é o lifetime value?
+
+# ═══════════════════════════════════════════════════════════════════════════
+# SQUADS & PRIORIDADES
+# ═══════════════════════════════════════════════════════════════════════════
+
+squads_ativos:
+  - squad-advisor              # Estratégia & Marca
+  # - squad-product            # Produto (descomente quando precisar)
+  # - squad-sales              # Vendas (descomente quando precisar)
+  # - squad-customer-success   # Retenção (descomente quando precisar)
+  # - squad-marketing          # Marketing (descomente quando precisar)
+
+prioridades:
+  fase_atual: "proposito"      # descoberta → proposito → produto → ...
+  proximo_foco: "Definir WHY e posicionamento"
+  bloqueadores: []
+
+# ═══════════════════════════════════════════════════════════════════════════
+# TIMES & CONTATOS
+# ═══════════════════════════════════════════════════════════════════════════
+
+times:
+  fundador:
+    nome: ""
+    email: ""
+    telefone: ""
+
+  product_owner:
+    nome: ""
+    email: ""
+
+  sales_lead:
+    nome: ""
+    email: ""
+
+# ═══════════════════════════════════════════════════════════════════════════
+# MÉTRICAS & KPIs (Será preenchido conforme progredimos)
+# ═══════════════════════════════════════════════════════════════════════════
+
+metricas:
+  mrr: ""              # Monthly Recurring Revenue
+  churn: ""            # Taxa de cancelamento
+  nps: ""              # Net Promoter Score
+  cac_payback: ""      # Quantos meses para recuperar CAC?
+  retention_d30: ""    # D30 Retention
+
+# ═══════════════════════════════════════════════════════════════════════════
+# INTEGRAÇÕES & FERRAMENTAS
+# ═══════════════════════════════════════════════════════════════════════════
+
+integraciones:
+  crm: ""              # Seu CRM? (Salesforce, HubSpot, Pipedrive, etc)
+  analytics: ""        # Onde você coleta dados? (Mixpanel, Amplitude, etc)
+  email: ""            # Ferramenta de email? (Mailchimp, ConvertKit, etc)
+  slack: ""            # Slack workspace ID (para notificações?)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# CONFIGURAÇÃO DO CLAUDE CODE
+# ═══════════════════════════════════════════════════════════════════════════
+
+claude_code:
+  modelo_padrao: "haiku"     # haiku (rápido), sonnet (balanceado), opus (potente)
+  modo_permissoes: "ask"     # ask, auto, explore
+
+  # MCPs habilitados
+  mcps:
+    exa: false               # Web search (ative quando precisar pesquisar)
+    github: false            # GitHub integration
+    context7: false          # Library docs lookup
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTAS INTERNAS
+# ═══════════════════════════════════════════════════════════════════════════
+
+notas: |
+  - Projeto criado em {CREATION_DATE}
+  - Baseado em World OS Matrix
+  - Próximo passo: ativar squad-advisor e definir WHY/HOW/WHAT

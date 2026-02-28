@@ -1,0 +1,63 @@
+# World OS Preset: personal-brand
+# Aplicado automaticamente pelo Maestro ao inicializar projeto
+
+preset:
+  id: "personal-brand"
+  nome: "Marca Pessoal / Creator / Autoridade"
+  descricao: "Construcao de marca pessoal, autoridade ou carreira como creator. Foco em autoconhecimento, posicionamento autentico, identidade visual e producao de conteudo."
+
+fases:
+  descoberta:
+    status: "pendente"
+    motivo: "Fundamental - o autoconhecimento e a base de uma marca pessoal autentica"
+  proposito:
+    status: "pendente"
+    motivo: "Define a missao pessoal, o territorio de autoridade e a narrativa central"
+  produto:
+    status: "pendente"
+    motivo: "Estruturacao de ofertas (mentorias, cursos, consultorias, infoprodutos)"
+  visao-produto:
+    status: "ignorado"
+    motivo: "Inicialmente ignorado - roadmap de produto e secundario ate validar audiencia e oferta"
+  business-dna:
+    status: "pendente"
+    motivo: "Consolida decisoes dos advisors em blueprint estrategico. Gera briefs para squads downstream."
+  identidade:
+    status: "pendente"
+    motivo: "Identidade visual coesa e essencial para reconhecimento e profissionalismo da marca pessoal"
+  conteudo:
+    status: "pendente"
+    motivo: "Motor principal de crescimento - conteudo estrategico para construir audiencia e autoridade"
+  vendas:
+    status: "pendente"
+    motivo: "Estruturar venda de mentorias, cursos ou consultorias - funil de alta conversao pessoal"
+  aquisicao:
+    status: "pendente"
+    motivo: "Trafego pago e organico para escalar audiencia alem do crescimento natural de conteudo"
+  retencao:
+    status: "ignorado"
+    motivo: "Opcional - ativado quando houver base de clientes recorrentes (comunidade, assinatura, mentoria contínua)"
+  operacao:
+    status: "ignorado"
+    motivo: "Inicialmente ignorado - processos operacionais sao ativados quando a demanda exigir estrutura"
+  escala:
+    status: "ignorado"
+    motivo: "Inicialmente ignorado - escala vem depois de validar posicionamento e audiencia"
+
+squads_prioritarios:
+  - "squad-zona-genialidade"
+  - "squad-advisor"
+  - "squad-design"
+  - "squad-content-distillery"
+
+ordem_sugerida:
+  - "descoberta"
+  - "proposito"
+  - "business-dna"
+  - "identidade"
+  - "conteudo"
+  - "produto"
+  - "vendas"
+  - "aquisicao"
+
+notas: "Marca pessoal comeca de dentro para fora: primeiro descoberta e proposito, depois identidade e conteudo. Produto vem depois de validar audiencia. Vendas e aquisicao fecham o ciclo de monetizacao. Retencao e ativada com modelo recorrente. Operacao e escala conforme crescimento."
