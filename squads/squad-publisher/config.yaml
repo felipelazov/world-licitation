@@ -1,0 +1,79 @@
+name: publisher
+version: "1.0.0"
+slash_prefix: "Publisher"
+title: "Publisher Squad - Elite Minds for Professional Document Design"
+description: "Squad especializado em criar documentos profissionais de alto nivel — catalogos de produtos, apresentacoes institucionais, relatorios e materiais de onboarding. Baseado nos melhores do mundo em design editorial, tipografia, grids e arquitetura de informacao."
+author: "AIOS Squad Creator"
+icon: "📐"
+type: specialist
+
+entry_agent: doc-chief
+
+independence: true
+independence_details: |
+  Squad 100% self-contained:
+  - Opera sobre dados do BM PRO (produtos, precos, funcionalidades)
+  - Output em formato estruturado (markdown, specs de layout)
+  - Nao requer dependencias externas alem do projeto base
+
+dependencies:
+  optional:
+    - name: jsPDF
+      description: "Geracao de PDF programatica (ja presente no projeto)"
+    - name: React-PDF
+      description: "Alternativa para geracao de PDF via React"
+
+environment:
+  required: []
+  optional: []
+
+tier_system:
+  orchestrator:
+    agent: doc-chief
+  tier_0_foundation:
+    description: "Diagnostico e arquitetura de informacao"
+    agents:
+      - edward-tufte
+  tier_1_masters:
+    description: "Design system e layout"
+    agents:
+      - massimo-vignelli
+      - josef-muller-brockmann
+  tier_2_specialists:
+    description: "Tipografia e refinamento"
+    agents:
+      - ellen-lupton
+      - robert-bringhurst
+
+agents:
+  - doc-chief
+  - edward-tufte
+  - massimo-vignelli
+  - josef-muller-brockmann
+  - ellen-lupton
+  - robert-bringhurst
+
+tasks:
+  - create-catalog
+  - create-presentation
+  - create-document
+
+workflows:
+  - wf-catalog
+  - wf-presentation
+
+templates:
+  - catalog-spec-tmpl
+  - presentation-spec-tmpl
+
+checklists:
+  - document-quality-checklist
+
+tags:
+  - editorial-design
+  - catalog
+  - pdf
+  - typography
+  - layout
+  - publication
+  - information-design

@@ -1,0 +1,59 @@
+# Template: Conversion Spec (n8n → AIOS)
+# Gerado pelo n8n-converter apos parsing do JSON
+
+conversion_spec:
+  source: "{n8n_workflow_name}"
+  source_version: "{n8n_version}"
+  target: "AIOS Native App"
+  converted_by: "n8n-converter"
+  converted_at: "{YYYY-MM-DD}"
+
+  summary:
+    total_steps: "{N}"
+    executors:
+      worker: "{N}"
+      agente: "{N}"
+      humano: "{N}"
+      clone: "{N}"
+    total_connections: "{N}"
+    improvements_suggested: "{N}"
+
+  steps:
+    - id: "STEP-001"
+      source_node: "{n8n_node_type}"
+      source_name: "{nome_no_n8n}"
+      aios_component: "{api_endpoint | api_call | ai_task | db_operation | notification | ...}"
+      executor: "{worker | agente | humano | clone}"
+      description: "{O que este step faz}"
+      config:
+        # Configuracao especifica do step
+        "{key}": "{value}"
+      credentials:
+        - name: "{credential_name}"
+          status: "[CREDENTIAL_REQUIRED]"
+      error_handling:
+        on_fail: "{acao em caso de erro}"
+        retry: "{retry policy}"
+        fallback: "{fallback action}"
+      handoff_to: "STEP-002"
+      improvement: "{melhoria sugerida sobre o original}"
+
+  node_mapping:
+    # Tabela visual para referencia
+    - node_n8n: "{tipo}"
+      node_name: "{nome}"
+      aios_component: "{componente}"
+      executor: "{tipo}"
+      improvement: "{melhoria}"
+
+  connections:
+    # Preservacao das connections do n8n
+    - from: "STEP-001"
+      to: "STEP-002"
+      condition: "{condicao se houver}"
+
+  improvements:
+    - category: "{performance | reliability | security | observability}"
+      description: "{descricao da melhoria}"
+      impact: "{alto | medio | baixo}"
+      effort: "{horas estimadas}"

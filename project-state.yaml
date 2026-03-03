@@ -358,3 +358,24 @@ squads:
     agents: ["gay-hendricks", "don-clifton", "dan-sullivan", "roger-hamilton", "alex-hormozi", "kathy-kolbe", "sally-hogshead"]
     tasks: ["start", "run-assessment", "analyze-genius-profile", "recommend-squad", "generate-blueprint"]
     negocio_fields: []
+
+  squad-automation:
+    domain: "n8n Conversion & Native AIOS Automation"
+    chief: "automation-chief"
+    agents: ["n8n-converter", "app-builder", "automation-strategist"]
+    tasks: ["convert-n8n-flow", "discover-automations", "create-automation-app", "suggest-improvements"]
+    negocio_fields: []
+
+  squad-creator-fundamentals:
+    domain: "Process Extraction & Squad Forging"
+    chief: "forge-chief"
+    agents: ["process-archaeologist", "forge-smith"]
+    tasks: ["start", "extract-process", "playback-validate", "architect-squad", "assemble-squad", "validate-squad"]
+    negocio_fields: []
+
+  squad-publisher:
+    domain: "Professional Document Design & Editorial Publishing"
+    chief: "doc-chief"
+    agents: ["edward-tufte", "massimo-vignelli", "josef-muller-brockmann", "ellen-lupton", "robert-bringhurst"]
+    tasks: ["create-catalog", "create-presentation", "create-document"]
+    negocio_fields: []

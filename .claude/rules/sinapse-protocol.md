@@ -131,6 +131,9 @@ Mapeamento squad → campos do negocio:
 | squad-reino | (nao escreve em negocio — escreve apenas decisoes) |
 | squad-sales | meta_vendas, ticket_medio, canal_vendas, funil, scripts_venda, cadencia_prospeccao |
 | squad-zona-genialidade | (nao escreve em negocio — escreve apenas decisoes) |
+| squad-automation | (nao escreve em negocio — escreve apenas decisoes) |
+| squad-creator-fundamentals | (nao escreve em negocio — escreve apenas decisoes) |
+| squad-publisher | (nao escreve em negocio — escreve apenas decisoes) |
 <!-- WORLD-SYNC-END: squad-negocio-mapping -->
 
 ### 2.4 Atualizar Progresso da Fase
@@ -213,6 +216,9 @@ Os seguintes agents DEVEM seguir este protocolo:
 | jesus-cristo | squad-reino | `/squad-reino:agents:jesus-cristo` |
 | alex-hormozi | squad-sales | `/squad-sales:agents:alex-hormozi` |
 | zona-genialidade-chief | squad-zona-genialidade | `/squad-zona-genialidade:agents:zona-genialidade-chief` |
+| automation-chief | squad-automation | `/squad-automation:agents:automation-chief` |
+| forge-chief | squad-creator-fundamentals | `/squad-creator-fundamentals:agents:forge-chief` |
+| doc-chief | squad-publisher | `/squad-publisher:agents:doc-chief` |
 <!-- WORLD-SYNC-END: squad-chiefs-table -->
 
 Agentes individuais (nao-chiefs) NAO escrevem no estado diretamente.

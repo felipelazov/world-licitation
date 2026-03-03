@@ -1,0 +1,139 @@
+pack:
+  name: squad-automation
+  version: 1.0.0
+  short-title: Automation Squad
+  description: >-
+    Squad especializado em converter automacoes n8n em aplicacoes nativas AIOS
+    e criar novas automacoes do zero. Recebe JSONs de fluxos n8n, ideias de
+    automacao ou pedidos de melhoria — entrega aplicacoes nativas com executores
+    (humano, agente, worker, clone). Tambem sugere melhorias e futuras automacoes.
+  author: World OS
+  icon: "🔄"
+  slashPrefix: squad-automation
+
+# Pattern Library
+pattern_library:
+  prefix: AU
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "AU-CV-001"
+  categories:
+    - id: CV
+      name: "Conversion Patterns"
+      description: "Patterns for n8n → AIOS conversion"
+    - id: AP
+      name: "App Patterns"
+      description: "Patterns for native AIOS app creation"
+    - id: EX
+      name: "Executor Patterns"
+      description: "Patterns for executor assignment (humano, agente, worker, clone)"
+    - id: QG
+      name: "Quality Gate Patterns"
+      description: "Patterns for automation quality validation"
+
+# Agents
+agents:
+  automation-chief:
+    role: "Automation Chief (Orchestrator)"
+    tier: orchestrator
+    domain: "Routing, n8n flow analysis, demand triage, delivery coordination"
+
+  n8n-converter:
+    role: "n8n Flow Converter"
+    tier: 1
+    domain: "Parse n8n JSON, map nodes to AIOS components, generate conversion spec"
+
+  app-builder:
+    role: "AIOS App Builder"
+    tier: 1
+    domain: "Build native AIOS applications, configure executors, wire integrations"
+
+  automation-strategist:
+    role: "Automation Strategist"
+    tier: 2
+    domain: "Improvement suggestions, future automation discovery, ROI analysis"
+
+# Executor Types
+executor_types:
+  humano:
+    description: "Tarefa executada por pessoa. Requer instrucoes claras e checklist."
+    when: "Julgamento humano necessario, decisao subjetiva, aprovacao"
+  agente:
+    description: "Tarefa executada por agente IA. Pode ser Claude, GPT, etc."
+    when: "Tarefa cognitiva, analise de texto, geracao de conteudo, decisao baseada em regras complexas"
+  worker:
+    description: "Script ou funcao automatizada. Roda sem supervisao."
+    when: "Tarefa deterministica, transformacao de dados, integracao API, CRON job"
+  clone:
+    description: "Agente IA com persona/expertise especifica (mind clone)."
+    when: "Tarefa que requer expertise de dominio especifico, tom de voz, metodologia particular"
+
+# Pipeline Architecture
+pipeline:
+  flow: "Demanda → Analysis (Chief) → Conversion (Converter) → Build (Builder) → Review (Strategist) → ENTREGA"
+  quality_gate_threshold: 0.70
+  stages:
+    - name: "Analysis & Triage"
+      owner: "automation-chief"
+      tasks: ["analyze-demand"]
+      gate: "Demanda classificada e roteada"
+      metrics: ["type_identified", "complexity_scored", "route_assigned"]
+
+    - name: "Conversion / Design"
+      owner: "n8n-converter"
+      tasks: ["convert-n8n-flow", "design-automation"]
+      gate: "Quality Gate >70% → passa pro Builder"
+      metrics: ["nodes_mapped", "executors_assigned", "gaps_identified"]
+
+    - name: "Build"
+      owner: "app-builder"
+      tasks: ["create-automation-app"]
+      gate: "Quality Gate >70% → passa pro Strategist"
+      metrics: ["app_created", "executors_configured", "tests_passed"]
+
+    - name: "Review & Improve"
+      owner: "automation-strategist"
+      tasks: ["suggest-improvements", "audit-automation"]
+      gate: "Quality Gate FINAL >70% → ENTREGA"
+      metrics: ["improvements_suggested", "roi_calculated", "future_automations_proposed"]
+
+# Workflow Configuration
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: true
+  allow_manual_override: false
+  unidirectional: true
+
+# n8n Node Type Mapping
+n8n_node_mapping:
+  description: "Mapeamento de tipos de nodes n8n para componentes AIOS"
+  mappings:
+    # Triggers
+    webhook: { aios: "api_endpoint", executor: "worker" }
+    cron: { aios: "scheduled_job", executor: "worker" }
+    email_trigger: { aios: "event_listener", executor: "worker" }
+
+    # Actions
+    http_request: { aios: "api_call", executor: "worker" }
+    send_email: { aios: "notification", executor: "worker" }
+    slack: { aios: "notification", executor: "worker" }
+
+    # Data
+    set: { aios: "data_transform", executor: "worker" }
+    function: { aios: "custom_logic", executor: "worker_or_agent" }
+    if: { aios: "conditional_branch", executor: "worker" }
+    switch: { aios: "multi_branch", executor: "worker" }
+    merge: { aios: "data_merge", executor: "worker" }
+
+    # AI
+    openai: { aios: "ai_task", executor: "agente" }
+    anthropic: { aios: "ai_task", executor: "agente" }
+
+    # Database
+    postgres: { aios: "db_operation", executor: "worker" }
+    mysql: { aios: "db_operation", executor: "worker" }
+    mongodb: { aios: "db_operation", executor: "worker" }
+
+    # Human
+    form: { aios: "human_input", executor: "humano" }
+    wait: { aios: "approval_gate", executor: "humano" }

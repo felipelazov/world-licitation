@@ -1,0 +1,66 @@
+# Template: Automation App Spec
+# Usado para definir nova automacao (sem n8n, do zero)
+
+automation_app:
+  name: "{nome-da-automacao}"
+  description: "{O que faz e por que existe}"
+  created_by: "app-builder"
+  created_at: "{YYYY-MM-DD}"
+  status: "draft | active | disabled"
+
+  trigger:
+    type: "{http | schedule | event | manual}"
+    config:
+      # HTTP
+      method: "POST"
+      path: "/api/automations/{nome}"
+      auth: "{bearer | api_key | none}"
+      # Schedule
+      cron: "{cron expression}"
+      timezone: "America/Sao_Paulo"
+      # Event
+      event: "{event_name}"
+      source: "{supabase | webhook | realtime}"
+
+  steps:
+    - id: "STEP-001"
+      name: "{nome descritivo}"
+      executor: "{worker | agente | humano | clone}"
+      description: "{O que faz}"
+      input:
+        - field: "{nome}"
+          type: "{tipo}"
+          source: "{trigger | STEP-XXX}"
+      output:
+        - field: "{nome}"
+          type: "{tipo}"
+      config:
+        # Configuracao especifica
+        "{key}": "{value}"
+      error_handling:
+        on_fail: "{acao}"
+        retry:
+          max_retries: 3
+          backoff: "exponential"
+          interval_ms: 1000
+        fallback: "{acao alternativa}"
+      handoff_to: "STEP-002"
+
+  executors_summary:
+    worker: "{N} steps"
+    agente: "{N} steps"
+    humano: "{N} steps"
+    clone: "{N} steps"
+
+  monitoring:
+    log_level: "info"
+    alert_on_failure: true
+    alert_channels: ["slack", "email"]
+    metrics:
+      - "execution_time"
+      - "success_rate"
+      - "error_count"
+
+  documentation:
+    readme: "src/services/automations/{nome}/README.md"
+    api_docs: "/api/docs/automations/{nome}"

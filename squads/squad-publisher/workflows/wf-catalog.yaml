@@ -1,0 +1,137 @@
+workflow:
+  id: "publisher-catalog"
+  name: "Create Product Catalog"
+  description: "Pipeline completo para criar catalogo de produtos profissional"
+  version: "1.0.0"
+  type: "sequential"
+
+metadata:
+  author: "Publisher Chief (Orchestrator)"
+  created_date: "2026-03-03"
+  tags:
+    - catalog
+    - products
+    - pdf
+    - editorial
+
+inputs:
+  product_source:
+    type: "string"
+    description: "Fonte dos dados: 'supabase' (puxa do BM PRO) ou 'manual' (usuario fornece lista)"
+    required: true
+    default: "supabase"
+
+  category_filter:
+    type: "string"
+    description: "Filtro de categoria (opcional, vazio = todos)"
+    required: false
+
+  brand_colors:
+    type: "object"
+    description: "Cores da marca (primary, secondary, accent)"
+    required: false
+    default:
+      primary: "#1B5E20"
+      secondary: "#E8F5E9"
+      accent: "#FF6F00"
+
+  format:
+    type: "string"
+    description: "Formato: A4, Letter, Custom"
+    default: "A4"
+
+steps:
+  - id: "step_0_briefing"
+    name: "Briefing & Data Collection"
+    type: "agent"
+    agent: "doc-chief"
+    description: "Coletar briefing e dados dos produtos"
+    outputs:
+      briefing: "Publico, objetivo, tom, volume de produtos"
+      product_data: "Lista de produtos com foto, nome, preco, descricao, categoria"
+
+  - id: "step_1_architecture"
+    name: "Information Architecture"
+    type: "agent"
+    agent: "edward-tufte"
+    command: "*structure-catalog"
+    description: "Definir arquitetura de informacao: hierarquia, agrupamentos, fluxo, eliminacao de ruido"
+    inputs:
+      briefing: "{{step_0_briefing.briefing}}"
+      products: "{{step_0_briefing.product_data}}"
+    outputs:
+      info_architecture: "Hierarquia de informacao, agrupamentos por categoria, fluxo de leitura, data-ink decisions"
+
+  - id: "step_2_design_system"
+    name: "Design System"
+    type: "agent"
+    agent: "massimo-vignelli"
+    command: "*design-system"
+    description: "Criar design system: tipografia, cores, grid base, componentes"
+    inputs:
+      info_architecture: "{{step_1_architecture.info_architecture}}"
+      brand_colors: "{{brand_colors}}"
+    outputs:
+      design_system: "Tipografia, paleta, grid base, spacing, componentes (product card, header, footer)"
+
+  - id: "step_3_grid_layout"
+    name: "Grid & Page Layout"
+    type: "agent"
+    agent: "josef-muller-brockmann"
+    command: "*catalog-grid"
+    description: "Criar grid multi-pagina e layout de cada tipo de pagina"
+    inputs:
+      design_system: "{{step_2_design_system.design_system}}"
+      product_count: "{{step_1_architecture.info_architecture.product_count}}"
+    outputs:
+      grid_system: "Colunas, margens, baseline, page types, ritmo entre paginas"
+
+  - id: "step_4_typography"
+    name: "Typographic Hierarchy"
+    type: "agent"
+    agent: "ellen-lupton"
+    command: "*typography"
+    description: "Aplicar hierarquia tipografica completa"
+    inputs:
+      design_system: "{{step_2_design_system.design_system}}"
+      grid_system: "{{step_3_grid_layout.grid_system}}"
+    outputs:
+      type_specs: "Todos os niveis tipograficos com tamanho, peso, leading, tracking, cor"
+
+  - id: "step_5_refinement"
+    name: "Typographic Refinement"
+    type: "agent"
+    agent: "robert-bringhurst"
+    command: "*refine"
+    description: "Refinamento final: ritmo vertical, escala, textura, detalhes finos"
+    inputs:
+      type_specs: "{{step_4_typography.type_specs}}"
+      grid_system: "{{step_3_grid_layout.grid_system}}"
+    outputs:
+      final_specs: "Documento refinado com todas as specs tipograficas finais"
+
+  - id: "step_6_output"
+    name: "Final Spec Document"
+    type: "agent"
+    agent: "doc-chief"
+    description: "Consolidar todas as specs em documento final de referencia"
+    inputs:
+      info_architecture: "{{step_1_architecture.info_architecture}}"
+      design_system: "{{step_2_design_system.design_system}}"
+      grid_system: "{{step_3_grid_layout.grid_system}}"
+      type_specs: "{{step_5_refinement.final_specs}}"
+    outputs:
+      catalog_spec: "Spec completo do catalogo pronto para implementacao"
+
+outputs:
+  catalog_spec:
+    type: "document"
+    description: "Especificacao completa do catalogo com todas as decisoes de design"
+    source: "step_6_output.catalog_spec"
+
+global_error_handling:
+  on_error: "pause_and_ask"
+  notification:
+    enabled: true
+    channels:
+      - console

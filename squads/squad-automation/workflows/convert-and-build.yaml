@@ -1,0 +1,94 @@
+# Workflow: Convert & Build Pipeline
+# Pipeline completo: Demanda → Analysis → Conversion → Build → Review → Entrega
+
+workflow:
+  name: "Convert & Build Pipeline"
+  version: "1.0"
+  description: >-
+    Pipeline completo para converter fluxo n8n em aplicacao AIOS nativa
+    ou criar automacao nova do zero. Passa por 4 fases com quality gates.
+  unidirectional: true
+
+phases:
+  - id: "phase-1-analysis"
+    name: "Analysis & Triage"
+    owner: "automation-chief"
+    description: "Recebe demanda, classifica tipo e complexidade, roteia"
+    tasks:
+      - "Parsear JSON n8n (se conversion) ou entender ideia (se new_build)"
+      - "Classificar tipo: conversion | new_build | improvement | audit"
+      - "Classificar complexidade: simple | medium | complex"
+      - "Identificar executores necessarios"
+      - "Rotear para fase seguinte"
+    checkpoint:
+      gate: "Demanda classificada e roteada?"
+      veto_conditions:
+        - "Demanda nao classificada → nao rotear"
+        - "JSON invalido → pedir JSON correto"
+      pass_to: "phase-2-conversion"
+
+  - id: "phase-2-conversion"
+    name: "Conversion / Design"
+    owner: "n8n-converter (conversion) ou automation-chief (new_build)"
+    description: "Gera spec de conversao ou design de automacao"
+    tasks:
+      - "Mapear nodes n8n para componentes AIOS"
+      - "Designar executores por step"
+      - "Preservar connections como handoffs"
+      - "Sugerir melhorias"
+      - "Gerar spec YAML completa"
+    checkpoint:
+      gate: "Conversion Quality Checklist >= 9/12?"
+      checklist: "conversion-quality-checklist.md"
+      veto_conditions:
+        - "Node sem mapeamento → resolver antes"
+        - "Step sem executor → designar antes"
+        - "Spec incompleta → completar antes"
+      pass_to: "phase-3-build"
+
+  - id: "phase-3-build"
+    name: "Build"
+    owner: "app-builder"
+    description: "Constroi aplicacao nativa AIOS a partir da spec"
+    tasks:
+      - "Criar estrutura de diretorios"
+      - "Implementar steps com executores"
+      - "Implementar error handling e retry"
+      - "Criar API route / CRON"
+      - "Escrever testes"
+    checkpoint:
+      gate: "App Build Checklist >= 9/12?"
+      checklist: "app-build-checklist.md"
+      veto_conditions:
+        - "TypeScript nao compila → corrigir"
+        - "Step sem error handling → adicionar"
+        - "Testes falhando → corrigir"
+      pass_to: "phase-4-review"
+
+  - id: "phase-4-review"
+    name: "Review & Improve"
+    owner: "automation-strategist"
+    description: "Audita qualidade, sugere melhorias, propoe automacoes futuras"
+    tasks:
+      - "Rodar audit checklist (10 pontos)"
+      - "Sugerir melhorias com ROI"
+      - "Propor automacoes futuras relacionadas"
+      - "Compilar entregaveis"
+    checkpoint:
+      gate: "Automation Quality Checklist >= 0.70?"
+      checklist: "automation-quality-checklist.md"
+      veto_conditions:
+        - "Score < 0.70 → corrigir issues criticos antes"
+      pass_to: "delivery"
+
+  - id: "delivery"
+    name: "Entrega"
+    owner: "automation-chief"
+    description: "Compila entregaveis e entrega ao demandante"
+    deliverables:
+      - "Aplicacao nativa AIOS funcional"
+      - "Documentacao (types, README)"
+      - "Testes passando"
+      - "Audit report com score"
+      - "Lista de melhorias futuras"
+      - "Sugestoes de automacoes relacionadas"
