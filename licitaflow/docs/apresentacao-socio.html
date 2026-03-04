@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BM Cesta Basica — Licitacao Publica | LicitaFlow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --primary: #2563EB;
+    --primary-light: #3B82F6;
+    --primary-dark: #1D4ED8;
+    --primary-bg: rgba(37,99,235,0.06);
+    --primary-bg-hover: rgba(37,99,235,0.1);
+    --primary-border: rgba(37,99,235,0.15);
+    --bg: #FFFFFF;
+    --bg-subtle: #F4F4F5;
+    --bg-card: #FFFFFF;
+    --text: #0A0A0A;
+    --text-secondary: #71717A;
+    --text-muted: #A1A1AA;
+    --border: #E4E4E7;
+    --border-light: #F4F4F5;
+    --green: #16A34A;
+    --green-bg: rgba(22,163,74,0.06);
+    --green-border: rgba(22,163,74,0.15);
+    --red: #DC2626;
+    --red-bg: rgba(220,38,38,0.06);
+    --yellow: #CA8A04;
+    --yellow-bg: rgba(202,138,4,0.06);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 24px;
+    position: relative;
+    background: linear-gradient(180deg, #F8FAFF 0%, #FFFFFF 60%);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-bg);
+    border: 1px solid var(--primary-border);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-size: clamp(40px, 7vw, 72px);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .hero h1 .accent { color: var(--primary); }
+
+  .hero-sub {
+    font-size: clamp(17px, 2.2vw, 22px);
+    color: var(--text-secondary);
+    max-width: 620px;
+    font-weight: 400;
+    margin-bottom: 56px;
+    position: relative;
+    z-index: 1;
+    line-height: 1.5;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-stat {
+    text-align: center;
+    padding: 20px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    min-width: 140px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+
+  .hero-stat-value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero-stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ============ SECTIONS ============ */
+  section {
+    padding: 80px 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .section-title {
+    font-size: clamp(30px, 4.5vw, 44px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .section-desc {
+    font-size: 17px;
+    color: var(--text-secondary);
+    max-width: 640px;
+    font-weight: 400;
+    margin-bottom: 48px;
+    line-height: 1.6;
+  }
+
+  /* ============ CARDS ============ */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    transition: all 0.25s ease;
+  }
+
+  .card:hover {
+    border-color: var(--primary-border);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.08);
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+
+  .card-icon.primary { background: var(--primary-bg); }
+  .card-icon.green { background: var(--green-bg); }
+  .card-icon.yellow { background: var(--yellow-bg); }
+
+  .card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ============ PIPELINE ============ */
+  .pipeline { position: relative; }
+
+  .pipeline-line {
+    position: absolute;
+    left: 27px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--border) 100%);
+  }
+
+  .pipeline-step {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 40px;
+    position: relative;
+  }
+
+  .pipeline-dot {
+    width: 54px;
+    height: 54px;
+    min-width: 54px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    z-index: 1;
+  }
+
+  .pipeline-content h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+
+  .pipeline-content .owner {
+    font-size: 13px;
+    color: var(--primary);
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .pipeline-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .pipeline-content .duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-bg);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--primary);
+    font-weight: 500;
+    margin-top: 10px;
+  }
+
+  /* ============ FINANCEIRO ============ */
+  .finance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .finance-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+  }
+
+  .finance-card .value {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 4px;
+    letter-spacing: -0.02em;
+  }
+
+  .finance-card .label {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .finance-card .detail {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ============ HIGHLIGHT BOX ============ */
+  .highlight-box {
+    background: var(--primary-bg);
+    border: 1px solid var(--primary-border);
+    border-radius: 20px;
+    padding: 40px;
+    margin: 48px 0;
+  }
+
+  .highlight-box h3 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .highlight-box ul {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+
+  .highlight-box li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .highlight-box li::before {
+    content: '→';
+    color: var(--primary);
+    font-weight: 700;
+    min-width: 16px;
+  }
+
+  .highlight-box.green-box {
+    background: var(--green-bg);
+    border-color: var(--green-border);
+  }
+
+  .highlight-box.green-box li::before { color: var(--green); }
+
+  /* ============ TABLE ============ */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin: 28px 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th {
+    background: var(--bg-subtle);
+    text-align: left;
+    padding: 14px 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 14px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--primary-bg); }
+
+  /* ============ APP FEATURES ============ */
+  .app-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .app-feature {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .app-feature:hover { border-color: var(--primary-border); }
+
+  .app-feature .num {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 8px;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .app-feature h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 3px;
+    color: var(--text);
+  }
+
+  .app-feature p {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ============ ROADMAP ============ */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+
+  .roadmap-week {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .roadmap-week::before {
+    content: attr(data-week);
+    position: absolute;
+    top: -10px;
+    right: -6px;
+    font-size: 72px;
+    font-weight: 900;
+    color: rgba(37,99,235,0.04);
+    line-height: 1;
+  }
+
+  .roadmap-week .week-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--primary);
+    margin-bottom: 10px;
+  }
+
+  .roadmap-week h4 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  .roadmap-week ul { list-style: none; }
+
+  .roadmap-week li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .roadmap-week li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary);
+    min-width: 6px;
+  }
+
+  /* ============ CTA ============ */
+  .cta-section {
+    text-align: center;
+    padding: 100px 24px;
+    background: linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%);
+  }
+
+  .cta-section h2 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 900;
+    margin-bottom: 16px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .cta-section h2 .accent { color: var(--primary); }
+
+  .cta-section p {
+    font-size: 18px;
+    color: var(--text-secondary);
+    max-width: 560px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 16px 36px;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.25);
+  }
+
+  .cta-btn:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+  }
+
+  /* ============ DIVIDER ============ */
+  .divider {
+    width: 64px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 2px;
+    margin: 0 auto;
+    opacity: 0.2;
+  }
+
+  /* ============ FOOTER ============ */
+  footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  footer .brand { color: var(--primary); font-weight: 600; }
+
+  /* ============ RISK BOX ============ */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .risk-col h4 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .risk-col.avoid h4 { color: var(--red); }
+  .risk-col.do h4 { color: var(--green); }
+
+  .risk-col ul { list-style: none; }
+
+  .risk-col li {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .risk-col.avoid li::before { content: '✕'; color: var(--red); font-weight: 700; min-width: 14px; }
+  .risk-col.do li::before { content: '✓'; color: var(--green); font-weight: 700; min-width: 14px; }
+
+  /* ============ MARGIN SIMULATOR ============ */
+  .sim-box {
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 36px;
+    margin: 36px 0;
+  }
+
+  .sim-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 14px;
+  }
+
+  .sim-row:last-child { border-bottom: none; }
+  .sim-row .sim-label { color: var(--text-secondary); }
+  .sim-row .sim-value { font-weight: 600; color: var(--text); }
+  .sim-row .sim-value.negative { color: var(--red); }
+  .sim-row.total { border-top: 2px solid var(--primary); margin-top: 8px; padding-top: 14px; }
+  .sim-row.total .sim-label { color: var(--text); font-weight: 700; font-size: 17px; }
+  .sim-row.total .sim-value { color: var(--primary); font-weight: 800; font-size: 20px; }
+
+  /* ============ LOGO AREA ============ */
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    z-index: 10;
+  }
+
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .logo-text span { color: var(--primary); }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 768px) {
+    .hero-stats { gap: 12px; }
+    .hero-stat { min-width: 120px; padding: 16px; }
+    .hero-stat-value { font-size: 24px; }
+    .risk-grid { grid-template-columns: 1fr; }
+    section { padding: 48px 20px; }
+    .highlight-box { padding: 24px; }
+    .pipeline-step { gap: 16px; }
+    .pipeline-dot { width: 42px; height: 42px; min-width: 42px; font-size: 15px; }
+    .pipeline-line { left: 21px; }
+    .logo-area { top: 16px; left: 16px; }
+  }
+
+  @media print {
+    .hero { min-height: auto; padding: 40px 24px; }
+    section { padding: 30px 0; page-break-inside: avoid; }
+    .scroll-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="logo-area">
+    <div class="logo-mark">LF</div>
+    <div class="logo-text">Licita<span>Flow</span></div>
+  </div>
+
+  <div class="hero-badge">BM Cesta Basica — Documento Estrategico</div>
+  <h1>Licitacao Publica<br><span class="accent">O Novo Canal de Vendas</span></h1>
+  <p class="hero-sub">Como entrar no mercado de R$15-20 bilhoes/ano vendendo cesta basica para o governo — com tecnologia, estrategia e margem saudavel.</p>
+
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-value">R$20bi</div>
+      <div class="hero-stat-label">Mercado Anual</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">8-15%</div>
+      <div class="hero-stat-label">Margem Liquida</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">R$6.7bi</div>
+      <div class="hero-stat-label">PNAE 2026</div>
+    </div>
+    <div class="hero-stat">
+      <div class="hero-stat-value">4 sem</div>
+      <div class="hero-stat-label">Ate 1o Pregao</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Role para baixo</span>
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 13l5 5 5-5M7 6l5 5 5-5"/></svg>
+  </div>
+</div>
+
+<!-- ============ POR QUE LICITACAO ============ -->
+<section>
+  <div class="section-label">Oportunidade</div>
+  <h2 class="section-title">Por Que Licitacao?</h2>
+  <p class="section-desc">O governo federal, estadual e municipal compra bilhoes em alimentos todo ano. E precisa de fornecedores como nos.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon primary">💰</div>
+      <h3>Receita Previsivel</h3>
+      <p>Contratos de 6-12 meses com cronograma de entrega definido. Voce sabe exatamente quanto vai faturar nos proximos meses. Adeus incerteza.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon green">📈</div>
+      <h3>Mercado Gigante e Crescente</h3>
+      <p>So o PNAE (merenda escolar) passou de R$3.7bi em 2022 para R$6.7bi em 2026 — crescimento de 80%. E isso e apenas uma fatia do bolo.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary">🏛️</div>
+      <h3>Governo Paga (Sempre)</h3>
+      <p>Diferente do varejo, o governo tem orcamento garantido. Atraso pode acontecer, calote nao. E o prazo tipico e 30 dias apos entrega.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary">🏪</div>
+      <h3>Vantagem ME/EPP</h3>
+      <p>A lei reserva licitacoes exclusivas ate R$80 mil e cotas de 25% para micro e pequenas empresas. Concorrencia menor, chances maiores.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon yellow">🔄</div>
+      <h3>Recorrencia</h3>
+      <p>Governo precisa de cesta basica TODO mes. Uma vez dentro, a renovacao e natural. Atas de registro de preco duram ate 12 meses.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary">⚡</div>
+      <h3>100% Digital</h3>
+      <p>Pregao eletronico e feito pela internet. Compras.gov.br, BEC, licitacoes-e. Sem sair de casa, sem viagem, sem papelada fisica.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ NUMEROS DO MERCADO ============ -->
+<section>
+  <div class="section-label">Mercado</div>
+  <h2 class="section-title">Os Numeros que Importam</h2>
+  <p class="section-desc">Dados reais do mercado de licitacao de alimentos no Brasil.</p>
+
+  <div class="finance-grid">
+    <div class="finance-card">
+      <div class="value">R$15-20bi</div>
+      <div class="label">Mercado anual de alimentos</div>
+      <div class="detail">Licitacoes federais, estaduais e municipais para generos alimenticios</div>
+    </div>
+    <div class="finance-card">
+      <div class="value">R$6.7bi</div>
+      <div class="label">PNAE 2026</div>
+      <div class="detail">Programa Nacional de Alimentacao Escolar — crescimento de 80% desde 2022</div>
+    </div>
+    <div class="finance-card">
+      <div class="value">30%</div>
+      <div class="label">Reserva agricultura familiar</div>
+      <div class="detail">PNAE obriga 30% de compra da agricultura familiar (chamada publica)</div>
+    </div>
+    <div class="finance-card">
+      <div class="value">5.570</div>
+      <div class="label">Municipios compradores</div>
+      <div class="detail">Cada municipio tem sua propria demanda, orcamento e cronograma de compras</div>
+    </div>
+    <div class="finance-card">
+      <div class="value">8-15%</div>
+      <div class="label">Margem liquida tipica</div>
+      <div class="detail">Para fornecedores de cesta basica em pregao eletronico</div>
+    </div>
+    <div class="finance-card">
+      <div class="value">R$80 mil</div>
+      <div class="label">Licitacoes exclusivas ME/EPP</div>
+      <div class="detail">Lei Complementar 123/2006 — menos concorrencia de grandes empresas</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ PIPELINE ============ -->
+<section>
+  <div class="section-label">Processo</div>
+  <h2 class="section-title">As 7 Fases da Licitacao</h2>
+  <p class="section-desc">Do edital ao pagamento — cada fase do pipeline licitatorio explicada de forma simples.</p>
+
+  <div class="pipeline">
+    <div class="pipeline-line"></div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">1</div>
+      <div class="pipeline-content">
+        <h3>Prospeccao de Editais</h3>
+        <div class="owner">Monitoramento diario nos portais</div>
+        <p>Acompanhar diariamente os portais (Compras.gov.br, BEC, Licitacoes-e) filtrando por objeto "cesta basica" ou "generos alimenticios", modalidade pregao eletronico, valor compativel e local de entrega no raio logistico.</p>
+        <div class="duration">⏱ Diario — 30-60 min</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">2</div>
+      <div class="pipeline-content">
+        <h3>Analise GO / NO-GO</h3>
+        <div class="owner">Triagem rapida de viabilidade</div>
+        <p>Para cada edital encontrado, avaliar 7 pontos: objeto compativel, exigencias atingiveis, prazo viavel, local no raio, valor permite margem, sem clausulas restritivas, capacidade de entrega. Se 5+ pontos positivos: GO.</p>
+        <div class="duration">⏱ 2-4 horas por edital</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">3</div>
+      <div class="pipeline-content">
+        <h3>Habilitacao</h3>
+        <div class="owner">Documentacao completa e valida</div>
+        <p>SICAF atualizado, todas as certidoes (federal, estadual, municipal, trabalhista), contrato social, balanco patrimonial, atestado de capacidade tecnica e — crucial para alimentos — alvara sanitario (VISA).</p>
+        <div class="duration">⏱ 1-3 dias (1a vez: 1-2 semanas)</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">4</div>
+      <div class="pipeline-content">
+        <h3>Elaboracao de Proposta</h3>
+        <div class="owner">Preco competitivo com margem saudavel</div>
+        <p>Planilha de custo completa (materia-prima + mao de obra + embalagem + frete + perdas). Definir margem minima (piso). Analisar historico de atas e precos de concorrentes anteriores.</p>
+        <div class="duration">⏱ 2-4 horas</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">5</div>
+      <div class="pipeline-content">
+        <h3>Sessao do Pregao</h3>
+        <div class="owner">Disputa estrategica em tempo real</div>
+        <p>Preco inicial sem revelar o piso. Lances decrementais graduais. Monitorar concorrentes em tempo real. NUNCA abaixo do piso de margem. Negociacao pos-lance com o pregoeiro se necessario.</p>
+        <div class="duration">⏱ 2-6 horas (dia do pregao)</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">6</div>
+      <div class="pipeline-content">
+        <h3>Contrato</h3>
+        <div class="owner">Formalizacao e gestao</div>
+        <p>Apos adjudicacao e homologacao: conferir minuta, assinar dentro do prazo (5 dias uteis tipico), emitir garantia se exigida, agendar cronograma de entregas.</p>
+        <div class="duration">⏱ 5-15 dias</div>
+      </div>
+    </div>
+
+    <div class="pipeline-step">
+      <div class="pipeline-dot">7</div>
+      <div class="pipeline-content">
+        <h3>Execucao e Pagamento</h3>
+        <div class="owner">Entregar, faturar, receber</div>
+        <p>Entrega conforme cronograma. NF emitida apos recebimento definitivo. Prazo de pagamento tipico: 30 dias. Documentar TUDO (fotos, protocolos, recibos). Contrato renovavel.</p>
+        <div class="duration">⏱ Vigencia do contrato (6-12 meses)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ SIMULACAO FINANCEIRA ============ -->
+<section>
+  <div class="section-label">Financeiro</div>
+  <h2 class="section-title">Simulacao de Margem</h2>
+  <p class="section-desc">Exemplo real: fornecimento de 500 cestas basicas mensais a R$110/unidade para orgao publico.</p>
+
+  <div class="sim-box">
+    <div class="sim-row">
+      <span class="sim-label">Receita bruta mensal (500 cestas x R$110)</span>
+      <span class="sim-value">R$ 55.000</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">(-) Materia-prima e insumos (~55%)</span>
+      <span class="sim-value negative">- R$ 30.250</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">(-) Mao de obra e embalagem (~12%)</span>
+      <span class="sim-value negative">- R$ 6.600</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">(-) Frete e logistica (~8%)</span>
+      <span class="sim-value negative">- R$ 4.400</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">(-) Impostos e taxas (~10%)</span>
+      <span class="sim-value negative">- R$ 5.500</span>
+    </div>
+    <div class="sim-row">
+      <span class="sim-label">(-) Perdas e imprevistos (~3%)</span>
+      <span class="sim-value negative">- R$ 1.650</span>
+    </div>
+    <div class="sim-row total">
+      <span class="sim-label">Lucro liquido mensal (~12%)</span>
+      <span class="sim-value">R$ 6.600</span>
+    </div>
+  </div>
+
+  <div class="highlight-box">
+    <h3>Projecao Anual com Escala</h3>
+    <ul>
+      <li>1 contrato de 500 cestas = R$6.600/mes liquido = R$79.200/ano</li>
+      <li>3 contratos simultaneos = R$19.800/mes = R$237.600/ano</li>
+      <li>5 contratos (meta 12 meses) = R$33.000/mes = R$396.000/ano</li>
+      <li>Ata de registro de preco permite fornecimento para multiplos orgaos</li>
+      <li>PNAE e programa permanente — demanda todo ano letivo</li>
+      <li>Escala reduz custo unitario e aumenta margem</li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ O QUE PRECISA ============ -->
+<section>
+  <div class="section-label">Requisitos</div>
+  <h2 class="section-title">O Que Precisa Pra Comecar</h2>
+  <p class="section-desc">Checklist completo de pre-requisitos para participar do primeiro pregao.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Descricao</th>
+          <th>Prazo</th>
+          <th>Custo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CNPJ Ativo</strong></td>
+          <td>Empresa com CNAE compativel (4729-6/99 ou similar para alimentos)</td>
+          <td>Ja temos</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td><strong>Certificado Digital</strong></td>
+          <td>e-CNPJ tipo A1 (software) ou A3 (token) — necessario para assinar no Compras.gov.br</td>
+          <td>1-3 dias</td>
+          <td>R$150-300/ano</td>
+        </tr>
+        <tr>
+          <td><strong>Cadastro SICAF</strong></td>
+          <td>Sistema de Cadastramento Unificado de Fornecedores — obrigatorio para licitacoes federais</td>
+          <td>1-5 dias</td>
+          <td>Gratuito</td>
+        </tr>
+        <tr>
+          <td><strong>Certidoes Negativas</strong></td>
+          <td>Federal (conjunta), estadual, municipal, trabalhista (TST), FGTS</td>
+          <td>1-7 dias</td>
+          <td>Gratuito</td>
+        </tr>
+        <tr>
+          <td><strong>Alvara Sanitario (VISA)</strong></td>
+          <td>OBRIGATORIO para alimentos — emitido pela Vigilancia Sanitaria municipal</td>
+          <td>15-30 dias</td>
+          <td>Varia por municipio</td>
+        </tr>
+        <tr>
+          <td><strong>Balanco Patrimonial</strong></td>
+          <td>Ultimo exercicio social — demonstra saude financeira</td>
+          <td>Com contador</td>
+          <td>Incluso contabilidade</td>
+        </tr>
+        <tr>
+          <td><strong>Atestado Capacidade Tecnica</strong></td>
+          <td>Declaracao de clientes atestando capacidade de fornecimento</td>
+          <td>Solicitar</td>
+          <td>Gratuito</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight-box green-box">
+    <h3 style="color: var(--green);">Investimento Inicial: Praticamente Zero</h3>
+    <ul>
+      <li>SICAF: gratuito</li>
+      <li>Certidoes: gratuitas (emitidas online)</li>
+      <li>Certificado digital: R$150-300/ano</li>
+      <li>Alvara sanitario: ja devemos ter</li>
+      <li>Nenhuma taxa para participar de pregao eletronico</li>
+      <li>Custo real e tempo e organizacao — nao dinheiro</li>
+    </ul>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ LICITAFLOW APP ============ -->
+<section>
+  <div class="section-label">Tecnologia</div>
+  <h2 class="section-title">LicitaFlow — Nosso App</h2>
+  <p class="section-desc">Plataforma que estamos construindo para gerenciar todo o ciclo licitatorio. Ja esta no ar em <strong style="color: var(--primary);">bmlicitation.vercel.app</strong></p>
+
+  <div class="app-features">
+    <div class="app-feature">
+      <div class="num">01</div>
+      <div>
+        <h4>Dashboard Inteligente</h4>
+        <p>Visao geral de todos os editais, prazos, status de documentos e contratos ativos em um so lugar.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">02</div>
+      <div>
+        <h4>Monitoramento de Editais</h4>
+        <p>Alerta automatico quando surgir edital compativel com nosso perfil nos portais de compras publicas.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">03</div>
+      <div>
+        <h4>Analise com IA</h4>
+        <p>Inteligencia artificial analisa o edital e da parecer GO/NO-GO automatico baseado em 7 criterios.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">04</div>
+      <div>
+        <h4>Gestao de Documentos</h4>
+        <p>Controle de validade de certidoes, alertas de vencimento, e checklist de habilitacao por edital.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">05</div>
+      <div>
+        <h4>Planilha de Custos</h4>
+        <p>Calculadora integrada de custo, margem e preco maximo de lance para cada licitacao.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">06</div>
+      <div>
+        <h4>Gestao de Contratos</h4>
+        <p>Acompanhamento pos-vitoria: entregas, notas fiscais, prazos de pagamento e renovacoes.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">07</div>
+      <div>
+        <h4>Relatorios e Historico</h4>
+        <p>Historico de participacoes, taxa de sucesso, margem media e insights para melhorar resultados.</p>
+      </div>
+    </div>
+    <div class="app-feature">
+      <div class="num">08</div>
+      <div>
+        <h4>Multi-tenant</h4>
+        <p>Arquitetura pronta para escalar — pode virar SaaS para outros fornecedores no futuro.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ REGRAS DE OURO ============ -->
+<section>
+  <div class="section-label">Estrategia</div>
+  <h2 class="section-title">5 Regras de Ouro</h2>
+  <p class="section-desc">Principios que separam fornecedores lucrativos dos que quebram.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon primary" style="font-weight:800; color: var(--primary); font-size:18px;">1</div>
+      <h3>Nunca Lance no Escuro</h3>
+      <p>Antes de dar QUALQUER lance, tenha sua planilha de custo 100% montada. Saber seu piso e nao-negociavel.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary" style="font-weight:800; color: var(--primary); font-size:18px;">2</div>
+      <h3>Documentacao e Pre-Requisito</h3>
+      <p>Nao adianta ter o melhor preco se a certidao venceu ontem. Mantenha TUDO em dia, SEMPRE.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary" style="font-weight:800; color: var(--primary); font-size:18px;">3</div>
+      <h3>Margem > Volume</h3>
+      <p>Melhor ganhar 3 pregoes com margem de 12% do que 10 com margem de 2%. Prejuizo nao e estrategia.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary" style="font-weight:800; color: var(--primary); font-size:18px;">4</div>
+      <h3>Entregue Sempre no Prazo</h3>
+      <p>Reputacao em licitacao e tudo. Um atraso de entrega pode te bloquear de futuras participacoes.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon primary" style="font-weight:800; color: var(--primary); font-size:18px;">5</div>
+      <h3>Escale com Atas de Registro</h3>
+      <p>Ata de registro de preco e o melhor amigo do fornecedor: um preco negociado, multiplos orgaos comprando.</p>
+    </div>
+  </div>
+
+  <div class="highlight-box" style="margin-top: 40px;">
+    <h3>Cuidados Importantes</h3>
+    <div class="risk-grid">
+      <div class="risk-col avoid">
+        <h4>Nunca Faca</h4>
+        <ul>
+          <li>Participar sem analisar o edital completo</li>
+          <li>Dar lance abaixo do custo real</li>
+          <li>Ignorar prazo de validade das certidoes</li>
+          <li>Participar sem alvara sanitario (alimentos)</li>
+          <li>Assumir que todo edital de cesta e igual</li>
+        </ul>
+      </div>
+      <div class="risk-col do">
+        <h4>Sempre Faca</h4>
+        <ul>
+          <li>Verificar capacidade de entrega antes de licitar</li>
+          <li>Calcular margem REAL (com frete, perdas, embalagem)</li>
+          <li>Documentar TUDO — licitacao e papel</li>
+          <li>Estudar historico de precos de editais anteriores</li>
+          <li>Comecar com editais menores para ganhar experiencia</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ ROADMAP ============ -->
+<section>
+  <div class="section-label">Plano de Acao</div>
+  <h2 class="section-title">4 Semanas Ate o 1o Pregao</h2>
+  <p class="section-desc">Cronograma realista para sair do zero e participar do primeiro pregao eletronico.</p>
+
+  <div class="roadmap">
+    <div class="roadmap-week" data-week="01">
+      <div class="week-label">Semana 1</div>
+      <h4>Fundacao</h4>
+      <ul>
+        <li>Comprar certificado digital e-CNPJ</li>
+        <li>Cadastrar no SICAF</li>
+        <li>Solicitar certidoes negativas</li>
+        <li>Verificar alvara sanitario</li>
+      </ul>
+    </div>
+    <div class="roadmap-week" data-week="02">
+      <div class="week-label">Semana 2</div>
+      <h4>Documentacao</h4>
+      <ul>
+        <li>Completar cadastro SICAF</li>
+        <li>Organizar balanco patrimonial</li>
+        <li>Solicitar atestados de capacidade</li>
+        <li>Primeiro acesso ao Compras.gov.br</li>
+      </ul>
+    </div>
+    <div class="roadmap-week" data-week="03">
+      <div class="week-label">Semana 3</div>
+      <h4>Estrategia</h4>
+      <ul>
+        <li>Montar planilha de custo base</li>
+        <li>Identificar primeiros editais alvo</li>
+        <li>Analisar historico de precos</li>
+        <li>Definir piso de margem</li>
+      </ul>
+    </div>
+    <div class="roadmap-week" data-week="04">
+      <div class="week-label">Semana 4</div>
+      <h4>Primeiro Pregao</h4>
+      <ul>
+        <li>Selecionar edital GO</li>
+        <li>Enviar proposta</li>
+        <li>Participar da sessao</li>
+        <li>Aprender com o resultado</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ============ PNAE ============ -->
+<section>
+  <div class="section-label">Oportunidade Especial</div>
+  <h2 class="section-title">PNAE — Merenda Escolar</h2>
+  <p class="section-desc">O Programa Nacional de Alimentacao Escolar e uma mina de ouro para fornecedores de cesta basica.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon green">🍎</div>
+      <h3>R$6.7 Bilhoes em 2026</h3>
+      <p>Orcamento do PNAE cresceu 80% desde 2022. E recurso federal repassado direto para municipios — todo municipio do Brasil recebe.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon green">📋</div>
+      <h3>Chamada Publica</h3>
+      <p>Modalidade mais simples que pregao: sem disputa de lances, preco baseado em pesquisa de mercado. Ideal para comecar. 30% reservado para agricultura familiar.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon green">🏫</div>
+      <h3>Demanda Permanente</h3>
+      <p>200 dias letivos por ano. Escolas SEMPRE precisam de alimento. Demanda estavel, previsivel e crescente com a expansao de creches e tempo integral.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<div class="cta-section">
+  <h2>Pronto pra<br><span class="accent">Comecar?</span></h2>
+  <p>O mercado esta la, a tecnologia esta pronta, o processo esta mapeado. So falta a gente ir.</p>
+  <a href="https://bmlicitation.vercel.app" class="cta-btn" target="_blank">
+    Acessar LicitaFlow →
+  </a>
+  <br><br>
+  <p style="font-size: 14px; color: var(--text-muted); max-width: 480px; margin: 20px auto 0;">
+    Ja temos: app no ar, banco de dados configurado, conta admin criada, pipeline mapeado e 5 especialistas de IA no squad de licitacao.
+  </p>
+</div>
+
+<footer>
+  <p><span class="brand">BM Cesta Basica</span> — Documento Estrategico — Marco 2026</p>
+  <p style="margin-top: 8px;">Gerado com <span class="brand">LicitaFlow</span></p>
+</footer>
+
+</body>
+</html>
