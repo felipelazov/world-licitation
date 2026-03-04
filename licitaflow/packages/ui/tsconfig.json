@@ -1,0 +1,9 @@
+{
+  "extends": "@licitaflow/config-ts/tsconfig.base.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "lib": ["ES2022", "DOM"],
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*"]
+}

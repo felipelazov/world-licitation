@@ -1,0 +1,114 @@
+pack:
+  name: squad-licitacao
+  version: 1.0.0
+  short-title: Licitacao Squad
+  description: >-
+    Squad especializado em licitacoes publicas para fornecedores de alimentos
+    e cesta basica. Cobre todo o ciclo: analise de edital, habilitacao,
+    estrategia de lance, compliance, gestao de contrato e entrega.
+    Foco em pregao eletronico (Compras.gov, BEC, portais estaduais).
+  author: World OS
+  icon: "⚖️"
+  slashPrefix: squad-licitacao
+  category: business-operations
+
+pattern_library:
+  prefix: LC
+  naming_convention:
+    format: "{PREFIX}-{CATEGORY}-{NUMBER}"
+    example: "LC-TP-001"
+  categories:
+    - id: TP
+      name: "Task Patterns"
+      description: "Padroes de tarefas do ciclo licitatorio"
+    - id: EP
+      name: "Executor Patterns"
+      description: "Perfis de execucao por tipo de atividade"
+    - id: PP
+      name: "Process Patterns"
+      description: "Fluxos padrao de licitacao"
+    - id: IP
+      name: "Integration Patterns"
+      description: "Integracoes com portais e sistemas governamentais"
+
+agents:
+  licitacao-chief:
+    role: "Chief (Orchestrator)"
+    tier: orchestrator
+    domain: "Coordenacao do ciclo licitatorio completo"
+  edital-analyst:
+    role: "Analista de Editais"
+    tier: 1
+    domain: "Analise juridica e tecnica de editais de pregao"
+    based_on: "Joel Niebuhr + Herbert Almeida"
+  bid-strategist:
+    role: "Estrategista de Lance"
+    tier: 1
+    domain: "Precificacao, margem e estrategia de lance em pregao eletronico"
+    based_on: "Henrique Serra / Magna Licitacoes"
+  compliance-officer:
+    role: "Oficial de Compliance"
+    tier: 1
+    domain: "Habilitacao, documentacao, SICAF, certidoes"
+    based_on: "Carlos Nascimento / Licitacursos"
+  contract-manager:
+    role: "Gestor de Contratos"
+    tier: 2
+    domain: "Pos-adjudicacao, entrega, nota fiscal, pagamento"
+    based_on: "Rodrigo Pironti"
+  pnae-specialist:
+    role: "Especialista PNAE"
+    tier: 2
+    domain: "Programa Nacional de Alimentacao Escolar, chamadas publicas, agricultura familiar"
+    based_on: "FNDE + Resolucoes CFN"
+
+task_standards:
+  enforce_anatomy: true
+  validator: "LC-TP-001"
+  required_fields:
+    - task_name
+    - status
+    - responsible_executor
+    - execution_type
+    - input
+    - output
+    - action_items
+    - acceptance_criteria
+
+executor_types:
+  human:
+    id: "LC-EP-001"
+    use_for: ["Assinatura de contratos", "Decisao de participar em edital", "Negociacao de precos com fornecedores"]
+  agent:
+    id: "LC-EP-002"
+    use_for: ["Analise de edital", "Checklist de documentacao", "Calculo de margem"]
+  hybrid:
+    id: "LC-EP-003"
+    use_for: ["Montagem de proposta", "Estrategia de lance", "Recurso administrativo"]
+  worker:
+    id: "LC-EP-004"
+    use_for: ["Monitoramento de portais", "Alertas de prazo", "Geracao de certidoes"]
+
+workflow_config:
+  checkpoint_policy: always_active
+  fail_fast: true
+  allow_manual_override: false
+
+pipeline:
+  flow: "Edital Identificado → Chief → Edital Analyst → Compliance → Bid Strategist → Contract Manager → ENTREGA"
+  stages:
+    - name: "Triagem de Edital"
+      owner: "edital-analyst"
+      metrics: ["editais_analisados", "go_nogo_ratio"]
+    - name: "Habilitacao"
+      owner: "compliance-officer"
+      metrics: ["docs_pendentes", "sicaf_status"]
+    - name: "Estrategia de Lance"
+      owner: "bid-strategist"
+      metrics: ["margem_minima", "preco_referencia"]
+    - name: "Execucao do Pregao"
+      owner: "bid-strategist"
+      metrics: ["lances_dados", "posicao_final"]
+    - name: "Gestao de Contrato"
+      owner: "contract-manager"
+      metrics: ["entregas_realizadas", "pagamentos_recebidos"]

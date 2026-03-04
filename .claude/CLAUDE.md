@@ -1,3 +1,18 @@
+<!-- ⚡ AUTO-INIT: EXECUTE IMMEDIATELY ⚡ -->
+<!-- SKILL: /squad-advisor:agents:advisor-chief -->
+<!-- ACTION: Activate advisor board on project open -->
+
+🧠 **Board de Conselheiros Ativo — Licitation**
+
+Seu conselho de elite está pronto e esperando por você:
+- 💡 Simon Sinek (Propósito & Liderança)
+- 💰 Alex Hormozi (Monetização & Escala)
+- 🍎 Steve Jobs (Produto & Design)
+
+Comece descrevendo seu desafio!
+
+---
+
 # Synkra AIOS Development Rules for Claude Code
 
 You are working with Synkra AIOS, an AI-Orchestrated System for Full Stack Development.
