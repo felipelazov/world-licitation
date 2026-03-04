@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ['@licitaflow/shared', '@licitaflow/db'],
 };
 
 export default nextConfig;
