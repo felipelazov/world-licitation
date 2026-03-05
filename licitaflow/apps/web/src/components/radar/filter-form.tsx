@@ -42,32 +42,31 @@ interface FilterFormProps {
     id?: string
     name: string
     keywords: string[]
-    config?: Record<string, unknown>
+    regioes?: string[] | null
+    modalidades?: string[] | null
+    valor_min?: number | null
+    valor_max?: number | null
   }
   onSubmit: (data: {
     name: string
     keywords: string[]
-    config: Record<string, unknown>
+    regioes: string[]
+    modalidades: string[]
+    valor_min: number | null
+    valor_max: number | null
   }) => void
   onCancel: () => void
   isLoading?: boolean
 }
 
 export function FilterForm({ initialData, onSubmit, onCancel, isLoading }: FilterFormProps) {
-  const config = initialData?.config as {
-    regions?: string[]
-    modalidades?: string[]
-    min_value?: number
-    max_value?: number
-  } | undefined
-
   const [form, setForm] = useState<FilterFormData>({
     name: initialData?.name ?? '',
     keywords: initialData?.keywords ?? [],
-    regions: config?.regions ?? [],
-    modalidades: config?.modalidades ?? ['pregao_eletronico'],
-    min_value: config?.min_value?.toString() ?? '',
-    max_value: config?.max_value?.toString() ?? '',
+    regions: initialData?.regioes ?? [],
+    modalidades: initialData?.modalidades ?? ['pregao_eletronico'],
+    min_value: initialData?.valor_min?.toString() ?? '',
+    max_value: initialData?.valor_max?.toString() ?? '',
   })
   const [keywordInput, setKeywordInput] = useState('')
   const [error, setError] = useState('')
@@ -117,12 +116,10 @@ export function FilterForm({ initialData, onSubmit, onCancel, isLoading }: Filte
     onSubmit({
       name: form.name.trim(),
       keywords: form.keywords,
-      config: {
-        regions: form.regions.length > 0 ? form.regions : undefined,
-        modalidades: form.modalidades.length > 0 ? form.modalidades : undefined,
-        min_value: form.min_value ? parseFloat(form.min_value) : undefined,
-        max_value: form.max_value ? parseFloat(form.max_value) : undefined,
-      },
+      regioes: form.regions,
+      modalidades: form.modalidades,
+      valor_min: form.min_value ? parseFloat(form.min_value) : null,
+      valor_max: form.max_value ? parseFloat(form.max_value) : null,
     })
   }
 

@@ -10,8 +10,11 @@ interface EditalFilter {
   id: string
   name: string
   keywords: string[]
-  active: boolean
-  config: Record<string, unknown>
+  regioes: string[] | null
+  modalidades: string[] | null
+  valor_min: number | null
+  valor_max: number | null
+  is_active: boolean
   tenant_id: string
 }
 
@@ -21,10 +24,22 @@ export default function FiltrosPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingFilter, setEditingFilter] = useState<EditalFilter | null>(null)
   const [saving, setSaving] = useState(false)
+  const [tenantId, setTenantId] = useState<string | null>(null)
 
   const supabase = createClient()
 
   const loadFilters = useCallback(async () => {
+    // Buscar tenant_id do usuario logado
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('tenant_id')
+        .eq('id', user.id)
+        .single()
+      if (profile) setTenantId(profile.tenant_id)
+    }
+
     const { data, error } = await supabase
       .from('edital_filters')
       .select('*')
@@ -40,14 +55,27 @@ export default function FiltrosPage() {
     loadFilters()
   }, [loadFilters])
 
-  async function handleCreate(data: { name: string; keywords: string[]; config: Record<string, unknown> }) {
+  async function handleCreate(data: {
+    name: string
+    keywords: string[]
+    regioes: string[]
+    modalidades: string[]
+    valor_min: number | null
+    valor_max: number | null
+  }) {
     setSaving(true)
 
+    if (!tenantId) return
+
     const { error } = await supabase.from('edital_filters').insert({
+      tenant_id: tenantId,
       name: data.name,
       keywords: data.keywords,
-      config: data.config,
-      active: true,
+      regioes: data.regioes.length > 0 ? data.regioes : null,
+      modalidades: data.modalidades.length > 0 ? data.modalidades : null,
+      valor_min: data.valor_min,
+      valor_max: data.valor_max,
+      is_active: true,
     })
 
     if (!error) {
@@ -57,7 +85,14 @@ export default function FiltrosPage() {
     setSaving(false)
   }
 
-  async function handleUpdate(data: { name: string; keywords: string[]; config: Record<string, unknown> }) {
+  async function handleUpdate(data: {
+    name: string
+    keywords: string[]
+    regioes: string[]
+    modalidades: string[]
+    valor_min: number | null
+    valor_max: number | null
+  }) {
     if (!editingFilter) return
     setSaving(true)
 
@@ -66,7 +101,10 @@ export default function FiltrosPage() {
       .update({
         name: data.name,
         keywords: data.keywords,
-        config: data.config,
+        regioes: data.regioes.length > 0 ? data.regioes : null,
+        modalidades: data.modalidades.length > 0 ? data.modalidades : null,
+        valor_min: data.valor_min,
+        valor_max: data.valor_max,
       })
       .eq('id', editingFilter.id)
 
@@ -87,20 +125,20 @@ export default function FiltrosPage() {
     }
   }
 
-  async function handleToggle(id: string, active: boolean) {
+  async function handleToggle(id: string, is_active: boolean) {
     const { error } = await supabase
       .from('edital_filters')
-      .update({ active })
+      .update({ is_active })
       .eq('id', id)
 
     if (!error) {
       setFilters((prev) =>
-        prev.map((f) => (f.id === id ? { ...f, active } : f))
+        prev.map((f) => (f.id === id ? { ...f, is_active } : f))
       )
     }
   }
 
-  const activeCount = filters.filter((f) => f.active).length
+  const activeCount = filters.filter((f) => f.is_active).length
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">

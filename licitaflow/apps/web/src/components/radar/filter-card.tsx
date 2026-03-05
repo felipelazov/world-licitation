@@ -7,8 +7,11 @@ interface FilterCardProps {
     id: string
     name: string
     keywords: string[]
-    active: boolean
-    config?: Record<string, unknown>
+    regioes: string[] | null
+    modalidades: string[] | null
+    valor_min: number | null
+    valor_max: number | null
+    is_active: boolean
   }
   onEdit: (id: string) => void
   onDelete: (id: string) => void
@@ -16,17 +19,10 @@ interface FilterCardProps {
 }
 
 export function FilterCard({ filter, onEdit, onDelete, onToggle }: FilterCardProps) {
-  const config = filter.config as {
-    regions?: string[]
-    min_value?: number
-    max_value?: number
-    modalidades?: string[]
-  } | undefined
-
   return (
     <div
       className={`rounded-lg border p-4 transition-colors ${
-        filter.active
+        filter.is_active
           ? 'border-green-500/30 bg-green-500/5'
           : 'border-[var(--border)] bg-[var(--card)] opacity-60'
       }`}
@@ -36,7 +32,7 @@ export function FilterCard({ filter, onEdit, onDelete, onToggle }: FilterCardPro
           <div className="flex items-center gap-2">
             <div
               className={`h-2 w-2 rounded-full ${
-                filter.active ? 'bg-green-500' : 'bg-[var(--muted-foreground)]'
+                filter.is_active ? 'bg-green-500' : 'bg-[var(--muted-foreground)]'
               }`}
             />
             <h3 className="font-medium text-[var(--foreground)]">{filter.name}</h3>
@@ -53,17 +49,17 @@ export function FilterCard({ filter, onEdit, onDelete, onToggle }: FilterCardPro
             ))}
           </div>
 
-          {(config?.regions?.length || config?.min_value || config?.max_value) && (
+          {(filter.regioes?.length || filter.valor_min || filter.valor_max) && (
             <div className="mt-2 flex flex-wrap gap-2 text-xs text-[var(--muted-foreground)]">
-              {config?.regions?.length ? (
-                <span>Regiões: {config.regions.join(', ')}</span>
+              {filter.regioes?.length ? (
+                <span>Regiões: {filter.regioes.join(', ')}</span>
               ) : null}
-              {config?.min_value || config?.max_value ? (
+              {filter.valor_min || filter.valor_max ? (
                 <span>
                   Valor:{' '}
-                  {config?.min_value ? `R$ ${config.min_value.toLocaleString('pt-BR')}` : '—'}
+                  {filter.valor_min ? `R$ ${filter.valor_min.toLocaleString('pt-BR')}` : '—'}
                   {' — '}
-                  {config?.max_value ? `R$ ${config.max_value.toLocaleString('pt-BR')}` : '—'}
+                  {filter.valor_max ? `R$ ${filter.valor_max.toLocaleString('pt-BR')}` : '—'}
                 </span>
               ) : null}
             </div>
@@ -72,11 +68,11 @@ export function FilterCard({ filter, onEdit, onDelete, onToggle }: FilterCardPro
 
         <div className="flex items-center gap-1">
           <button
-            onClick={() => onToggle(filter.id, !filter.active)}
+            onClick={() => onToggle(filter.id, !filter.is_active)}
             className={`rounded p-1.5 transition-colors hover:bg-[var(--muted)] ${
-              filter.active ? 'text-green-500' : 'text-[var(--muted-foreground)]'
+              filter.is_active ? 'text-green-500' : 'text-[var(--muted-foreground)]'
             }`}
-            title={filter.active ? 'Desativar' : 'Ativar'}
+            title={filter.is_active ? 'Desativar' : 'Ativar'}
           >
             <Power className="h-4 w-4" />
           </button>
@@ -84,6 +80,7 @@ export function FilterCard({ filter, onEdit, onDelete, onToggle }: FilterCardPro
             onClick={() => onEdit(filter.id)}
             className="rounded p-1.5 text-[var(--muted-foreground)] transition-colors hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
             title="Editar"
+
           >
             <Pencil className="h-4 w-4" />
           </button>
