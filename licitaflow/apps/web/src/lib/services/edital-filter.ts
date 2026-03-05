@@ -31,6 +31,11 @@ const HIGH_RELEVANCE_KEYWORDS = [
   'kit alimentacao',
   'kit alimentação',
   'cesta de alimentos',
+  'generos alimenticios',
+  'gêneros alimentícios',
+  'alimentacao escolar',
+  'alimentação escolar',
+  'merenda escolar',
 ]
 
 // Palavras que reduzem relevancia (nao e o que fornecemos)
