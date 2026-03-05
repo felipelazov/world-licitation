@@ -9,18 +9,19 @@ import { FeedFilters } from '@/components/radar/feed-filters'
 
 interface EditalRow {
   id: string
-  title: string
-  object: string
-  agency: string
-  estimated_value: number | null
-  session_date: string | null
-  publication_date: string
+  numero: string | null
+  objeto: string
+  orgao: string
+  valor_estimado: number | null
+  data_sessao: string | null
+  data_publicacao: string | null
   status: string
-  portal_url: string
-  modalidade: string
+  portal_url: string | null
+  link_sistema_origem: string | null
+  modalidade: string | null
   uf?: string | null
   relevance_score?: number | null
-  edital_sources: { name: string; slug: string } | null
+  edital_sources: { name: string } | null
 }
 
 const PAGE_SIZE = 20
@@ -47,14 +48,14 @@ export default function RadarPage() {
 
     let query = supabase
       .from('editals')
-      .select('*, edital_sources(name, slug)', { count: 'exact' })
+      .select('*, edital_sources(name)', { count: 'exact' })
 
     if (status) {
       query = query.eq('status', status)
     }
 
     if (search) {
-      query = query.or(`title.ilike.%${search}%,object.ilike.%${search}%,agency.ilike.%${search}%`)
+      query = query.or(`objeto.ilike.%${search}%,orgao.ilike.%${search}%`)
     }
 
     query = query
@@ -129,7 +130,7 @@ export default function RadarPage() {
 
   const newTodayCount = editals.filter((e) => {
     const today = new Date().toISOString().split('T')[0]
-    return e.status === 'novo' && e.publication_date?.startsWith(today)
+    return e.status === 'novo' && e.data_publicacao?.startsWith(today)
   }).length
 
   const totalPages = Math.ceil(totalCount / PAGE_SIZE)

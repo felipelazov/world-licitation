@@ -8,18 +8,19 @@ import { Countdown } from '@licitaflow/ui'
 interface EditalCardProps {
   edital: {
     id: string
-    title: string
-    object: string
-    agency: string
-    estimated_value: number | null
-    session_date: string | null
-    publication_date: string
+    numero?: string | null
+    objeto: string
+    orgao: string
+    valor_estimado: number | null
+    data_sessao: string | null
+    data_publicacao: string | null
     status: string
-    portal_url: string
-    modalidade: string
+    portal_url: string | null
+    link_sistema_origem: string | null
+    modalidade: string | null
     uf?: string | null
     relevance_score?: number | null
-    edital_sources?: { name: string; slug: string } | null
+    edital_sources?: { name: string } | null
   }
   onStatusChange?: (id: string, status: string) => void
 }
@@ -72,16 +73,16 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
             href={`/radar/${edital.id}`}
             className="mt-1.5 block text-sm font-semibold text-[var(--foreground)] hover:text-[var(--primary)]"
           >
-            {edital.title}
+            {edital.numero || edital.modalidade || 'Edital'}
           </Link>
 
           <p className="mt-1 line-clamp-2 text-sm text-[var(--muted-foreground)]">
-            {edital.object}
+            {edital.objeto}
           </p>
         </div>
 
         <a
-          href={edital.portal_url}
+          href={edital.link_sistema_origem || edital.portal_url || '#'}
           target="_blank"
           rel="noopener noreferrer"
           className="shrink-0 rounded p-1.5 text-[var(--muted-foreground)] opacity-0 transition-opacity hover:bg-[var(--muted)] hover:text-[var(--foreground)] group-hover:opacity-100"
@@ -94,15 +95,15 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
       <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted-foreground)]">
         <span className="flex items-center gap-1">
           <Building2 className="h-3.5 w-3.5" />
-          {edital.agency}
+          {edital.orgao}
         </span>
         <span className="flex items-center gap-1">
           <DollarSign className="h-3.5 w-3.5" />
-          {formatCurrency(edital.estimated_value)}
+          {formatCurrency(edital.valor_estimado)}
         </span>
         <span className="flex items-center gap-1">
           <Calendar className="h-3.5 w-3.5" />
-          Sessão: {formatDatetime(edital.session_date)}
+          Sessão: {formatDatetime(edital.data_sessao)}
         </span>
         {edital.uf && (
           <span className="flex items-center gap-1">
@@ -110,8 +111,8 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
             {edital.uf}
           </span>
         )}
-        <span>Publicado: {formatDate(edital.publication_date)}</span>
-        <Countdown date={edital.session_date} size="sm" showExpired={false} />
+        <span>Publicado: {formatDate(edital.data_publicacao)}</span>
+        <Countdown date={edital.data_sessao} size="sm" showExpired={false} />
       </div>
 
       {/* Quick actions */}
