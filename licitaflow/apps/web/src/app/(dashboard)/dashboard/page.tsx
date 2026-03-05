@@ -284,13 +284,14 @@ export default function DashboardPage() {
                     )}
                   </div>
                   {edital.relevance_score != null && edital.relevance_score > 0 && (
-                    <span className={`shrink-0 rounded-full px-1.5 py-0.5 text-xs font-medium ${
+                    <span className={`flex items-center gap-0.5 shrink-0 rounded-full px-1.5 py-0.5 text-xs font-medium ${
                       edital.relevance_score >= 70
                         ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                         : edital.relevance_score >= 40
                           ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
                           : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
                     }`}>
+                      <Star className="h-3 w-3" />
                       {edital.relevance_score}
                     </span>
                   )}
