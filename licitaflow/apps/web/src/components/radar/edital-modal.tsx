@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import {
   X, Building2, Calendar, DollarSign, MapPin, Star, ExternalLink, FileText,
-  Scale, Clock, AlertTriangle, CheckCircle2, Loader2, Gavel, Info, Target,
+  Scale, Clock, AlertTriangle, CheckCircle2, Loader2, Gavel, Target,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -267,10 +267,10 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
             {/* ============ QUEM ESTA COMPRANDO ============ */}
             <Section icon={<Building2 className="h-4 w-4" />} title="Quem esta comprando">
               <div className="grid gap-2 text-sm sm:grid-cols-2">
-                <Info label="Orgao" value={raw?.orgaoEntidade?.razaoSocial || edital.orgao} />
-                <Info label="CNPJ" value={raw?.orgaoEntidade?.cnpj ? formatCNPJ(raw.orgaoEntidade.cnpj) : edital.orgao_cnpj || 'Nao informado'} />
-                <Info label="Unidade" value={raw?.unidadeOrgao?.nomeUnidade} />
-                <Info label="Esfera" value={raw?.orgaoEntidade?.esferaId === 'E' ? 'Estadual' : raw?.orgaoEntidade?.esferaId === 'F' ? 'Federal' : raw?.orgaoEntidade?.esferaId === 'M' ? 'Municipal' : raw?.orgaoEntidade?.esferaId || 'Nao informado'} />
+                <Detail label="Orgao" value={raw?.orgaoEntidade?.razaoSocial || edital.orgao} />
+                <Detail label="CNPJ" value={raw?.orgaoEntidade?.cnpj ? formatCNPJ(raw.orgaoEntidade.cnpj) : edital.orgao_cnpj || 'Nao informado'} />
+                <Detail label="Unidade" value={raw?.unidadeOrgao?.nomeUnidade} />
+                <Detail label="Esfera" value={raw?.orgaoEntidade?.esferaId === 'E' ? 'Estadual' : raw?.orgaoEntidade?.esferaId === 'F' ? 'Federal' : raw?.orgaoEntidade?.esferaId === 'M' ? 'Municipal' : raw?.orgaoEntidade?.esferaId || 'Nao informado'} />
               </div>
             </Section>
 
@@ -278,17 +278,17 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
             <div className="grid gap-4 sm:grid-cols-2">
               <Section icon={<MapPin className="h-4 w-4" />} title="Local">
                 <div className="space-y-1 text-sm">
-                  <Info label="Cidade" value={raw?.unidadeOrgao?.municipioNome} />
-                  <Info label="Estado" value={raw?.unidadeOrgao?.ufNome ? `${raw.unidadeOrgao.ufNome} (${raw.unidadeOrgao.ufSigla})` : edital.uf} />
-                  <Info label="IBGE" value={raw?.unidadeOrgao?.codigoIbge || edital.municipio_ibge} />
+                  <Detail label="Cidade" value={raw?.unidadeOrgao?.municipioNome} />
+                  <Detail label="Estado" value={raw?.unidadeOrgao?.ufNome ? `${raw.unidadeOrgao.ufNome} (${raw.unidadeOrgao.ufSigla})` : edital.uf} />
+                  <Detail label="IBGE" value={raw?.unidadeOrgao?.codigoIbge || edital.municipio_ibge} />
                 </div>
               </Section>
 
               <Section icon={<DollarSign className="h-4 w-4" />} title="Valores">
                 <div className="space-y-1 text-sm">
-                  <Info label="Estimado" value={fmt(raw?.valorTotalEstimado || edital.valor_estimado)} />
-                  <Info label="Homologado" value={raw?.valorTotalHomologado ? fmt(raw.valorTotalHomologado) : 'Pendente'} />
-                  {raw?.srp && <Info label="SRP" value="Sim (Registro de Preco)" />}
+                  <Detail label="Estimado" value={fmt(raw?.valorTotalEstimado || edital.valor_estimado)} />
+                  <Detail label="Homologado" value={raw?.valorTotalHomologado ? fmt(raw.valorTotalHomologado) : 'Pendente'} />
+                  {raw?.srp && <Detail label="SRP" value="Sim (Registro de Preco)" />}
                 </div>
               </Section>
             </div>
@@ -296,22 +296,22 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
             {/* ============ DATAS ============ */}
             <Section icon={<Calendar className="h-4 w-4" />} title="Datas importantes">
               <div className="grid gap-2 text-sm sm:grid-cols-2">
-                <Info label="Publicacao PNCP" value={fmtDate(raw?.dataPublicacaoPncp || edital.data_publicacao)} />
-                <Info label="Abertura propostas" value={fmtDate(raw?.dataAberturaProposta || edital.data_sessao)} />
-                <Info label="Encerramento propostas" value={fmtDate(raw?.dataEncerramentoProposta)} />
-                <Info label="Sincronizado em" value={fmtDate(edital.synced_at)} />
+                <Detail label="Publicacao PNCP" value={fmtDate(raw?.dataPublicacaoPncp || edital.data_publicacao)} />
+                <Detail label="Abertura propostas" value={fmtDate(raw?.dataAberturaProposta || edital.data_sessao)} />
+                <Detail label="Encerramento propostas" value={fmtDate(raw?.dataEncerramentoProposta)} />
+                <Detail label="Sincronizado em" value={fmtDate(edital.synced_at)} />
               </div>
             </Section>
 
             {/* ============ DETALHES LEGAIS ============ */}
             <Section icon={<Scale className="h-4 w-4" />} title="Detalhes da licitacao">
               <div className="grid gap-2 text-sm sm:grid-cols-2">
-                <Info label="Modalidade" value={raw?.modalidadeNome || edital.modalidade} />
-                <Info label="Modo de disputa" value={raw?.modoDisputaNome} />
-                <Info label="Situacao" value={raw?.situacaoCompraNome} />
-                <Info label="Amparo legal" value={raw?.amparoLegal?.nome} />
-                <Info label="Numero PNCP" value={edital.pncp_id} />
-                <Info label="Processo" value={raw?.processo} />
+                <Detail label="Modalidade" value={raw?.modalidadeNome || edital.modalidade} />
+                <Detail label="Modo de disputa" value={raw?.modoDisputaNome} />
+                <Detail label="Situacao" value={raw?.situacaoCompraNome} />
+                <Detail label="Amparo legal" value={raw?.amparoLegal?.nome} />
+                <Detail label="Numero PNCP" value={edital.pncp_id} />
+                <Detail label="Processo" value={raw?.processo} />
               </div>
               {raw?.amparoLegal?.descricao && (
                 <p className="mt-2 text-xs text-[var(--muted-foreground)] italic">{raw.amparoLegal.descricao}</p>
@@ -321,7 +321,7 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
             {/* ============ FONTE ============ */}
             <Section icon={<Gavel className="h-4 w-4" />} title="Fonte dos dados">
               <div className="space-y-1 text-sm">
-                <Info label="Portal" value={edital.edital_sources?.name || 'PNCP'} />
+                <Detail label="Portal" value={edital.edital_sources?.name || 'PNCP'} />
                 <p className="text-xs text-[var(--muted-foreground)]">
                   PNCP = Portal Nacional de Contratacoes Publicas. E o sistema oficial do governo federal onde todos os orgaos publicam suas licitacoes (Lei 14.133/2021).
                 </p>
@@ -422,7 +422,7 @@ function Section({ icon, title, children }: { icon: React.ReactNode; title: stri
   )
 }
 
-function Info({ label, value }: { label: string; value?: string | null }) {
+function Detail({ label, value }: { label: string; value?: string | null }) {
   return (
     <div>
       <span className="text-xs text-[var(--muted-foreground)]">{label}: </span>
