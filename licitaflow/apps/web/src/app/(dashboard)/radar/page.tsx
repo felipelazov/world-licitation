@@ -46,11 +46,19 @@ export default function RadarPage() {
   const [status, setStatus] = useState('')
   const [orderBy, setOrderBy] = useState('relevance_score:desc')
   const [monitoringUfs, setMonitoringUfs] = useState<string[]>([])
+  const [radarFilters, setRadarFilters] = useState<{
+    keywords: string[]
+    regioes: string[]
+    modalidades: string[]
+    valor_min: number | null
+    valor_max: number | null
+  } | null>(null)
 
   const supabase = createClient()
 
-  // Load monitoring config (UFs filter)
-  const loadMonitoringConfig = useCallback(async () => {
+  // Load monitoring config (UFs) + radar filters (edital_filters)
+  const loadFiltersConfig = useCallback(async () => {
+    // Monitoring config (controla sync)
     try {
       const res = await fetch('/api/monitoring')
       const json = await res.json()
@@ -60,13 +68,44 @@ export default function RadarPage() {
     } catch {
       // use no filter
     }
-  }, [])
+
+    // Radar filters (edital_filters ativos — controla exibicao)
+    const { data: filters } = await supabase
+      .from('edital_filters')
+      .select('keywords, regioes, modalidades, valor_min, valor_max')
+      .eq('is_active', true)
+
+    if (filters && filters.length > 0) {
+      // Combinar todos os filtros ativos (uniao)
+      const allKeywords = new Set<string>()
+      const allRegioes = new Set<string>()
+      const allModalidades = new Set<string>()
+      let minVal: number | null = null
+      let maxVal: number | null = null
+
+      for (const f of filters) {
+        if (f.keywords) for (const k of f.keywords) allKeywords.add(k)
+        if (f.regioes) for (const r of f.regioes) allRegioes.add(r)
+        if (f.modalidades) for (const m of f.modalidades) allModalidades.add(m)
+        if (f.valor_min != null) minVal = minVal == null ? f.valor_min : Math.min(minVal, f.valor_min)
+        if (f.valor_max != null) maxVal = maxVal == null ? f.valor_max : Math.max(maxVal, f.valor_max)
+      }
+
+      setRadarFilters({
+        keywords: Array.from(allKeywords),
+        regioes: Array.from(allRegioes),
+        modalidades: Array.from(allModalidades),
+        valor_min: minVal,
+        valor_max: maxVal,
+      })
+    }
+  }, [supabase])
 
   useEffect(() => {
-    loadMonitoringConfig()
-  }, [loadMonitoringConfig])
+    loadFiltersConfig()
+  }, [loadFiltersConfig])
 
-  // Load status counts (filtered by monitoring UFs)
+  // Load status counts (filtered by monitoring UFs + radar filters)
   const loadStatusCounts = useCallback(async () => {
     let query = supabase
       .from('editals')
@@ -74,6 +113,9 @@ export default function RadarPage() {
 
     if (monitoringUfs.length > 0) {
       query = query.in('uf', monitoringUfs)
+    }
+    if (radarFilters?.regioes?.length) {
+      query = query.in('uf', radarFilters.regioes)
     }
 
     const { data } = await query
@@ -85,7 +127,7 @@ export default function RadarPage() {
       }
       setStatusCounts(counts)
     }
-  }, [supabase, monitoringUfs])
+  }, [supabase, monitoringUfs, radarFilters])
 
   const loadEditals = useCallback(async () => {
     setLoading(true)
@@ -96,9 +138,23 @@ export default function RadarPage() {
       .from('editals')
       .select('*, edital_sources(name)', { count: 'exact' })
 
-    // Aplicar filtro de UFs do monitoramento
+    // Filtro de UFs do monitoramento (config geral)
     if (monitoringUfs.length > 0) {
       query = query.in('uf', monitoringUfs)
+    }
+
+    // Filtros do Radar (edital_filters — refinamento visual)
+    if (radarFilters?.regioes?.length) {
+      query = query.in('uf', radarFilters.regioes)
+    }
+    if (radarFilters?.modalidades?.length) {
+      query = query.in('modalidade', radarFilters.modalidades)
+    }
+    if (radarFilters?.valor_min != null) {
+      query = query.gte('valor_estimado', radarFilters.valor_min)
+    }
+    if (radarFilters?.valor_max != null) {
+      query = query.lte('valor_estimado', radarFilters.valor_max)
     }
 
     if (status) {
@@ -120,7 +176,7 @@ export default function RadarPage() {
       setTotalCount(count ?? 0)
     }
     setLoading(false)
-  }, [supabase, status, search, orderBy, page, monitoringUfs])
+  }, [supabase, status, search, orderBy, page, monitoringUfs, radarFilters])
 
   useEffect(() => {
     loadEditals()

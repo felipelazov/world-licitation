@@ -144,7 +144,7 @@ export default function MonitoramentoPage() {
         <div>
           <h1 className="text-2xl font-bold text-[var(--foreground)]">Monitoramento de Editais</h1>
           <p className="mt-0.5 text-sm text-[var(--muted-foreground)]">
-            Configure quais editais o radar deve buscar automaticamente
+            Define o que o sistema busca nos portais publicos (PNCP). Esses criterios controlam a sincronizacao automatica.
           </p>
         </div>
       </div>

@@ -145,9 +145,10 @@ export default function FiltrosPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--foreground)]">Filtros de Monitoramento</h1>
+          <h1 className="text-2xl font-bold text-[var(--foreground)]">Filtros do Radar</h1>
           <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            Configure quais editais aparecem no seu Radar. {activeCount > 0 && `${activeCount} filtro${activeCount > 1 ? 's' : ''} ativo${activeCount > 1 ? 's' : ''}.`}
+            Crie filtros pessoais para refinar quais editais aparecem no seu Radar. Apenas editais que combinam com pelo menos um filtro ativo serao exibidos.
+            {activeCount > 0 && ` ${activeCount} filtro${activeCount > 1 ? 's' : ''} ativo${activeCount > 1 ? 's' : ''}.`}
           </p>
         </div>
         {!showForm && !editingFilter && (
@@ -189,9 +190,9 @@ export default function FiltrosPage() {
       ) : filters.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[var(--border)] py-12 text-center">
           <Filter className="mb-3 h-10 w-10 text-[var(--muted-foreground)]" />
-          <h3 className="font-medium text-[var(--foreground)]">Nenhum filtro configurado</h3>
-          <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            Crie filtros para monitorar editais automaticamente.
+          <h3 className="font-medium text-[var(--foreground)]">Nenhum filtro do radar</h3>
+          <p className="mt-1 max-w-sm text-sm text-[var(--muted-foreground)]">
+            Sem filtros ativos, todos os editais sincronizados aparecem no Radar. Crie filtros para ver apenas o que interessa.
           </p>
           <button
             onClick={() => setShowForm(true)}
