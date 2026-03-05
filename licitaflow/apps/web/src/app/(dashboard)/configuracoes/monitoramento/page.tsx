@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Loader2, Save, ArrowLeft, Plus, X } from 'lucide-react'
 import Link from 'next/link'
+import { SUGGESTED_KEYWORDS } from '@/components/radar/filter-form'
 
 const UF_OPTIONS = [
   'AC','AL','AM','AP','BA','CE','DF','ES','GO','MA','MG','MS','MT',
@@ -222,6 +223,22 @@ export default function MonitoramentoPage() {
             Adicionar
           </button>
         </div>
+        {SUGGESTED_KEYWORDS.filter(s => !config.keywords.includes(s)).length > 0 && (
+          <div>
+            <span className="text-xs text-[var(--muted-foreground)]">Sugestoes:</span>
+            <div className="mt-1 flex flex-wrap gap-1">
+              {SUGGESTED_KEYWORDS.filter(s => !config.keywords.includes(s)).map(s => (
+                <button
+                  key={s}
+                  onClick={() => setConfig(prev => ({ ...prev, keywords: [...prev.keywords, s] }))}
+                  className="rounded-full border border-dashed border-[var(--border)] px-2 py-0.5 text-xs text-[var(--muted-foreground)] hover:border-[var(--primary)] hover:text-[var(--primary)]"
+                >
+                  + {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Modalidades */}

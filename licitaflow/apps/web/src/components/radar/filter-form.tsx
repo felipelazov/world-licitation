@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import { X, Plus } from 'lucide-react'
 
-const SUGGESTED_KEYWORDS = [
+export const SUGGESTED_KEYWORDS = [
   'cesta basica',
-  'kit alimentacao',
   'generos alimenticios',
+  'kit alimentacao',
   'merenda escolar',
   'alimentacao escolar',
+  'alimentos nao pereciveis',
+  'cesta de alimentos',
   'hortifruti',
   'carne bovina',
   'leite',
