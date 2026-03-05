@@ -34,6 +34,9 @@ importers:
       '@licitaflow/shared':
         specifier: workspace:*
         version: link:../../packages/shared
+      '@licitaflow/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@supabase/ssr':
         specifier: ^0.9.0
         version: 0.9.0(@supabase/supabase-js@2.98.0)

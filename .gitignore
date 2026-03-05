@@ -51,3 +51,4 @@ claude-talk-to-figma-mcp/
 tmp/
 temp/
 *.tmp
+.vercel
