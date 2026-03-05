@@ -2,11 +2,14 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Radar, Settings2, Loader2, RefreshCw } from 'lucide-react'
+import { Radar, Settings2, RefreshCw, CheckSquare, Trash2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { EditalCard } from '@/components/radar/edital-card'
+import { EditalCardSkeleton } from '@/components/radar/edital-card-skeleton'
 import { EditalModal } from '@/components/radar/edital-modal'
 import { FeedFilters } from '@/components/radar/feed-filters'
+import { NotificationPrompt } from '@/components/notifications/notification-prompt'
+import { showEditalNotification } from '@/lib/hooks/use-notifications'
 
 interface EditalRow {
   id: string
@@ -35,6 +38,8 @@ export default function RadarPage() {
   const [syncing, setSyncing] = useState(false)
   const [syncResult, setSyncResult] = useState<{ saved: number; found: number } | null>(null)
   const [selectedEditalId, setSelectedEditalId] = useState<string | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [statusCounts, setStatusCounts] = useState<Record<string, number>>({})
 
   // Filters
   const [search, setSearch] = useState('')
@@ -42,6 +47,21 @@ export default function RadarPage() {
   const [orderBy, setOrderBy] = useState('relevance_score:desc')
 
   const supabase = createClient()
+
+  // Load status counts once
+  const loadStatusCounts = useCallback(async () => {
+    const { data } = await supabase
+      .from('editals')
+      .select('status')
+
+    if (data) {
+      const counts: Record<string, number> = { all: data.length }
+      for (const row of data) {
+        counts[row.status] = (counts[row.status] || 0) + 1
+      }
+      setStatusCounts(counts)
+    }
+  }, [supabase])
 
   const loadEditals = useCallback(async () => {
     setLoading(true)
@@ -57,7 +77,7 @@ export default function RadarPage() {
     }
 
     if (search) {
-      query = query.or(`objeto.ilike.%${search}%,orgao.ilike.%${search}%`)
+      query = query.or(`objeto.fts(portuguese).${search},orgao.ilike.%${search}%`)
     }
 
     query = query
@@ -75,22 +95,31 @@ export default function RadarPage() {
 
   useEffect(() => {
     loadEditals()
-  }, [loadEditals])
+    loadStatusCounts()
+  }, [loadEditals, loadStatusCounts])
 
   // Reset page when filters change
   useEffect(() => {
     setPage(0)
+    setSelectedIds(new Set())
   }, [search, status, orderBy])
 
-  // Realtime subscription
+  // Realtime subscription with browser notifications
   useEffect(() => {
     const channel = supabase
       .channel('editals-realtime')
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'editals' },
-        () => {
+        (payload) => {
           loadEditals()
+          loadStatusCounts()
+          // Browser notification
+          const obj = (payload.new as { objeto?: string; orgao?: string })
+          showEditalNotification(
+            'Novo edital encontrado!',
+            obj?.objeto?.slice(0, 100) || 'Novo edital disponivel no radar.',
+          )
         }
       )
       .subscribe()
@@ -98,7 +127,7 @@ export default function RadarPage() {
     return () => {
       supabase.removeChannel(channel)
     }
-  }, [supabase, loadEditals])
+  }, [supabase, loadEditals, loadStatusCounts])
 
   async function handleStatusChange(id: string, newStatus: string) {
     const { error } = await supabase
@@ -110,6 +139,42 @@ export default function RadarPage() {
       setEditals((prev) =>
         prev.map((e) => (e.id === id ? { ...e, status: newStatus } : e))
       )
+      loadStatusCounts()
+    }
+  }
+
+  async function handleBulkAction(newStatus: string) {
+    if (selectedIds.size === 0) return
+    const ids = Array.from(selectedIds)
+
+    const { error } = await supabase
+      .from('editals')
+      .update({ status: newStatus })
+      .in('id', ids)
+
+    if (!error) {
+      setEditals((prev) =>
+        prev.map((e) => (selectedIds.has(e.id) ? { ...e, status: newStatus } : e))
+      )
+      setSelectedIds(new Set())
+      loadStatusCounts()
+    }
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    if (selectedIds.size === editals.length) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(editals.map((e) => e.id)))
     }
   }
 
@@ -122,6 +187,7 @@ export default function RadarPage() {
       if (data.success) {
         setSyncResult({ saved: data.saved, found: data.found })
         loadEditals()
+        loadStatusCounts()
       }
     } catch {
       // silently fail
@@ -171,6 +237,9 @@ export default function RadarPage() {
         </div>
       </div>
 
+      {/* Notification permission prompt */}
+      <NotificationPrompt />
+
       {/* Sync result */}
       {syncResult && (
         <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
@@ -183,15 +252,55 @@ export default function RadarPage() {
         search={search}
         status={status}
         orderBy={orderBy}
+        statusCounts={statusCounts}
         onSearchChange={setSearch}
         onStatusChange={setStatus}
         onOrderChange={setOrderBy}
       />
 
+      {/* Bulk actions bar */}
+      {selectedIds.size > 0 && (
+        <div className="flex items-center gap-3 rounded-lg border border-[var(--primary)]/30 bg-[var(--primary)]/5 px-4 py-2">
+          <span className="text-sm font-medium text-[var(--foreground)]">
+            {selectedIds.size} selecionado{selectedIds.size > 1 ? 's' : ''}
+          </span>
+          <div className="flex items-center gap-2 ml-auto">
+            <button
+              onClick={() => handleBulkAction('analisando')}
+              className="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1 text-xs font-medium text-white hover:bg-blue-700"
+            >
+              <CheckSquare className="h-3 w-3" />
+              Analisar
+            </button>
+            <button
+              onClick={() => handleBulkAction('go')}
+              className="rounded-lg bg-green-600 px-3 py-1 text-xs font-medium text-white hover:bg-green-700"
+            >
+              GO
+            </button>
+            <button
+              onClick={() => handleBulkAction('descartado')}
+              className="flex items-center gap-1 rounded-lg border border-red-300 px-3 py-1 text-xs text-red-500 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-900/20"
+            >
+              <Trash2 className="h-3 w-3" />
+              Descartar
+            </button>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="rounded-lg border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted-foreground)] hover:bg-[var(--muted)]"
+            >
+              Limpar
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Feed */}
       {loading ? (
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-6 w-6 animate-spin text-[var(--muted-foreground)]" />
+        <div className="space-y-3">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <EditalCardSkeleton key={i} />
+          ))}
         </div>
       ) : editals.length === 0 ? (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[var(--border)] py-12 text-center">
@@ -213,14 +322,35 @@ export default function RadarPage() {
         </div>
       ) : (
         <>
+          {/* Select all */}
+          <div className="flex items-center gap-2 px-1">
+            <input
+              type="checkbox"
+              checked={selectedIds.size === editals.length && editals.length > 0}
+              onChange={toggleSelectAll}
+              className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+            />
+            <span className="text-xs text-[var(--muted-foreground)]">Selecionar todos</span>
+          </div>
+
           <div className="space-y-3">
             {editals.map((edital) => (
-              <EditalCard
-                key={edital.id}
-                edital={edital}
-                onStatusChange={handleStatusChange}
-                onClick={() => setSelectedEditalId(edital.id)}
-              />
+              <div key={edital.id} className="flex items-start gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.has(edital.id)}
+                  onChange={() => toggleSelect(edital.id)}
+                  className="mt-4 h-4 w-4 shrink-0 rounded border-[var(--border)] accent-[var(--primary)]"
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <div className="flex-1 min-w-0">
+                  <EditalCard
+                    edital={edital}
+                    onStatusChange={handleStatusChange}
+                    onClick={() => setSelectedEditalId(edital.id)}
+                  />
+                </div>
+              </div>
             ))}
           </div>
 
@@ -242,7 +372,7 @@ export default function RadarPage() {
                 disabled={page >= totalPages - 1}
                 className="rounded-lg border border-[var(--border)] px-3 py-1.5 text-sm disabled:opacity-50"
               >
-                Próxima
+                Proxima
               </button>
             </div>
           )}

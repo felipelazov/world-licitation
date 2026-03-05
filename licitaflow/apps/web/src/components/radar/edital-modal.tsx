@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Link from 'next/link'
 import {
   X, Building2, Calendar, DollarSign, MapPin, Star, ExternalLink, FileText,
   Scale, Clock, AlertTriangle, CheckCircle2, Loader2, Gavel, Target,
+  ClipboardList, ArrowRight,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -328,6 +330,36 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
               </div>
             </Section>
 
+            {/* ============ DOCUMENTOS NECESSARIOS ============ */}
+            <Section icon={<ClipboardList className="h-4 w-4" />} title="Documentos necessarios para participar">
+              <div className="space-y-1.5 text-sm">
+                {[
+                  { doc: 'SICAF atualizado e valido', critical: true },
+                  { doc: 'Certidao Negativa Federal (tributos + divida ativa)', critical: true },
+                  { doc: 'Certidao Negativa Estadual', critical: true },
+                  { doc: 'Certidao Negativa Municipal', critical: true },
+                  { doc: 'Certidao Negativa Trabalhista (TST)', critical: true },
+                  { doc: 'Contrato Social / Ultima alteracao', critical: true },
+                  { doc: 'Balanco Patrimonial do ultimo exercicio', critical: false },
+                  { doc: 'Alvara Sanitario (VISA)', critical: true },
+                  { doc: 'Certificado Digital (A1 ou A3)', critical: true },
+                  { doc: 'Atestado de Capacidade Tecnica', critical: false },
+                ].map((item) => (
+                  <div key={item.doc} className="flex items-center gap-2">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${item.critical ? 'bg-red-400' : 'bg-yellow-400'}`} />
+                    <span className="text-[var(--foreground)]">{item.doc}</span>
+                    {item.critical && <span className="text-xs text-red-500">(obrigatorio)</span>}
+                  </div>
+                ))}
+              </div>
+              <Link
+                href="/documentos"
+                className="mt-3 flex items-center gap-2 text-xs font-medium text-[var(--primary)] hover:underline"
+              >
+                Verificar meus documentos <ArrowRight className="h-3 w-3" />
+              </Link>
+            </Section>
+
             {/* ============ O QUE FAZER ============ */}
             <Section icon={<CheckCircle2 className="h-4 w-4" />} title="Proximos passos">
               <ol className="space-y-2 text-sm">
@@ -367,6 +399,13 @@ export function EditalModal({ editalId, onClose, onStatusChange }: Props) {
                   Abrir no Portal
                 </a>
               )}
+              <Link
+                href={`/analises/${edital.id}`}
+                className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--foreground)] hover:bg-[var(--muted)]"
+              >
+                <FileText className="h-4 w-4" />
+                Analise Detalhada
+              </Link>
               {edital.status === 'novo' && onStatusChange && (
                 <>
                   <button

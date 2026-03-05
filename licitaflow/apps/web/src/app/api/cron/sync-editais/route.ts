@@ -12,6 +12,8 @@ import type { FilterConfig } from '@/lib/services/edital-filter'
  */
 export const maxDuration = 300 // 5 minutos
 
+const BATCH_SIZE = 50
+
 async function getOrCreateSource(supabase: ReturnType<typeof createAdminClient>, name: string, portalUrl: string) {
   const { data: source } = await supabase
     .from('edital_sources')
@@ -33,6 +35,91 @@ async function getOrCreateSource(supabase: ReturnType<typeof createAdminClient>,
     .single()
 
   return newSource?.id
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type EditalInsert = Record<string, any>
+
+async function batchUpsertEditais(
+  supabase: ReturnType<typeof createAdminClient>,
+  allData: EditalInsert[],
+  sourceName: string,
+  errors: Array<{ source: string; code: string; message: string }>,
+): Promise<number> {
+  if (allData.length === 0) return 0
+
+  let saved = 0
+
+  // Pre-fetch existing external_ids to separate new vs update
+  const externalIds = allData
+    .map((e) => e.external_id)
+    .filter((id): id is string => id != null)
+
+  const existingSet = new Set<string>()
+  if (externalIds.length > 0) {
+    // Query in chunks to avoid URL length limits
+    for (let i = 0; i < externalIds.length; i += 100) {
+      const chunk = externalIds.slice(i, i + 100)
+      const { data: existing } = await supabase
+        .from('editals')
+        .select('external_id')
+        .eq('tenant_id', allData[0].tenant_id)
+        .in('external_id', chunk)
+      if (existing) {
+        existing.forEach((e: { external_id: string }) => existingSet.add(e.external_id))
+      }
+    }
+  }
+
+  const toInsert = allData.filter((e) => !e.external_id || !existingSet.has(e.external_id))
+  const toUpdate = allData.filter((e) => e.external_id && existingSet.has(e.external_id))
+
+  // Batch insert new records in chunks
+  for (let i = 0; i < toInsert.length; i += BATCH_SIZE) {
+    const chunk = toInsert.slice(i, i + BATCH_SIZE)
+    const { error: batchError } = await supabase.from('editals').insert(chunk)
+    if (!batchError) {
+      saved += chunk.length
+    } else if (batchError.code === '23505') {
+      // Batch had a duplicate (pncp_id conflict) — fallback to individual inserts
+      for (const item of chunk) {
+        const { error: insertError } = await supabase.from('editals').insert(item)
+        if (!insertError) {
+          saved++
+        } else if (insertError.code !== '23505' && errors.length < 5) {
+          errors.push({ source: sourceName, code: insertError.code || 'unknown', message: insertError.message })
+        }
+      }
+    } else if (errors.length < 5) {
+      errors.push({ source: sourceName, code: batchError.code || 'unknown', message: batchError.message })
+    }
+  }
+
+  // Batch update existing records
+  if (toUpdate.length > 0) {
+    const updatePromises = toUpdate.map((editalData) =>
+      supabase
+        .from('editals')
+        .update({
+          objeto: editalData.objeto,
+          valor_estimado: editalData.valor_estimado,
+          relevance_score: editalData.relevance_score,
+          raw_data: editalData.raw_data,
+          synced_at: editalData.synced_at,
+        })
+        .eq('tenant_id', editalData.tenant_id)
+        .eq('external_id', editalData.external_id)
+    )
+
+    // Run updates in parallel batches of 20
+    for (let i = 0; i < updatePromises.length; i += 20) {
+      const batch = updatePromises.slice(i, i + 20)
+      const results = await Promise.all(batch)
+      saved += results.filter((r) => !r.error).length
+    }
+  }
+
+  return saved
 }
 
 export async function GET(request: NextRequest) {
@@ -79,8 +166,9 @@ export async function GET(request: NextRequest) {
 
     for (const config of configs) {
       const tenantId = config.tenant_id
-      let pncpFound = 0, pncpSaved = 0, comprasGovFound = 0, comprasGovSaved = 0
       const errors: Array<{ source: string; code: string; message: string }> = []
+
+      let pncpFound = 0, pncpSaved = 0, comprasGovFound = 0, comprasGovSaved = 0
 
       try {
         // Log de sync
@@ -111,76 +199,30 @@ export async function GET(request: NextRequest) {
           relevanceThreshold: config.relevance_threshold || 40,
         }
 
-        // ==========================================
-        // FONTE 1: PNCP
-        // ==========================================
-        const contratacoes = await fetchEditaisMultiplos({
-          dataInicial,
-          dataFinal,
-          modalidades,
-          ufs,
-        })
+        // Fetch das duas fontes em paralelo
+        const [contratacoes, { resultado: pregoes }] = await Promise.all([
+          fetchEditaisMultiplos({ dataInicial, dataFinal, modalidades, ufs }),
+          fetchPregoes({ dataInicial, dataFinal }),
+        ])
+
         pncpFound = contratacoes.length
-
-        const relevantes = filterEditais(contratacoes, filterConfig)
-        for (const result of relevantes) {
-          const editalData = toEditalInsert(result, tenantId, pncpSourceId)
-          // Insert com tratamento de duplicata (partial unique indexes nao funcionam com upsert)
-          const { error: insertError } = await supabase
-            .from('editals')
-            .insert(editalData)
-          if (!insertError) {
-            pncpSaved++
-          } else if (insertError.code === '23505') {
-            // Duplicata — atualizar registro existente
-            const { error: updateError } = await supabase
-              .from('editals')
-              .update({
-                objeto: editalData.objeto,
-                valor_estimado: editalData.valor_estimado,
-                relevance_score: editalData.relevance_score,
-                raw_data: editalData.raw_data,
-                synced_at: editalData.synced_at,
-              })
-              .eq('tenant_id', editalData.tenant_id)
-              .eq('external_id', editalData.external_id)
-            if (!updateError) pncpSaved++
-          } else if (errors.length < 5) {
-            errors.push({ source: 'pncp', code: insertError.code || 'unknown', message: insertError.message })
-          }
-        }
-
-        // ==========================================
-        // FONTE 2: Compras.gov.br (Pregoes Legados)
-        // ==========================================
-        const { resultado: pregoes } = await fetchPregoes({ dataInicial, dataFinal })
         comprasGovFound = pregoes.length
 
+        // Filtrar e mapear para formato de insert
+        const relevantes = filterEditais(contratacoes, filterConfig)
+        const pncpData = relevantes.map((r) => toEditalInsert(r, tenantId, pncpSourceId))
+
         const pregoesRelevantes = filterPregoes(pregoes, filterConfig)
-        for (const result of pregoesRelevantes) {
-          const editalData = pregaoToEditalInsert(result, tenantId, comprasGovSourceId)
-          const { error: insertError } = await supabase
-            .from('editals')
-            .insert(editalData)
-          if (!insertError) {
-            comprasGovSaved++
-          } else if (insertError.code === '23505') {
-            const { error: updateError } = await supabase
-              .from('editals')
-              .update({
-                objeto: editalData.objeto,
-                valor_estimado: editalData.valor_estimado,
-                relevance_score: editalData.relevance_score,
-                raw_data: editalData.raw_data,
-                synced_at: editalData.synced_at,
-              })
-              .eq('tenant_id', editalData.tenant_id)
-              .eq('external_id', editalData.external_id)
-            if (!updateError) comprasGovSaved++
-          } else if (errors.length < 5) {
-            errors.push({ source: 'comprasgov', code: insertError.code || 'unknown', message: insertError.message })
-          }
-        }
+        const comprasData = pregoesRelevantes.map((r) => pregaoToEditalInsert(r, tenantId, comprasGovSourceId))
+
+        // Batch upsert em paralelo
+        const [pncpResult, comprasResult] = await Promise.all([
+          batchUpsertEditais(supabase, pncpData, 'pncp', errors),
+          batchUpsertEditais(supabase, comprasData, 'comprasgov', errors),
+        ])
+
+        pncpSaved = pncpResult
+        comprasGovSaved = comprasResult
 
         const totalSaved = pncpSaved + comprasGovSaved
         const totalFound = pncpFound + comprasGovFound

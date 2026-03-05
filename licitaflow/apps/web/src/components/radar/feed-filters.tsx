@@ -9,7 +9,7 @@ const STATUS_OPTIONS = [
   { value: 'go', label: 'GO' },
   { value: 'no_go', label: 'NO-GO' },
   { value: 'proposta_enviada', label: 'Proposta' },
-  { value: 'em_pregao', label: 'Em Pregão' },
+  { value: 'em_pregao', label: 'Em Pregao' },
   { value: 'adjudicado', label: 'Adjudicado' },
   { value: 'descartado', label: 'Descartado' },
 ]
@@ -17,16 +17,17 @@ const STATUS_OPTIONS = [
 const ORDER_OPTIONS = [
   { value: 'relevance_score:desc', label: 'Mais relevante' },
   { value: 'created_at:desc', label: 'Mais recente' },
-  { value: 'session_date:asc', label: 'Sessão (próxima)' },
-  { value: 'estimated_value:desc', label: 'Maior valor' },
-  { value: 'estimated_value:asc', label: 'Menor valor' },
-  { value: 'publication_date:desc', label: 'Publicação (recente)' },
+  { value: 'data_sessao:asc', label: 'Sessao (proxima)' },
+  { value: 'valor_estimado:desc', label: 'Maior valor' },
+  { value: 'valor_estimado:asc', label: 'Menor valor' },
+  { value: 'data_publicacao:desc', label: 'Publicacao (recente)' },
 ]
 
 interface FeedFiltersProps {
   search: string
   status: string
   orderBy: string
+  statusCounts?: Record<string, number>
   onSearchChange: (value: string) => void
   onStatusChange: (value: string) => void
   onOrderChange: (value: string) => void
@@ -36,6 +37,7 @@ export function FeedFilters({
   search,
   status,
   orderBy,
+  statusCounts,
   onSearchChange,
   onStatusChange,
   onOrderChange,
@@ -49,7 +51,7 @@ export function FeedFilters({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          placeholder="Buscar no objeto ou órgão..."
+          placeholder="Buscar no objeto ou orgao..."
           className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] py-2 pl-10 pr-3 text-sm text-[var(--foreground)] outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)]"
         />
       </div>
@@ -60,19 +62,27 @@ export function FeedFilters({
 
         {/* Status pills */}
         <div className="flex flex-wrap gap-1">
-          {STATUS_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => onStatusChange(opt.value)}
-              className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
-                status === opt.value
-                  ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
-                  : 'bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]'
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
+          {STATUS_OPTIONS.map((opt) => {
+            const count = statusCounts?.[opt.value || 'all']
+            return (
+              <button
+                key={opt.value}
+                onClick={() => onStatusChange(opt.value)}
+                className={`rounded-full px-2.5 py-1 text-xs font-medium transition-colors ${
+                  status === opt.value
+                    ? 'bg-[var(--primary)] text-[var(--primary-foreground)]'
+                    : 'bg-[var(--muted)] text-[var(--muted-foreground)] hover:bg-[var(--accent)]'
+                }`}
+              >
+                {opt.label}
+                {count != null && count > 0 && (
+                  <span className={`ml-1 ${status === opt.value ? 'opacity-80' : 'opacity-60'}`}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            )
+          })}
         </div>
 
         {/* Order select */}
