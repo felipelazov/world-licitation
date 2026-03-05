@@ -36,7 +36,7 @@ export default function RadarPage() {
   const [totalCount, setTotalCount] = useState(0)
   const [page, setPage] = useState(0)
   const [syncing, setSyncing] = useState(false)
-  const [syncResult, setSyncResult] = useState<{ saved: number; found: number } | null>(null)
+  const [syncResult, setSyncResult] = useState<{ saved: number; found: number; relevant: number } | null>(null)
   const [selectedEditalId, setSelectedEditalId] = useState<string | null>(null)
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [statusCounts, setStatusCounts] = useState<Record<string, number>>({})
@@ -214,7 +214,7 @@ export default function RadarPage() {
       const res = await fetch('/api/editais/sync')
       const data = await res.json()
       if (data.success) {
-        setSyncResult({ saved: data.saved, found: data.found })
+        setSyncResult({ saved: data.saved, found: data.found, relevant: data.relevant })
         loadEditals()
         loadStatusCounts()
       }
@@ -271,8 +271,17 @@ export default function RadarPage() {
 
       {/* Sync result */}
       {syncResult && (
-        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
-          Sync concluido: {syncResult.saved} edital(is) salvo(s) de {syncResult.found} encontrado(s).
+        <div className={`rounded-lg border px-4 py-2 text-sm ${
+          syncResult.saved > 0
+            ? 'border-green-200 bg-green-50 text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400'
+            : 'border-yellow-200 bg-yellow-50 text-yellow-700 dark:border-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'
+        }`}>
+          Sync concluido: {syncResult.found} encontrado(s) no PNCP → {syncResult.relevant} relevante(s) → {syncResult.saved} novo(s) salvo(s).
+          {syncResult.found > 0 && syncResult.relevant === 0 && (
+            <span className="block mt-1 text-xs opacity-80">
+              Nenhum edital passou no filtro de palavras-chave. Ajuste em Configuracoes → Monitoramento.
+            </span>
+          )}
         </div>
       )}
 

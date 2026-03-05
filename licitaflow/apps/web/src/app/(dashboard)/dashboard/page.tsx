@@ -76,10 +76,37 @@ export default function DashboardPage() {
   const loadDashboard = useCallback(async () => {
     setLoading(true)
 
+    // Buscar config de monitoramento para filtrar por UFs
+    let monitoringUfs: string[] = []
+    try {
+      const res = await fetch('/api/monitoring')
+      const json = await res.json()
+      if (json.data?.ufs?.length > 0) {
+        monitoringUfs = json.data.ufs
+      }
+    } catch {
+      // use no filter
+    }
+
     const today = new Date().toISOString().split('T')[0]
     const weekEnd = new Date()
     weekEnd.setDate(weekEnd.getDate() + 7)
     const weekEndStr = weekEnd.toISOString()
+
+    // Build editals queries with UF filter
+    let editaisQ = supabase.from('editals').select('*', { count: 'exact', head: true })
+    let novosHojeQ = supabase.from('editals').select('*', { count: 'exact', head: true }).eq('status', 'novo').gte('data_publicacao', today)
+    let valorQ = supabase.from('editals').select('valor_estimado').not('valor_estimado', 'is', null)
+    let sessoesQ = supabase.from('editals').select('*', { count: 'exact', head: true }).not('data_sessao', 'is', null).gte('data_sessao', today).lte('data_sessao', weekEndStr)
+    let recentQ = supabase.from('editals').select('id, numero, objeto, orgao, valor_estimado, data_sessao, status, relevance_score').order('created_at', { ascending: false }).limit(5)
+
+    if (monitoringUfs.length > 0) {
+      editaisQ = editaisQ.in('uf', monitoringUfs)
+      novosHojeQ = novosHojeQ.in('uf', monitoringUfs)
+      valorQ = valorQ.in('uf', monitoringUfs)
+      sessoesQ = sessoesQ.in('uf', monitoringUfs)
+      recentQ = recentQ.in('uf', monitoringUfs)
+    }
 
     const [
       editaisRes,
@@ -93,22 +120,14 @@ export default function DashboardPage() {
       docsAlertRes,
       pregoesAlertRes,
     ] = await Promise.all([
-      supabase.from('editals').select('*', { count: 'exact', head: true }),
-      supabase.from('editals').select('*', { count: 'exact', head: true })
-        .eq('status', 'novo')
-        .gte('data_publicacao', today),
+      editaisQ,
+      novosHojeQ,
       supabase.from('edital_analyses').select('*', { count: 'exact', head: true }).is('decision', null),
       supabase.from('documents').select('*', { count: 'exact', head: true }).eq('status', 'valido'),
       supabase.from('bidding_sessions').select('*', { count: 'exact', head: true }).in('status', ['agendado', 'em_andamento']),
-      supabase.from('editals').select('valor_estimado').not('valor_estimado', 'is', null),
-      supabase.from('editals').select('*', { count: 'exact', head: true })
-        .not('data_sessao', 'is', null)
-        .gte('data_sessao', today)
-        .lte('data_sessao', weekEndStr),
-      supabase.from('editals')
-        .select('id, numero, objeto, orgao, valor_estimado, data_sessao, status, relevance_score')
-        .order('created_at', { ascending: false })
-        .limit(5),
+      valorQ,
+      sessoesQ,
+      recentQ,
       supabase.from('documents').select('id, name, status, expires_at')
         .in('status', ['vencendo', 'vencido'])
         .order('expires_at', { ascending: true })
