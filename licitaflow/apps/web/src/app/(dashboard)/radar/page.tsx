@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Radar, Settings2, Loader2, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { EditalCard } from '@/components/radar/edital-card'
+import { EditalModal } from '@/components/radar/edital-modal'
 import { FeedFilters } from '@/components/radar/feed-filters'
 
 interface EditalRow {
@@ -33,6 +34,7 @@ export default function RadarPage() {
   const [page, setPage] = useState(0)
   const [syncing, setSyncing] = useState(false)
   const [syncResult, setSyncResult] = useState<{ saved: number; found: number } | null>(null)
+  const [selectedEditalId, setSelectedEditalId] = useState<string | null>(null)
 
   // Filters
   const [search, setSearch] = useState('')
@@ -217,6 +219,7 @@ export default function RadarPage() {
                 key={edital.id}
                 edital={edital}
                 onStatusChange={handleStatusChange}
+                onClick={() => setSelectedEditalId(edital.id)}
               />
             ))}
           </div>
@@ -244,6 +247,15 @@ export default function RadarPage() {
             </div>
           )}
         </>
+      )}
+
+      {/* Modal de analise */}
+      {selectedEditalId && (
+        <EditalModal
+          editalId={selectedEditalId}
+          onClose={() => setSelectedEditalId(null)}
+          onStatusChange={handleStatusChange}
+        />
       )}
     </div>
   )

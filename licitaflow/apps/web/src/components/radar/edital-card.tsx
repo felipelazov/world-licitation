@@ -1,6 +1,5 @@
 'use client'
 
-import Link from 'next/link'
 import { Building2, Calendar, DollarSign, ExternalLink, MapPin, Star } from 'lucide-react'
 import { StatusBadge } from './status-badge'
 import { Countdown } from '@licitaflow/ui'
@@ -23,6 +22,7 @@ interface EditalCardProps {
     edital_sources?: { name: string } | null
   }
   onStatusChange?: (id: string, status: string) => void
+  onClick?: () => void
 }
 
 function formatCurrency(value: number | null): string {
@@ -43,9 +43,12 @@ function formatDatetime(dateStr: string | null): string {
   }).format(new Date(dateStr))
 }
 
-export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
+export function EditalCard({ edital, onStatusChange, onClick }: EditalCardProps) {
   return (
-    <div className="group rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 transition-colors hover:border-[var(--primary)]/30">
+    <div
+      className="group cursor-pointer rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 transition-colors hover:border-[var(--primary)]/30"
+      onClick={onClick}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
@@ -69,12 +72,9 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
             )}
           </div>
 
-          <Link
-            href={`/radar/${edital.id}`}
-            className="mt-1.5 block text-sm font-semibold text-[var(--foreground)] hover:text-[var(--primary)]"
-          >
+          <span className="mt-1.5 block text-sm font-semibold text-[var(--foreground)] group-hover:text-[var(--primary)]">
             {edital.numero || edital.modalidade || 'Edital'}
-          </Link>
+          </span>
 
           <p className="mt-1 line-clamp-2 text-sm text-[var(--muted-foreground)]">
             {edital.objeto}
@@ -85,6 +85,7 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
           href={edital.link_sistema_origem || edital.portal_url || '#'}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => e.stopPropagation()}
           className="shrink-0 rounded p-1.5 text-[var(--muted-foreground)] opacity-0 transition-opacity hover:bg-[var(--muted)] hover:text-[var(--foreground)] group-hover:opacity-100"
           title="Abrir no portal"
         >
@@ -117,7 +118,7 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
 
       {/* Quick actions */}
       {edital.status === 'novo' && onStatusChange && (
-        <div className="mt-3 flex gap-2 border-t border-[var(--border)] pt-3">
+        <div className="mt-3 flex gap-2 border-t border-[var(--border)] pt-3" onClick={(e) => e.stopPropagation()}>
           <button
             onClick={() => onStatusChange(edital.id, 'analisando')}
             className="rounded-lg bg-[var(--primary)] px-3 py-1 text-xs font-medium text-[var(--primary-foreground)] hover:opacity-90"
