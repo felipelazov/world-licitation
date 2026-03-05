@@ -4,6 +4,7 @@
  */
 
 import type { PNCPContratacao } from './pncp-api'
+import type { PregaoLegado } from './compras-gov-api'
 
 const DEFAULT_KEYWORDS = [
   'cesta basica',
@@ -167,6 +168,116 @@ export function filterEditais(
     .filter(r => r.score >= config.relevanceThreshold)
     .sort((a, b) => b.score - a.score)
 }
+
+// ==========================================
+// COMPRAS.GOV — Pregoes Legados
+// ==========================================
+
+export interface PregaoFilterResult {
+  pregao: PregaoLegado
+  score: number
+  matchedKeywords: string[]
+}
+
+/**
+ * Calcula score de relevancia para pregao legado do Compras.gov.
+ */
+export function calculatePregaoScore(
+  pregao: PregaoLegado,
+  config: FilterConfig
+): PregaoFilterResult {
+  const textoNorm = normalizeText(pregao.objetoCompra || '')
+  let score = 0
+  const matchedKeywords: string[] = []
+  const keywords = config.keywords.length > 0 ? config.keywords : DEFAULT_KEYWORDS
+
+  // Keyword match (0-60)
+  for (const kw of keywords) {
+    const kwNorm = normalizeText(kw)
+    if (textoNorm.includes(kwNorm)) {
+      matchedKeywords.push(kw)
+      const isHigh = HIGH_RELEVANCE_KEYWORDS.some(hk => normalizeText(hk) === kwNorm)
+      score += isHigh ? 20 : 10
+    }
+  }
+  score = Math.min(score, 60)
+
+  // Negative keywords (-20)
+  for (const nk of NEGATIVE_KEYWORDS) {
+    if (textoNorm.includes(normalizeText(nk))) {
+      score -= 20
+      break
+    }
+  }
+
+  // UF match (0-20)
+  if (config.ufs.length > 0 && pregao.ufOrgao) {
+    if (config.ufs.includes(pregao.ufOrgao)) {
+      score += 20
+    }
+  } else {
+    score += 10
+  }
+
+  // Valor (0-15)
+  if (pregao.valorEstimado && pregao.valorEstimado > 0) {
+    const dentroMin = !config.valorMin || pregao.valorEstimado >= config.valorMin
+    const dentroMax = !config.valorMax || pregao.valorEstimado <= config.valorMax
+    if (dentroMin && dentroMax) score += 15
+  }
+
+  score = Math.max(0, Math.min(100, score))
+
+  return { pregao, score, matchedKeywords }
+}
+
+/**
+ * Filtra pregoes legados por relevancia.
+ */
+export function filterPregoes(
+  pregoes: PregaoLegado[],
+  config: FilterConfig
+): PregaoFilterResult[] {
+  return pregoes
+    .map(p => calculatePregaoScore(p, config))
+    .filter(r => r.score >= config.relevanceThreshold)
+    .sort((a, b) => b.score - a.score)
+}
+
+/**
+ * Converte pregao legado para formato de insert no Supabase.
+ */
+export function pregaoToEditalInsert(result: PregaoFilterResult, tenantId: string, sourceId: string) {
+  const p = result.pregao
+  const externalId = `COMPRASGOV-${p.numeroPregao}-${p.anoCompra}`
+  return {
+    tenant_id: tenantId,
+    source_id: sourceId,
+    external_id: externalId,
+    pncp_id: externalId,
+    numero: p.numeroPregao,
+    orgao: p.nomeOrgao || 'Nao informado',
+    orgao_cnpj: null,
+    objeto: p.objetoCompra,
+    modalidade: 'Pregao Eletronico (Legado)',
+    valor_estimado: p.valorEstimado || null,
+    uf: p.ufOrgao || null,
+    municipio_ibge: null,
+    local_entrega: p.ufOrgao || null,
+    data_publicacao: p.dataEdital || null,
+    data_sessao: null,
+    link_sistema_origem: null,
+    portal_url: null,
+    relevance_score: result.score,
+    status: 'novo',
+    raw_data: p,
+    synced_at: new Date().toISOString(),
+  }
+}
+
+// ==========================================
+// PNCP — Conversao
+// ==========================================
 
 /**
  * Converte resultado do filtro para formato de insert no Supabase.

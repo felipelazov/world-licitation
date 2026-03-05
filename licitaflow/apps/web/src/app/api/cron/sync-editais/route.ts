@@ -1,18 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { fetchEditaisMultiplos } from '@/lib/services/pncp-api'
-import { filterEditais, toEditalInsert } from '@/lib/services/edital-filter'
+import { fetchPregoes } from '@/lib/services/compras-gov-api'
+import { filterEditais, toEditalInsert, filterPregoes, pregaoToEditalInsert } from '@/lib/services/edital-filter'
 import type { FilterConfig } from '@/lib/services/edital-filter'
 
 /**
  * GET /api/cron/sync-editais
- * Cron job — sincroniza editais do PNCP para TODOS os tenants com sync habilitado.
+ * Cron job — sincroniza editais do PNCP + Compras.gov para TODOS os tenants.
  * Protegido por CRON_SECRET (Vercel envia automaticamente).
  */
-export const maxDuration = 300 // 5 minutos (Vercel Pro)
+export const maxDuration = 300 // 5 minutos
+
+async function getOrCreateSource(supabase: ReturnType<typeof createAdminClient>, name: string, portalUrl: string) {
+  const { data: source } = await supabase
+    .from('edital_sources')
+    .select('id')
+    .eq('name', name)
+    .single()
+
+  if (source?.id) return source.id
+
+  const { data: newSource } = await supabase
+    .from('edital_sources')
+    .insert({
+      name,
+      portal_url: portalUrl,
+      scraper_type: 'api',
+      is_active: true,
+    })
+    .select('id')
+    .single()
+
+  return newSource?.id
+}
 
 export async function GET(request: NextRequest) {
-  // Verificar autorizacao do cron
   const authHeader = request.headers.get('authorization')
   const cronSecret = process.env.CRON_SECRET
 
@@ -22,10 +45,9 @@ export async function GET(request: NextRequest) {
 
   const startTime = Date.now()
   const supabase = createAdminClient()
-  const results: Array<{ tenant_id: string; found: number; saved: number }> = []
+  const results: Array<{ tenant_id: string; pncp: { found: number; saved: number }; comprasgov: { found: number; saved: number } }> = []
 
   try {
-    // Buscar todos os tenants com sync habilitado
     const { data: configs } = await supabase
       .from('tenant_monitoring_config')
       .select('*')
@@ -35,41 +57,24 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ message: 'Nenhum tenant com sync ativo', tenants: 0 })
     }
 
-    // Buscar/criar source PNCP
-    const { data: source } = await supabase
-      .from('edital_sources')
-      .select('id')
-      .eq('name', 'PNCP')
-      .single()
+    // Buscar/criar sources
+    const [pncpSourceId, comprasGovSourceId] = await Promise.all([
+      getOrCreateSource(supabase, 'PNCP', 'https://pncp.gov.br'),
+      getOrCreateSource(supabase, 'Compras.gov.br', 'https://compras.gov.br'),
+    ])
 
-    let sourceId = source?.id
-
-    if (!sourceId) {
-      const { data: newSource } = await supabase
-        .from('edital_sources')
-        .insert({
-          name: 'PNCP',
-          portal_url: 'https://pncp.gov.br',
-          scraper_type: 'api',
-          is_active: true,
-        })
-        .select('id')
-        .single()
-      sourceId = newSource?.id
+    if (!pncpSourceId || !comprasGovSourceId) {
+      return NextResponse.json({ error: 'Falha ao obter sources' }, { status: 500 })
     }
 
-    if (!sourceId) {
-      return NextResponse.json({ error: 'Falha ao obter source PNCP' }, { status: 500 })
-    }
-
-    // Periodo de busca: ultimos 3 dias
+    // Periodo: ultimos 3 dias
     const dataFinal = new Date()
     const dataInicial = new Date()
     dataInicial.setDate(dataInicial.getDate() - 3)
 
-    // Processar cada tenant
     for (const config of configs) {
       const tenantId = config.tenant_id
+      let pncpFound = 0, pncpSaved = 0, comprasGovFound = 0, comprasGovSaved = 0
 
       try {
         // Log de sync
@@ -77,7 +82,7 @@ export async function GET(request: NextRequest) {
           .from('sync_logs')
           .insert({
             tenant_id: tenantId,
-            source: 'pncp',
+            source: 'pncp+comprasgov',
             status: 'running',
             params: {
               ufs: config.ufs,
@@ -92,13 +97,6 @@ export async function GET(request: NextRequest) {
         const ufs = config.ufs?.length > 0 ? config.ufs : ['SP']
         const modalidades = config.modalidades?.length > 0 ? config.modalidades : [6]
 
-        const contratacoes = await fetchEditaisMultiplos({
-          dataInicial,
-          dataFinal,
-          modalidades,
-          ufs,
-        })
-
         const filterConfig: FilterConfig = {
           keywords: config.keywords || [],
           ufs,
@@ -107,24 +105,46 @@ export async function GET(request: NextRequest) {
           relevanceThreshold: config.relevance_threshold || 40,
         }
 
-        const relevantes = filterEditais(contratacoes, filterConfig)
+        // ==========================================
+        // FONTE 1: PNCP
+        // ==========================================
+        const contratacoes = await fetchEditaisMultiplos({
+          dataInicial,
+          dataFinal,
+          modalidades,
+          ufs,
+        })
+        pncpFound = contratacoes.length
 
-        // Upsert editais
-        let savedCount = 0
+        const relevantes = filterEditais(contratacoes, filterConfig)
         for (const result of relevantes) {
-          const editalData = toEditalInsert(result, tenantId, sourceId)
+          const editalData = toEditalInsert(result, tenantId, pncpSourceId)
           const { error } = await supabase
             .from('editals')
-            .upsert(editalData, {
-              onConflict: 'tenant_id,pncp_id',
-              ignoreDuplicates: false,
-            })
-          if (!error) savedCount++
+            .upsert(editalData, { onConflict: 'tenant_id,pncp_id', ignoreDuplicates: false })
+          if (!error) pncpSaved++
         }
 
+        // ==========================================
+        // FONTE 2: Compras.gov.br (Pregoes Legados)
+        // ==========================================
+        const { resultado: pregoes } = await fetchPregoes({ dataInicial, dataFinal })
+        comprasGovFound = pregoes.length
+
+        const pregoesRelevantes = filterPregoes(pregoes, filterConfig)
+        for (const result of pregoesRelevantes) {
+          const editalData = pregaoToEditalInsert(result, tenantId, comprasGovSourceId)
+          const { error } = await supabase
+            .from('editals')
+            .upsert(editalData, { onConflict: 'tenant_id,pncp_id', ignoreDuplicates: false })
+          if (!error) comprasGovSaved++
+        }
+
+        const totalSaved = pncpSaved + comprasGovSaved
+        const totalFound = pncpFound + comprasGovFound
+
         // Notificacao
-        if (savedCount > 0 && config.notify_on_new_edital) {
-          // Buscar qualquer user do tenant para notificar
+        if (totalSaved > 0 && config.notify_on_new_edital) {
           const { data: tenantUser } = await supabase
             .from('profiles')
             .select('id')
@@ -137,38 +157,44 @@ export async function GET(request: NextRequest) {
               tenant_id: tenantId,
               user_id: tenantUser.id,
               type: 'edital_novo',
-              title: `${savedCount} edital(is) novo(s) encontrado(s)`,
-              body: `Sync automatico encontrou ${savedCount} editais relevantes de ${contratacoes.length} verificados.`,
-              data: { source: 'pncp', count: savedCount, trigger: 'cron' },
+              title: `${totalSaved} edital(is) novo(s) encontrado(s)`,
+              body: `Sync automatico: ${pncpSaved} do PNCP + ${comprasGovSaved} do Compras.gov (${totalFound} verificados).`,
+              data: { pncp: pncpSaved, comprasgov: comprasGovSaved, trigger: 'cron' },
             })
           }
         }
 
         // Atualizar log
-        const duration = Date.now() - startTime
         if (syncLog?.id) {
           await supabase
             .from('sync_logs')
             .update({
               status: 'success',
-              editais_found: contratacoes.length,
-              editais_relevant: relevantes.length,
-              editais_saved: savedCount,
-              duration_ms: duration,
+              editais_found: totalFound,
+              editais_relevant: relevantes.length + pregoesRelevantes.length,
+              editais_saved: totalSaved,
+              duration_ms: Date.now() - startTime,
               finished_at: new Date().toISOString(),
             })
             .eq('id', syncLog.id)
         }
 
-        results.push({ tenant_id: tenantId, found: contratacoes.length, saved: savedCount })
+        results.push({
+          tenant_id: tenantId,
+          pncp: { found: pncpFound, saved: pncpSaved },
+          comprasgov: { found: comprasGovFound, saved: comprasGovSaved },
+        })
       } catch (tenantError) {
         const message = tenantError instanceof Error ? tenantError.message : 'Erro'
-        results.push({ tenant_id: tenantId, found: 0, saved: 0 })
+        results.push({
+          tenant_id: tenantId,
+          pncp: { found: pncpFound, saved: pncpSaved },
+          comprasgov: { found: comprasGovFound, saved: comprasGovSaved },
+        })
 
-        // Log de erro
         await supabase.from('sync_logs').insert({
           tenant_id: tenantId,
-          source: 'pncp',
+          source: 'pncp+comprasgov',
           status: 'error',
           params: { error: message, trigger: 'cron' },
           finished_at: new Date().toISOString(),
@@ -176,15 +202,17 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Atualizar last_scraped_at do source
-    await supabase
-      .from('edital_sources')
-      .update({ last_scraped_at: new Date().toISOString() })
-      .eq('id', sourceId)
+    // Atualizar last_scraped_at dos sources
+    const now = new Date().toISOString()
+    await Promise.all([
+      supabase.from('edital_sources').update({ last_scraped_at: now }).eq('id', pncpSourceId),
+      supabase.from('edital_sources').update({ last_scraped_at: now }).eq('id', comprasGovSourceId),
+    ])
 
     return NextResponse.json({
       success: true,
       tenants_processed: results.length,
+      sources: ['PNCP', 'Compras.gov.br'],
       results,
       duration_ms: Date.now() - startTime,
     })
