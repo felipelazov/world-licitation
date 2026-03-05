@@ -75,6 +75,7 @@ export async function GET(request: NextRequest) {
     for (const config of configs) {
       const tenantId = config.tenant_id
       let pncpFound = 0, pncpSaved = 0, comprasGovFound = 0, comprasGovSaved = 0
+      const errors: Array<{ source: string; code: string; message: string }> = []
 
       try {
         // Log de sync
@@ -119,10 +120,29 @@ export async function GET(request: NextRequest) {
         const relevantes = filterEditais(contratacoes, filterConfig)
         for (const result of relevantes) {
           const editalData = toEditalInsert(result, tenantId, pncpSourceId)
-          const { error } = await supabase
+          // Insert com tratamento de duplicata (partial unique indexes nao funcionam com upsert)
+          const { error: insertError } = await supabase
             .from('editals')
-            .upsert(editalData, { onConflict: 'tenant_id,source_id,external_id', ignoreDuplicates: false })
-          if (!error) pncpSaved++
+            .insert(editalData)
+          if (!insertError) {
+            pncpSaved++
+          } else if (insertError.code === '23505') {
+            // Duplicata — atualizar registro existente
+            const { error: updateError } = await supabase
+              .from('editals')
+              .update({
+                objeto: editalData.objeto,
+                valor_estimado: editalData.valor_estimado,
+                relevance_score: editalData.relevance_score,
+                raw_data: editalData.raw_data,
+                synced_at: editalData.synced_at,
+              })
+              .eq('tenant_id', editalData.tenant_id)
+              .eq('external_id', editalData.external_id)
+            if (!updateError) pncpSaved++
+          } else if (errors.length < 5) {
+            errors.push({ source: 'pncp', code: insertError.code || 'unknown', message: insertError.message })
+          }
         }
 
         // ==========================================
@@ -134,10 +154,27 @@ export async function GET(request: NextRequest) {
         const pregoesRelevantes = filterPregoes(pregoes, filterConfig)
         for (const result of pregoesRelevantes) {
           const editalData = pregaoToEditalInsert(result, tenantId, comprasGovSourceId)
-          const { error } = await supabase
+          const { error: insertError } = await supabase
             .from('editals')
-            .upsert(editalData, { onConflict: 'tenant_id,source_id,external_id', ignoreDuplicates: false })
-          if (!error) comprasGovSaved++
+            .insert(editalData)
+          if (!insertError) {
+            comprasGovSaved++
+          } else if (insertError.code === '23505') {
+            const { error: updateError } = await supabase
+              .from('editals')
+              .update({
+                objeto: editalData.objeto,
+                valor_estimado: editalData.valor_estimado,
+                relevance_score: editalData.relevance_score,
+                raw_data: editalData.raw_data,
+                synced_at: editalData.synced_at,
+              })
+              .eq('tenant_id', editalData.tenant_id)
+              .eq('external_id', editalData.external_id)
+            if (!updateError) comprasGovSaved++
+          } else if (errors.length < 5) {
+            errors.push({ source: 'comprasgov', code: insertError.code || 'unknown', message: insertError.message })
+          }
         }
 
         const totalSaved = pncpSaved + comprasGovSaved
@@ -181,8 +218,9 @@ export async function GET(request: NextRequest) {
 
         results.push({
           tenant_id: tenantId,
-          pncp: { found: pncpFound, saved: pncpSaved },
-          comprasgov: { found: comprasGovFound, saved: comprasGovSaved },
+          pncp: { found: pncpFound, saved: pncpSaved, relevant: relevantes.length },
+          comprasgov: { found: comprasGovFound, saved: comprasGovSaved, relevant: pregoesRelevantes.length },
+          errors: errors.length > 0 ? errors : undefined,
         })
       } catch (tenantError) {
         const message = tenantError instanceof Error ? tenantError.message : 'Erro'
