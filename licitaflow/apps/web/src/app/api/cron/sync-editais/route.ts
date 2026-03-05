@@ -121,7 +121,7 @@ export async function GET(request: NextRequest) {
           const editalData = toEditalInsert(result, tenantId, pncpSourceId)
           const { error } = await supabase
             .from('editals')
-            .upsert(editalData, { onConflict: 'tenant_id,pncp_id', ignoreDuplicates: false })
+            .upsert(editalData, { onConflict: 'tenant_id,source_id,external_id', ignoreDuplicates: false })
           if (!error) pncpSaved++
         }
 
@@ -136,7 +136,7 @@ export async function GET(request: NextRequest) {
           const editalData = pregaoToEditalInsert(result, tenantId, comprasGovSourceId)
           const { error } = await supabase
             .from('editals')
-            .upsert(editalData, { onConflict: 'tenant_id,pncp_id', ignoreDuplicates: false })
+            .upsert(editalData, { onConflict: 'tenant_id,source_id,external_id', ignoreDuplicates: false })
           if (!error) comprasGovSaved++
         }
 
