@@ -1,4 +1,10 @@
 {
   "installCommand": "cd ../.. && pnpm install --no-frozen-lockfile",
-  "buildCommand": "cd ../.. && pnpm turbo build --filter=web"
+  "buildCommand": "cd ../.. && pnpm turbo build --filter=web",
+  "crons": [
+    {
+      "path": "/api/cron/sync-editais",
+      "schedule": "0 6,12,18 * * *"
+    }
+  ]
 }

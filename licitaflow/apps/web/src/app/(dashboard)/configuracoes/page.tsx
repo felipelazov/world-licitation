@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { User, Bell, Loader2, Save } from 'lucide-react'
+import { User, Bell, Loader2, Save, Radar } from 'lucide-react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
@@ -124,6 +124,18 @@ export default function ConfiguracoesPage() {
           <div>
             <h3 className="text-sm font-semibold text-[var(--foreground)]">Notificacoes</h3>
             <p className="text-xs text-[var(--muted-foreground)]">Configure quais alertas receber</p>
+          </div>
+        </Link>
+        <Link
+          href="/configuracoes/monitoramento"
+          className="group flex items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--card)] p-4 transition-colors hover:border-[var(--primary)]"
+        >
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--muted)] group-hover:bg-[var(--primary)]/10">
+            <Radar className="h-5 w-5 text-[var(--primary)]" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-[var(--foreground)]">Monitoramento</h3>
+            <p className="text-xs text-[var(--muted-foreground)]">UFs, palavras-chave e filtros de editais</p>
           </div>
         </Link>
       </div>

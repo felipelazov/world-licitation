@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { Radar, Settings2, Loader2 } from 'lucide-react'
+import { Radar, Settings2, Loader2, RefreshCw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { EditalCard } from '@/components/radar/edital-card'
 import { FeedFilters } from '@/components/radar/feed-filters'
@@ -18,6 +18,8 @@ interface EditalRow {
   status: string
   portal_url: string
   modalidade: string
+  uf?: string | null
+  relevance_score?: number | null
   edital_sources: { name: string; slug: string } | null
 }
 
@@ -28,11 +30,13 @@ export default function RadarPage() {
   const [loading, setLoading] = useState(true)
   const [totalCount, setTotalCount] = useState(0)
   const [page, setPage] = useState(0)
+  const [syncing, setSyncing] = useState(false)
+  const [syncResult, setSyncResult] = useState<{ saved: number; found: number } | null>(null)
 
   // Filters
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
-  const [orderBy, setOrderBy] = useState('created_at:desc')
+  const [orderBy, setOrderBy] = useState('relevance_score:desc')
 
   const supabase = createClient()
 
@@ -106,6 +110,23 @@ export default function RadarPage() {
     }
   }
 
+  async function handleSync() {
+    setSyncing(true)
+    setSyncResult(null)
+    try {
+      const res = await fetch('/api/editais/sync')
+      const data = await res.json()
+      if (data.success) {
+        setSyncResult({ saved: data.saved, found: data.found })
+        loadEditals()
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setSyncing(false)
+    }
+  }
+
   const newTodayCount = editals.filter((e) => {
     const today = new Date().toISOString().split('T')[0]
     return e.status === 'novo' && e.publication_date?.startsWith(today)
@@ -128,14 +149,31 @@ export default function RadarPage() {
             )}
           </p>
         </div>
-        <Link
-          href="/radar/filtros"
-          className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--muted)]"
-        >
-          <Settings2 className="h-4 w-4" />
-          Filtros
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="flex items-center gap-2 rounded-lg bg-[var(--primary)] px-3 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:opacity-90 disabled:opacity-50"
+          >
+            <RefreshCw className={`h-4 w-4 ${syncing ? 'animate-spin' : ''}`} />
+            {syncing ? 'Sincronizando...' : 'Sincronizar'}
+          </button>
+          <Link
+            href="/radar/filtros"
+            className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--foreground)] hover:bg-[var(--muted)]"
+          >
+            <Settings2 className="h-4 w-4" />
+            Filtros
+          </Link>
+        </div>
       </div>
+
+      {/* Sync result */}
+      {syncResult && (
+        <div className="rounded-lg border border-green-200 bg-green-50 px-4 py-2 text-sm text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-400">
+          Sync concluido: {syncResult.saved} edital(is) salvo(s) de {syncResult.found} encontrado(s).
+        </div>
+      )}
 
       {/* Filters */}
       <FeedFilters

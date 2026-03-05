@@ -15,6 +15,7 @@ const STATUS_OPTIONS = [
 ]
 
 const ORDER_OPTIONS = [
+  { value: 'relevance_score:desc', label: 'Mais relevante' },
   { value: 'created_at:desc', label: 'Mais recente' },
   { value: 'session_date:asc', label: 'Sessão (próxima)' },
   { value: 'estimated_value:desc', label: 'Maior valor' },

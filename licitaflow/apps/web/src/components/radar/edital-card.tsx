@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Building2, Calendar, DollarSign, ExternalLink } from 'lucide-react'
+import { Building2, Calendar, DollarSign, ExternalLink, MapPin, Star } from 'lucide-react'
 import { StatusBadge } from './status-badge'
 import { Countdown } from '@licitaflow/ui'
 
@@ -17,6 +17,8 @@ interface EditalCardProps {
     status: string
     portal_url: string
     modalidade: string
+    uf?: string | null
+    relevance_score?: number | null
     edital_sources?: { name: string; slug: string } | null
   }
   onStatusChange?: (id: string, status: string) => void
@@ -50,6 +52,18 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
             {edital.edital_sources && (
               <span className="text-xs text-[var(--muted-foreground)]">
                 {edital.edital_sources.name}
+              </span>
+            )}
+            {edital.relevance_score != null && edital.relevance_score > 0 && (
+              <span className={`flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-xs font-medium ${
+                edital.relevance_score >= 70
+                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                  : edital.relevance_score >= 40
+                    ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+              }`}>
+                <Star className="h-3 w-3" />
+                {edital.relevance_score}
               </span>
             )}
           </div>
@@ -90,6 +104,12 @@ export function EditalCard({ edital, onStatusChange }: EditalCardProps) {
           <Calendar className="h-3.5 w-3.5" />
           Sessão: {formatDatetime(edital.session_date)}
         </span>
+        {edital.uf && (
+          <span className="flex items-center gap-1">
+            <MapPin className="h-3.5 w-3.5" />
+            {edital.uf}
+          </span>
+        )}
         <span>Publicado: {formatDate(edital.publication_date)}</span>
         <Countdown date={edital.session_date} size="sm" showExpired={false} />
       </div>
