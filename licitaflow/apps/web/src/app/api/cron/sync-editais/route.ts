@@ -45,7 +45,12 @@ export async function GET(request: NextRequest) {
 
   const startTime = Date.now()
   const supabase = createAdminClient()
-  const results: Array<{ tenant_id: string; pncp: { found: number; saved: number }; comprasgov: { found: number; saved: number } }> = []
+  const results: Array<{
+    tenant_id: string
+    pncp: { found: number; saved: number; relevant?: number }
+    comprasgov: { found: number; saved: number; relevant?: number }
+    errors?: Array<{ source: string; code: string; message: string }>
+  }> = []
 
   try {
     const { data: configs } = await supabase
