@@ -125,8 +125,9 @@ export async function fetchEditaisByDate(params: {
   modalidade?: number
   uf?: string
   municipioIbge?: string
+  maxPaginas?: number
 }): Promise<PNCPContratacao[]> {
-  const { dataInicial, dataFinal, modalidade = MODALIDADES.PREGAO_ELETRONICO, uf, municipioIbge } = params
+  const { dataInicial, dataFinal, modalidade = MODALIDADES.PREGAO_ELETRONICO, uf, municipioIbge, maxPaginas = 5 } = params
 
   const searchParams = new URLSearchParams({
     dataInicial: formatDatePNCP(dataInicial),
@@ -136,7 +137,7 @@ export async function fetchEditaisByDate(params: {
     pagina: '1',
   })
 
-  if (uf) searchParams.set('uf', uf)
+  if (uf) searchParams.set('ufSigla', uf)
   if (municipioIbge) searchParams.set('codigoMunicipioIbge', municipioIbge)
 
   const allResults: PNCPContratacao[] = []
@@ -159,7 +160,7 @@ export async function fetchEditaisByDate(params: {
     if (pagina <= totalPaginas) {
       await sleep(RATE_LIMIT_MS)
     }
-  } while (pagina <= totalPaginas)
+  } while (pagina <= totalPaginas && pagina <= maxPaginas)
 
   return allResults
 }
@@ -183,7 +184,7 @@ export async function fetchEditaisPropostaAberta(params: {
     pagina: '1',
   })
 
-  if (uf) searchParams.set('uf', uf)
+  if (uf) searchParams.set('ufSigla', uf)
 
   const allResults: PNCPContratacao[] = []
   let pagina = 1
