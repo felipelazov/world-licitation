@@ -30,6 +30,10 @@ export async function updateSession(request: NextRequest) {
   } = await supabase.auth.getUser()
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/auth')
+  const isCronRoute = request.nextUrl.pathname.startsWith('/api/cron/')
+
+  // Cron routes handle their own auth via CRON_SECRET
+  if (isCronRoute) return supabaseResponse
 
   // Not authenticated and not on auth route → redirect to login
   if (!user && !isAuthRoute) {
