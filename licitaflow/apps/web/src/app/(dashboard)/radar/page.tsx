@@ -45,14 +45,38 @@ export default function RadarPage() {
   const [search, setSearch] = useState('')
   const [status, setStatus] = useState('')
   const [orderBy, setOrderBy] = useState('relevance_score:desc')
+  const [monitoringUfs, setMonitoringUfs] = useState<string[]>([])
 
   const supabase = createClient()
 
-  // Load status counts once
+  // Load monitoring config (UFs filter)
+  const loadMonitoringConfig = useCallback(async () => {
+    try {
+      const res = await fetch('/api/monitoring')
+      const json = await res.json()
+      if (json.data?.ufs?.length > 0) {
+        setMonitoringUfs(json.data.ufs)
+      }
+    } catch {
+      // use no filter
+    }
+  }, [])
+
+  useEffect(() => {
+    loadMonitoringConfig()
+  }, [loadMonitoringConfig])
+
+  // Load status counts (filtered by monitoring UFs)
   const loadStatusCounts = useCallback(async () => {
-    const { data } = await supabase
+    let query = supabase
       .from('editals')
       .select('status')
+
+    if (monitoringUfs.length > 0) {
+      query = query.in('uf', monitoringUfs)
+    }
+
+    const { data } = await query
 
     if (data) {
       const counts: Record<string, number> = { all: data.length }
@@ -61,7 +85,7 @@ export default function RadarPage() {
       }
       setStatusCounts(counts)
     }
-  }, [supabase])
+  }, [supabase, monitoringUfs])
 
   const loadEditals = useCallback(async () => {
     setLoading(true)
@@ -71,6 +95,11 @@ export default function RadarPage() {
     let query = supabase
       .from('editals')
       .select('*, edital_sources(name)', { count: 'exact' })
+
+    // Aplicar filtro de UFs do monitoramento
+    if (monitoringUfs.length > 0) {
+      query = query.in('uf', monitoringUfs)
+    }
 
     if (status) {
       query = query.eq('status', status)
@@ -91,7 +120,7 @@ export default function RadarPage() {
       setTotalCount(count ?? 0)
     }
     setLoading(false)
-  }, [supabase, status, search, orderBy, page])
+  }, [supabase, status, search, orderBy, page, monitoringUfs])
 
   useEffect(() => {
     loadEditals()
